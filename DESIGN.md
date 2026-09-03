@@ -114,9 +114,9 @@ motion:
   reduced-motion: field static, no smooth scroll, no split text, width axis static, 150ms opacity fades only
 
 field:
-  renderer: OGL, one fragment shader, full-screen triangle
+  renderer: hand-written WebGL2, one fragment shader, full-screen triangle, parallel shader compile
   dither: ordered Bayer 8x8, cell 2 CSS px, image-rendering pixelated
-  quality-tiers: cell 2, 3, 4 (step down when p75 frame time exceeds 12ms)
+  quality-tiers: cell 2, 3, 4 (step down when the p75 frame interval exceeds 22ms over 60 frames)
   modes: hero (masked by headline), band (thin horizontal band behind the index), off
   accent: only within the pointer radius, none at idle
   min-density-under-text: 55 percent on pixels

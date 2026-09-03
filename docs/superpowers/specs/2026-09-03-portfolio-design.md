@@ -92,7 +92,7 @@ Rules: the accent is used as ink (links, index numbers, the lit part of the fiel
 
 ### 5.1 Field renderer
 
-- Library: **OGL** (about 29 KB, WebGL2 with WebGL1 fallback). One full-screen triangle, one fragment shader. No Three.js, no R3F.
+- Renderer: a hand-written WebGL2 wrapper (`lib/field/gl.ts`, about 2 KB) with one full-screen triangle and one fragment shader, compiled through KHR_parallel_shader_compile so the main thread never blocks. No Three.js, no R3F, no OGL (dropped during Plan 02: a library added bytes and a blocking compile for no gain).
 - Shader: fbm value noise advected over time (flow), thresholded with an ordered 8x8 Bayer matrix at a fixed cell size of 2 CSS px (the dither must be pixel-crisp, so the canvas renders at exactly `viewport / cell` resolution with `image-rendering: pixelated`; device pixel ratio is ignored on purpose). Uniforms: time, resolution, pointer (smoothed on the JS side with attack 25ms and release 175ms), theme colours (field-on, field-off, accent), intensity (0 to 1, driven by scroll), reveal (0 to 1, driven by page transitions).
 - Accent appears only within a radius around the pointer, falling off smoothly; idle state drifts slowly with no accent.
 - One persistent `<canvas>` mounted in the root layout outside the route segment, `position: fixed`, `inset: 0`, `z-index` below content, `pointer-events: none`. Routes set its `intensity` and `mode` (`hero`, `band`, `off`) through a small store; the canvas never remounts on navigation.
@@ -176,7 +176,7 @@ Content that must be confirmed by Edoardo before publish: NDA scope for traceabi
 - Next.js 16.3 App Router, React 19.2, TypeScript strict. `cacheComponents` and `partialPrefetching` on. React Compiler on. All routes statically prerendered.
 - Styling: Tailwind CSS 4 for layout, spacing and responsive utilities, with every token declared in `@theme` as CSS custom properties. CSS Modules for animated components and pseudo-element work. `DESIGN.md` documents the same tokens; a unit test checks that every token in `DESIGN.md` exists in `globals.css`.
 - Motion: GSAP 3.15 (ScrollTrigger, SplitText, Flip) via `@gsap/react`; Lenis 1.3; Tempus 1.0; React `<ViewTransition>` for route transitions. No Motion library (one animation system).
-- WebGL: OGL. Field code under `lib/field/`.
+- WebGL: hand-written WebGL2 (no library). Field code under `lib/field/`.
 - Content: Content Collections with `@content-collections/mdx`; `rehype-slug`, `rehype-autolink-headings`, `remark-gfm`.
 - Fonts: `next/font/local`, variable woff2 in `public/fonts` (Bricolage Grotesque, Geist Mono), license files alongside.
 - Images: `next/image`, AVIF and WebP, `sizes` on every image. Covers pre-processed with a dither treatment at build time (sharp script) so the treatment is real pixels, not a runtime filter.

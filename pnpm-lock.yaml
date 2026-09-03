@@ -17,6 +17,9 @@ importers:
       react-dom:
         specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
+      tempus:
+        specifier: 1.0.0
+        version: 1.0.0(react@19.2.8)
       zustand:
         specifier: 5.0.15
         version: 5.0.15(@types/react@19.2.18)(react@19.2.8)
@@ -4196,6 +4199,14 @@ packages:
 
   teex@1.0.1:
     resolution: {integrity: sha512-eYE6iEI62Ni1H8oIa7KlDU6uQBtqr4Eajni3wX7rpfXD8ysFx8z0+dri+KWEPWpBsxXfxu58x/0jvTVT1ekOSg==}
+
+  tempus@1.0.0:
+    resolution: {integrity: sha512-yAtEKgbPwrenbvi4dvEFDUADRSZ5cHFqHIeFWQFEN5yrIRNhuBIl4lbTcukgy7KVgnr2qEOGabRixKQe0SCF9w==}
+    peerDependencies:
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   text-decoder@1.2.7:
     resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
@@ -9378,6 +9389,10 @@ snapshots:
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
+
+  tempus@1.0.0(react@19.2.8):
+    optionalDependencies:
+      react: 19.2.8
 
   text-decoder@1.2.7:
     dependencies:

@@ -4,7 +4,7 @@ Source of my personal portfolio. Frontend developer with a design degree, buildi
 
 ## Stack
 
-Next.js 16 (App Router, React 19, React Compiler, Cache Components), TypeScript, Tailwind CSS 4 with every token declared in `@theme` plus CSS Modules for animated components, MDX typed with Content Collections, GSAP and Lenis for motion, one WebGL surface rendered with OGL. Vitest, Playwright with axe, Lighthouse CI. Deployable to Cloudflare Workers through OpenNext or to Vercel.
+Next.js 16 (App Router, React 19, React Compiler, Cache Components), TypeScript, Tailwind CSS 4 with every token declared in `@theme` plus CSS Modules for animated components, MDX typed with Content Collections, GSAP and Lenis for motion, one WebGL2 surface with a hand-written shader (no 3D library). Vitest, Playwright with axe, Lighthouse CI. Deployable to Cloudflare Workers through OpenNext or to Vercel.
 
 Design system: `DESIGN.md` (tokens and rules) and `docs/superpowers/specs/2026-09-03-portfolio-design.md` (spec). Product truth: `PRODUCT.md`. Research behind the direction: `docs/research/`. Implementation plans: `docs/superpowers/plans/`.
 

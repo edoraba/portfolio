@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { FieldMount } from '@/components/field-mount'
 import { Footer } from '@/components/footer'
 import { SiteNav } from '@/components/site-nav'
 import { SkipLink } from '@/components/skip-link'
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <Script id="theme" strategy="beforeInteractive">
           {themeScript}
         </Script>
+        <FieldMount />
         <SkipLink />
         <SiteNav />
         <main id="main" className="flex-1">

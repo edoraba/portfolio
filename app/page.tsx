@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { CopyEmail } from '@/components/copy-email'
+import { HeroMask } from '@/components/hero-mask'
 import { MarginIndex } from '@/components/margin-index'
 import { WorkList } from '@/components/work-list'
 import { featuredWorks, labs, writings } from '@/lib/content'
@@ -11,12 +12,7 @@ export default function Home() {
     <>
       <section className="site-container grid min-h-[80dvh] content-between page-x pt-8 pb-12 lg:grid-cols-[1fr_18rem] lg:gap-12">
         <div className="self-end">
-          <h1 className="display-xl">
-            <span className="block">Design,</span>
-            <span className="block">
-              then <em>build.</em>
-            </span>
-          </h1>
+          <HeroMask />
           <p className="mt-10 measure text-ink-muted">
             <span className="text-ink">{site.role}.</span> Whole products, from the interface to the
             database, shipped from {site.location}.

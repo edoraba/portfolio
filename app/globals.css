@@ -190,3 +190,51 @@
   max-width: var(--container-site);
   margin-inline: auto;
 }
+
+/* The field: one fixed canvas behind everything, pixels are dither cells. */
+.field-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100dvh;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+/* Hero headline drawn as SVG text so the same glyphs can mask the canvas. */
+.hero-svg {
+  display: block;
+  width: 100%;
+  height: calc(var(--text-display-xl) * 1.9);
+  overflow: visible;
+}
+.hero-mask-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.hero-text {
+  font-family: var(--font-sans);
+  font-size: var(--text-display-xl);
+  font-weight: 500;
+  letter-spacing: var(--text-display-xl--letter-spacing);
+  font-variation-settings:
+    'opsz' 96,
+    'wdth' 100;
+}
+.hero-text tspan {
+  transition: font-variation-settings 500ms var(--ease-out-expo);
+}
+.hero-italic {
+  font-style: italic;
+}
+.hero-dither-cell {
+  fill: var(--field-on);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-text tspan {
+    transition: none;
+  }
+}
