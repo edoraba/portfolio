@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { CommandMenuServer } from '@/components/command-menu-server'
 import { FieldMount } from '@/components/field-mount'
 import { Footer } from '@/components/footer'
+import { GridOverlay } from '@/components/grid-overlay'
 import { SiteNav } from '@/components/site-nav'
 import { SkipLink } from '@/components/skip-link'
 import { fontClassNames } from '@/lib/fonts'
@@ -22,12 +24,17 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           {themeScript}
         </Script>
         <FieldMount />
-        <SkipLink />
-        <SiteNav />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        {/* .page is the filter target for the playful palette commands; the field stays outside. */}
+        <div className="page flex min-h-dvh flex-col">
+          <SkipLink />
+          <SiteNav />
+          <main id="main" className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        <CommandMenuServer />
+        <GridOverlay />
       </body>
     </html>
   )

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { navItems, site } from '@/lib/site'
 import { Decode } from './decode'
+import { PaletteTrigger } from './palette-trigger'
 import { ThemeToggle } from './theme-toggle'
 
 // Every interactive element in the bar is at least 24px in both dimensions (WCAG 2.5.8).
@@ -39,6 +40,9 @@ export function SiteNav() {
           ))}
           <li>
             <ThemeToggle />
+          </li>
+          <li className="hidden md:block">
+            <PaletteTrigger />
           </li>
         </ul>
       </nav>
