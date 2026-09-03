@@ -103,6 +103,10 @@ void main() {
   d = uFloor + d * (1.0 - uFloor);
   d *= uIntensity;
 
+  // Band mode: the dither thins out towards the top edge instead of starting with a hard line.
+  float yTop = 1.0 - vUv.y;
+  if (uMode == 1) d *= smoothstep(uBand.x, uBand.x + 0.25, yTop);
+
   int bx = int(mod(cell.x, 8.0));
   int by = int(mod(cell.y, 8.0));
   float threshold = (float(bayer[by * 8 + bx]) + 0.5) / 64.0;
@@ -112,8 +116,7 @@ void main() {
 
   float alpha = 1.0;
   if (uMode == 1) {
-    float y = 1.0 - vUv.y;
-    alpha = step(uBand.x, y) * step(y, uBand.y);
+    alpha = step(uBand.x, yTop) * step(yTop, uBand.y);
   }
   if (uMode == 2) alpha = 0.0;
 

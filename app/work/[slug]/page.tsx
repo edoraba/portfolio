@@ -5,6 +5,7 @@ import { ViewTransition } from 'react'
 import { Decode } from '@/components/decode'
 import { Mdx } from '@/components/mdx-components'
 import { PageTransition } from '@/components/page-transition'
+import { Toc } from '@/components/toc'
 import { workBySlug, works } from '@/lib/content'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -66,8 +67,13 @@ export default async function WorkDetail({ params }: Props) {
             </div>
           ))}
         </dl>
-        <div className="mt-8">
-          <Mdx code={w.body} />
+        <div className="mt-8 lg:grid lg:grid-cols-12 lg:gap-6">
+          <aside className="hidden lg:col-span-3 lg:block">
+            <Toc headings={w.headings} />
+          </aside>
+          <div id="case-body" className="lg:col-span-7 lg:col-start-4">
+            <Mdx code={w.body} />
+          </div>
         </div>
       </article>
     </PageTransition>

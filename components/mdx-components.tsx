@@ -21,9 +21,13 @@ const components = {
       {...p}
     />
   ),
-  a: (p: ComponentProps<'a'>) => (
-    <a className="text-accent underline-offset-4 hover:underline" {...p} />
-  ),
+  a: ({ className, ...p }: ComponentProps<'a'>) =>
+    className?.includes('heading-link') ? (
+      // Heading anchors (rehype-autolink-headings) keep the heading's own colour.
+      <a className="text-inherit no-underline" {...p} />
+    ) : (
+      <a className="text-accent underline-offset-4 hover:underline" {...p} />
+    ),
   figure: (p: ComponentProps<'figure'>) => <figure className="mt-block" {...p} />,
   figcaption: (p: ComponentProps<'figcaption'>) => (
     <figcaption className="mt-3 label text-ink-muted" {...p} />

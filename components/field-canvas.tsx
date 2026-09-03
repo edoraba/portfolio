@@ -9,7 +9,7 @@ import { useField } from '@/lib/field/store'
 const ATTACK_MS = 25
 const RELEASE_MS = 175
 const FLOOR_HERO = 0.55
-const FLOOR_BAND = 0.2
+const FLOOR_BAND = 0.04
 
 /**
  * The one persistent WebGL surface. Mounted lazily by FieldMount, it draws only while
@@ -73,6 +73,12 @@ export default function FieldCanvas() {
     applyMask(store.getState().mode)
     const unsubStore = store.subscribe((s, prev) => {
       if (s.mode !== prev.mode) applyMask(s.mode)
+      if (s.cell !== cell) {
+        // Changed from outside (the palette's dither commands).
+        cell = s.cell
+        renderer.resize(cell)
+        intervals.length = 0
+      }
     })
 
     const unsubTick = Tempus.add(
@@ -94,6 +100,7 @@ export default function FieldCanvas() {
           intensity: s.intensity,
           pointer: smooth,
           floor: s.mode === 'hero' ? FLOOR_HERO : FLOOR_BAND,
+          band: s.band,
         })
         if (deltaTime < IGNORE_ABOVE_MS) {
           intervals.push(deltaTime)

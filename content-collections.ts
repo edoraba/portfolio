@@ -3,15 +3,31 @@ import { compileMDX } from '@content-collections/mdx'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
+import GithubSlugger from 'github-slugger'
 import { z } from 'zod'
 
 const mdxOptions: Parameters<typeof compileMDX>[2] = {
   remarkPlugins: [remarkGfm],
-  rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]],
+  rehypePlugins: [
+    rehypeSlug,
+    [rehypeAutolinkHeadings, { behavior: 'wrap', properties: { className: ['heading-link'] } }],
+  ],
 }
 
 const slugOf = (p: string) => p.replace(/\.mdx$/, '')
 const content = z.string()
+
+/** Level 2 headings with the same ids rehype-slug will produce, for tables of contents. */
+function headingsOf(markdown: string): { id: string; text: string }[] {
+  const slugger = new GithubSlugger()
+  return markdown
+    .split('\n')
+    .filter((line) => /^## /.test(line))
+    .map((line) => {
+      const text = line.replace(/^## /, '').trim()
+      return { id: slugger.slug(text), text }
+    })
+}
 
 const work = defineCollection({
   name: 'work',
@@ -37,6 +53,7 @@ const work = defineCollection({
   transform: async (doc, ctx) => ({
     ...doc,
     slug: slugOf(doc._meta.path),
+    headings: headingsOf(doc.content),
     body: await compileMDX(ctx, doc, mdxOptions),
   }),
 })

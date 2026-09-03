@@ -487,3 +487,25 @@ html[data-fx='negative'] .page {
   letter-spacing: 0.06em;
   color: var(--accent);
 }
+
+/* Table of contents on long-form pages */
+.toc {
+  position: sticky;
+  top: 5rem;
+}
+.toc__item a {
+  display: block;
+  padding: 6px 0 6px 12px;
+  border-left: 1px solid var(--hairline);
+  color: var(--ink-muted);
+  transition:
+    color 200ms var(--ease-out-expo),
+    border-color 200ms var(--ease-out-expo);
+}
+.toc__item a:hover,
+.toc__item--on a {
+  color: var(--ink);
+}
+.toc__item--on a {
+  border-left-color: var(--accent);
+}

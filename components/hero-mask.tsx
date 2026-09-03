@@ -32,7 +32,7 @@ export function HeroMask() {
     const store = useField
     const reduced = prefersReducedMotion()
     let lastTransform = ''
-    store.getState().setRequested(true)
+    store.getState().request('hero')
 
     const tick = () => {
       const rect = visible.getBoundingClientRect()
@@ -44,9 +44,15 @@ export function HeroMask() {
       const s = store.getState()
       if (!s.enabled) return
       const intensity = heroIntensity(window.scrollY, window.innerHeight)
-      if (intensity !== s.intensity) s.setIntensity(intensity)
-      const mode = intensity > 0 ? 'hero' : 'off'
-      if (mode !== s.mode) s.setMode(mode)
+      if (intensity > 0) {
+        // The hero owns the field while it is on screen.
+        if (s.mode !== 'hero') s.setMode('hero')
+        if (intensity !== s.intensity) s.setIntensity(intensity)
+      } else if (s.mode === 'hero') {
+        // Hand over: another owner (the footer) may take the field from here.
+        s.setMode('off')
+        s.setIntensity(0)
+      }
     }
     const unsub = Tempus.add(tick, { label: 'hero-mask' })
 
@@ -72,9 +78,11 @@ export function HeroMask() {
       window.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('pointerleave', onLeave)
       const s = store.getState()
-      s.setMode('off')
-      s.setIntensity(0)
-      s.setRequested(false)
+      if (s.mode === 'hero') {
+        s.setMode('off')
+        s.setIntensity(0)
+      }
+      s.release('hero')
     }
   }, [])
 
