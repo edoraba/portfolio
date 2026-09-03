@@ -21,7 +21,7 @@ colors:
     surface: '#E6E0D3'
     surface-2: '#DDD6C6'
     ink: '#141310'
-    ink-muted: '#6E685C'
+    ink-muted: '#625C50'
     hairline: 'rgba(20,19,16,0.12)'
     accent: '#1F3BFF'
     accent-ink: '#F1EDE4'

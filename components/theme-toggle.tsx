@@ -11,7 +11,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={`Switch to ${next} theme`}
-      className="label text-ink-muted transition-colors duration-200 hover:text-ink"
+      className="inline-flex items-center py-2 label text-ink-muted transition-colors duration-200 hover:text-ink"
     >
       {mounted ? (theme === 'dark' ? 'Paper' : 'Field') : 'Theme'}
     </button>

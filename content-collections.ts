@@ -96,4 +96,4 @@ const pages = defineCollection({
   }),
 })
 
-export default defineConfig({ collections: [work, lab, writing, pages] })
+export default defineConfig({ content: [work, lab, writing, pages] })

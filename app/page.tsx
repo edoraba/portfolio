@@ -63,7 +63,7 @@ export default function Home() {
             ))}
           </ul>
         </div>
-        <div>
+        <div hidden={writings.length === 0}>
           <h2 className="label text-ink-muted">Writing</h2>
           <ul className="mt-6 space-y-3">
             {writings.slice(0, 3).map((w) => (

@@ -37,3 +37,8 @@ Thumbs.db
 
 # generated content
 .content-collections
+
+# test reports
+playwright-report
+test-results
+.lighthouseci

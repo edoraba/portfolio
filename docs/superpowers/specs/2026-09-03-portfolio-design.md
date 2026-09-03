@@ -64,7 +64,7 @@ Two themes, one accent family. Roles, not names.
 | surface                     | #15171B                                      | #E6E0D3             |
 | surface-2                   | #1C1F24                                      | #DDD6C6             |
 | ink                         | #F2F2EF                                      | #141310             |
-| ink-muted                   | #8B8E93                                      | #6E685C             |
+| ink-muted                   | #8B8E93                                      | #625C50             |
 | hairline                    | rgba(242,242,239,0.10)                       | rgba(20,19,16,0.12) |
 | accent                      | #7D93FF                                      | #1F3BFF             |
 | accent-ink (text on accent) | #0B0C0E                                      | #F1EDE4             |

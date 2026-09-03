@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Mdx } from '@/components/mdx-components'
-import { writingBySlug, writings } from '@/lib/content'
+import { writingBySlug, writingsIncludingDrafts } from '@/lib/content'
 
 type Props = { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
-  return writings.map((w) => ({ slug: w.slug }))
+  return writingsIncludingDrafts.map((w) => ({ slug: w.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
