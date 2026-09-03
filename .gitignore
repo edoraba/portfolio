@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+
+# env
+.env
+.env.*
+!.env.example
+
+# build and cache
+dist/
+.turbo/
+.cache/
+*.tsbuildinfo
+
+# tests and reports
+coverage/
+playwright-report/
+test-results/
+.lighthouseci/
+
+# os and editors
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# local agent config (hooks are installed per machine by impeccable)
+.claude/settings.local.json
+.impeccable/
