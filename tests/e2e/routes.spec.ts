@@ -17,6 +17,8 @@ for (const route of routes) {
   test(`${route} renders with one h1 and no horizontal overflow`, async ({ page }) => {
     await page.goto(route)
     await expect(page.locator('h1')).toHaveCount(1)
+    // Measure with the real fonts in place: fallback metrics differ on CI machines.
+    await page.evaluate(() => document.fonts.ready)
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
     )

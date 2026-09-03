@@ -9,7 +9,7 @@ import { ThemeToggle } from './theme-toggle'
 export function SiteNav() {
   return (
     <header
-      className="site-container flex h-16 items-center justify-between gap-4 page-x"
+      className="site-container flex min-h-16 items-center justify-between gap-4 page-x"
       style={{ viewTransitionName: 'site-header' }}
     >
       <Link
@@ -25,7 +25,7 @@ export function SiteNav() {
         </span>
       </Link>
       <nav aria-label="Primary">
-        <ul className="flex items-center gap-4 md:gap-8">
+        <ul className="flex flex-wrap items-center justify-end gap-x-4 md:gap-x-8">
           {navItems.map((item) => (
             <li key={item.href}>
               <Link
