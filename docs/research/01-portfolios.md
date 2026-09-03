@@ -15,6 +15,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 ### A1. Creative developers (animation and WebGL heavy)
 
 #### 1. Bruno Simon, bruno-simon.com (2025 rebuild, SOTD Jan 21 2026, Site of the Month Feb 2026)
+
 - Who: French creative developer, author of Three.js Journey.
 - Stack: Three.js with TSL (Three.js Shading Language), WebGPU renderer with WebGL fallback, Rapier physics, Howler.js audio, Blender with Python scripting for world building, DRACO and KTX2 (ETC1S/UASTC) compression. Code on GitHub under MIT. Fonts: Amatic SC and Nunito.
 - Hero: the whole site is a drivable 3D world. "Please drive around to learn more about me and discover the many secrets of this world."
@@ -26,6 +27,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: inaccessible by nature, heavy first load, the "portfolio as game" idea is now copied so often that it reads as Bruno's idea whoever does it. Do not attempt a driving game.
 
 #### 2. Antoine Wodniack, wodniack.dev (SOTD Dec 12 2024, Developer Award)
+
 - Who: French creative developer, ex Waaark co-founder, 16 SOTD, coding "since 1987" framing.
 - Stack: Astro (asset paths under /_astro/), GSAP, WebGL for the 3D gallery, Lenis-style smooth scroll. Single page.
 - Hero: binary 1/0 texture motif, "Creative Developer" with star glyph, "Coding globally from France. Available for freelance work."
@@ -38,6 +40,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: accessibility 6.2 despite the contrast toggle; single-page means no deep case studies.
 
 #### 3. Francesco Michelini, francescomichelini.com (Folio23, SOTD Dec 19 2023, Developer Award) - Italian, Modena
+
 - Who: independent creative developer "focusing on 3d / interaction / smooth animations", Awwwards jury 2026. Design by Unlearn Studio (Davide Baratta).
 - Stack (from Codrops spotlight, Jan 2025): Nuxt 3, GSAP, Lenis, Three.js, TresJS, Astro on some projects, Storyblok CMS.
 - Hero: minimal typographic statement plus location "Based in Modena (IT) / working remotely worldwide". Percentage preloader.
@@ -49,12 +52,14 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: percentage preloader is the 2019 to 2022 cliche; content is thin on process.
 
 #### 4. Davide Perozzi, davideperozzi.com (SOTD Apr 28 2019; still widely referenced)
+
 - Who: Italian-born creative developer in Karlsruhe. Design by Norman Dubois.
 - Stack: Vue, WebGL, custom cursor, typography-first.
 - Palette: #000, #D14836, #fff. Dev 7.08, Accessibility 5.67.
 - Included only as a cautionary benchmark: 2019 vintage cursor and parallax patterns, low accessibility.
 
 #### 5. Jesper Landberg, jesperlandberg.com
+
 - Who: Swedish "design engineer", Awwwards Independent of the Year 2022 and 2024, 74 awards (30 Awwwards, 37 FWA, 3 Webby).
 - Stack: not disclosed on the site; known GSAP power user, WebGL. Note that he self-labels as design engineer but the work is agency-grade creative development.
 - Hero: typographic statement about "building visually rich, motion-driven websites", awards stated as plain text.
@@ -64,6 +69,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: little about him as a person; the site is a list.
 
 #### 6. Grégory Lallé, gregorylalle.com (SOTD Oct 30 2024, Developer Award)
+
 - Who: creative developer in Lyon; design by Thomas Monavon.
 - Hero: name plus "Creative developer" only. Ten numbered projects (0 to 10) as anchor-linked gallery.
 - Palette: single color #111111.
@@ -73,6 +79,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: interchangeable with a dozen other minimal dark folios; accessibility.
 
 #### 7. Gianluca Gradogna, gianlucagradogna.com (SOTD Jan 23 2025, Developer Award) - Italian, Florence
+
 - Who: multidisciplinary designer (design, advertising, code, photography). Credits: Norman Gabriel.
 - Hero: "Gianluca Gradogna, Multidisciplinary Designer", loading transition, horizontal layout with infinite scroll, "Please rotate your device" on mobile (a red flag).
 - Palette: #0D0D0D and #FFFFFF.
@@ -81,6 +88,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: forcing device rotation is hostile; horizontal-only layouts fail on mobile.
 
 #### 8. Pacôme Pertant, pacomepertant.com (SOTD Jun 9 2026, Developer Award) built by Louis Bocquet and Colin Demouge
+
 - Who: motion and sound designer in Paris; developer credit to Louis Bocquet.
 - Stack: Nuxt (/_nuxt/ assets), GSAP, Three.js.
 - Hero: repeated "showreel • 2025 •" marquee text, entry gate "enter with sound / enter without sound".
@@ -90,6 +98,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: marquee text hero and enter gates are recognisable 2020 to 2023 tropes; Markup 6.6 suggests div soup.
 
 #### 9. Elliott Mangham, elliott.mangham.dev (SOTD Dec 2 2025, Developer Award)
+
 - Who: UK WordPress developer positioning as "trusted right-hand for agencies".
 - Stack: GSAP, vanilla JS, Vite (per Awwwards). Palette #121212 and #fff.
 - Hero: long personal paragraph with emoji flags, "Available September 2026" availability indicator, discovery-call and cost-estimate CTAs, collapsible rates.
@@ -99,19 +108,23 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: percentage bars, metric inflation, emoji in headings, reads as a sales page more than a craft page.
 
 #### 10. Studio Null, madebynull.com (SOTD May 2 2025) and NOTHIN', noth.in (SOTD Aug 10 2026, Webflow + WebGL + GSAP)
+
 - Studio sites, included because personal portfolios now imitate them: audio enter gate, Prismic CMS, Spotify "Radio" section, 3D rendered objects, hero shaders with mouse interaction, 01/14 pagination.
 - NOTHIN' scores: SOTD 7.45, Dev 7.24, Accessibility 6.80, Semantics 6.80. Webflow plus WebGL is now award-viable, which lowers the bar for "creative developer" claims.
 
 #### 11. Luis Bizarro, bizar.ro
+
 - Who: Brazilian creative technologist (Apple, Active Theory), 9 SOTD, Independent of the Year 2021. Design by Kacper.
 - Stack: WebGPU, WebGL, shaders, TypeScript stated in the bio.
 - Projects: grouped by affiliation (Apple, Active Theory, Personal) with one-paragraph "what I built" summaries, for example Xbox Museum "main museum selector scene, 3D screens animations and states, user progress tracking".
 - Works: the best template for describing contribution on team projects without owning the visuals. Typography experiments published on Instagram as a lab.
 
 #### 12. Aristide Benoist, aristidebenoist.com
+
 - Current site is a near-empty "Aristide Benoist, Independent developer, 0 0 1" WebGL page; v1 (2017, SOTD) was Three.js with design by Ben Mingo. Included for the pattern of crediting the designer and 3D artist explicitly.
 
 #### 13. Simone Andreotti, simone-dev.com - Italian (Lotrek)
+
 - Who: frontend and creative developer, Three.js, Astro, Vue, GSAP, GLSL.
 - Hero: rotating messages that change on return visits; spiral card navigation for Lab, Work, Stack.
 - Projects: cards with video previews; the "2025 Website" has "a standard version, an open world exploration and a full VR world". Minigame with graphics settings and procedural map.
@@ -119,26 +132,31 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: too many socials (nine), spiral nav is a novelty that hides content.
 
 #### 14. Martin Laxenaire, martin-laxenaire.fr (Codrops write-up Oct 2025)
+
 - Who: French creative developer, author of gpu-curtains.
 - Stack: Nuxt 3, Sanity, GSAP, WebGPU via gpu-curtains, TypeScript.
 - Concept: gamified portfolio where WebGPU scenes unlock content; each scene bound to real data (GitHub stats, invoice totals, video metadata). Gamification is disabled for prefers-reduced-motion users. Real-time FPS monitor drives a quality manager.
 - Quote worth keeping: detailed case study pages "often become outdated when projects go offline or cannot be publicly shared".
 
 #### 15. Thibault Guignand, thibaultguignand.com (Codrops write-up May 2026)
+
 - Stack: Vite, React 18, TypeScript, GSAP (SplitText, ScrollTrigger), OGL instead of Three.js, Lenis, SCSS BEM, i18n FR/EN.
 - Techniques: a single GSAP-tweened progress value pushed to shader uniforms; clip-path text wipes layered on character scramble; ScrollTrigger scrub: 1 driving scale, inset clip-path and an SVG progress ring; GSAP timelines coordinated with the View Transitions API; direct DOM mutation instead of React state at 120 Hz; idle guard suspends the render loop.
 - Reduced motion is "treated as a parallel design" not a kill switch. This is the current best practice sentence.
 
 #### 16. Stas Bondar, stabondar.com (Codrops 2025 standout redesign, Nominee Independent of the Year 2025)
+
 - Front-end developer, Awwwards jury, Webflow plus GSAP. Hero repeats "Front-End Developer" rhythmically, personal story from pro athletics, "Unavailable for Freelance Projects" stated openly, awards list 2021 to 2026.
 - Works: honesty about availability, personality copy. Does not work: repeated-word hero is a marquee variant.
 
 #### 17. Rogier de Boevé, rogierdeboeve.com (Codrops spotlight May 2025)
+
 - Belgian creative developer and visual artist. Astro, Three.js, GSAP, Theatre.js for timeline motion. Full creative control design through dev. Quote: "it's not about how fancy the code is or whether you're using the latest framework".
 
 ### A2. Design engineers (product and interaction craft, typographic, fast)
 
 #### 18. Rauno Freiberg, rauno.me
+
 - Who: Estonian interaction designer, Vercel, Devouring Details.
 - Stack: Next.js (Vercel), custom.
 - Hero: mantra list "Make it fast. Make it beautiful. Make it consistent. Make it carefully. Make it timeless. Make it soulful. Make it."
@@ -148,54 +166,66 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 - Does not work: almost nothing to look at above the fold if you do not already know who he is.
 
 #### 19. Paco Coursey, paco.me
+
 - Who: design engineer, Linear (previously Vercel).
 - Sections: Building, Projects (cmdk, Writer, next-themes with GitHub links), Writing, Now, Connect. Markdown-like hierarchy, 2025 footer. Copy: "Everything around me is someone's life work".
 - Works: open-source projects as the portfolio; quiet confidence.
 
 #### 20. Emil Kowalski, emilkowal.ski
+
 - Who: design engineer, Linear (ex Vercel), author of animations.dev.
 - Sections: Projects (Sonner, Vaul, animations.dev, aiforui.dev), Writing (10 essays on taste, friction, animation), newsletter.
 - His own published animation rules (emilkowal.ski/ui/great-animations): animate only transform and opacity, ease-out for interactions, under 300 ms, interruptible, do not animate repeated actions, respect prefers-reduced-motion with opacity-only alternatives, spring for natural motion.
 - Works: writing as proof of taste; components with real adoption.
 
 #### 21. Jhey Tompkins, jhey.dev
+
 - Who: design engineer, Shopify (ex Google, Vercel). Tagline "Making your ideas click".
 - Site is a hub: live widgets (location and weather via weatherapi.com, Spotify now playing, Steam), CodePen and YouTube links, GitHub AMA. The Craft of UI course.
 - Works: live data widgets signal "I ship and I play". Does not work: the portfolio itself is thin; the real work lives on CodePen.
 
 #### 22. Yann-Edern Gillet, yannglt.com
+
 - Who: software designer at Linear, Paris. Headline "Crafting interfaces, products, and systems".
 - Nav: Now, Writing, About; footer Index, Moodboard, Track Record, Changelog. Monospace identifier strings, "High Voltage" motif, Pokémon references.
 - Essay "The Rosetta Stone of Design Engineering" is directly about the hybrid story. Frames itself as "a non-portfolio-only digital place".
 - Works: Changelog and Moodboard pages, work grouped as "xp" explorations vs "li" Linear projects.
 
 #### 23. Hayden Bleasel, haydenbleasel.com
+
 - Australian software engineer and product designer at OpenAI. The whole home page is an age/year timeline 1993 to 2026 with inline links to launches and acquisitions. Nav About, Writing, Speaking, Press.
 - Works: a single strong information architecture idea replaces the standard hero.
 
 #### 24. Pedro Duarte, ped.ro
+
 - Raycast, Radix creator. "Yo! I'm Pedro Duarte." Sections Writing, Speaking, Shooting. Conversational, credibility via numbers (Radix 20M monthly downloads).
 
 #### 25. Brittany Chiang, brittanychiang.com
+
 - Frontend engineer at Klaviyo. "I build accessible, pixel-perfect experiences for the web." Next.js, Tailwind, Inter, Vercel, colophon "Designed in Figma, coded in VS Code". Skip-to-content link, spotlight cursor glow on desktop, Tardis GIF "time travel" to old versions.
 - Works: accessibility as a stated brand, colophon. Does not work: cloned thousands of times (GitHub template), so the layout itself is now generic.
 
 #### 26. Josh W. Comeau, joshwcomeau.com
+
 - Educator. Sound toggle, dark mode, whimsical details, categories CSS/React/Animation. Included for the sound-toggle pattern and for how writing becomes the portfolio.
 
 #### 27. Michele Mazzucco, michelemazzucco.it - Italian, Dolomites
+
 - Generalist design engineer, 10+ years B2B SaaS. Next.js. Six numbered philosophy cards ("Quality creates gravity. Craft is strategic."), Work (Portchain, Beefree, Incode) and Side projects, personal photography, "Made in the dolomites".
 - Works: the clearest Italian example of the design-plus-engineering narrative for product work.
 
 #### 28. Federico Pian, federicopian.com - Italian, Udine (Overpx co-founder)
+
 - "Ciao, I'm Fede!" with live CEST clock. Vercel image optimisation. Eight projects 2020 to 2025 with agency, year, tagline and Visit link; 0% progress indicator and "scroll/swipe to discover" horizontal project navigation.
 - Does not work: horizontal-only discovery and percentage indicator again.
 
 #### 29. Gionatan Nese, gionatannese.com (Developer HM Aug 4 2026, CSSDA UI/UX/Innovation Sep 2 2026) - Italian, Milan
+
 - Multi-disciplinary designer. GSAP, Three.js, WebGL, sound, infinite scroll, black and white. "Selected Work" (4) plus "Explorations" (7, including a Ferrari 330 P4 digital tribute). Copy: "bold ideas into ambitious cool Stuff™ that actually stick". Community score 8.67 on 15 votes.
 - Works: separating Work from Explorations; Italian and current.
 
 #### 30. Other Italians checked
+
 - Fabio Ottaviani (Supah), supah.it: creative developer at studiogusto (Perugia), 11 Awwwards, 11 FWA; site is a WebGL canvas with no server text; portfolio of experiments lives on CodePen (Supah DailyUI). Model for "CodePen as lab".
 - Niccolò Miranda, niccolomiranda.com: Italian in Amsterdam, hedgehog mascot, horizontal drag work carousel, testimonial quote "Blurring the line between design & dev"; SOTD for both his 2018 folio and "Paper Portfolio" (7.92). His Awwwards Academy course is literally "Creative Portfolios".
 - Davide Baratta, davidebaratta.com (SOTD Nov 18 2024): designer, Unlearn Studio; built by Francesco Michelini with Astro, Storyblok, Cloudflare, Lenis, PiecesJs, GSAP, Taxi.js, Nanostores, PixiJS. Dev 7.49, Accessibility 7.40, WPO 8.20. Black and white, drag projects navigation.
@@ -223,6 +253,7 @@ Format per entry: URL, who, stack, hero, nav and transitions, projects, typograp
 ### B1. Recurring patterns that work in top-tier developer portfolios
 
 Hero types, ranked by how often they appear among 2024 to 2026 winners and design-engineer favourites:
+
 1. Typographic statement plus location plus availability (Michelini, Lallé, Landberg, Wodniack). One line of what you do, one of where, one of status. The location line is a differentiator for a Turin developer; Michelini's "Based in Modena (IT) / working remotely worldwide" is the exact formula.
 2. Mantra or manifesto list (Rauno's "Make it fast..."; Mazzucco's six principles). Signals values, not services.
 3. Single structural idea replacing a hero (Bleasel's age timeline, Wodniack's binary autobiography, Bruno's world). Concept-first beats decoration-first.
@@ -230,15 +261,18 @@ Hero types, ranked by how often they appear among 2024 to 2026 winners and desig
 5. WebGL or shader hero with mouse interaction (NOTHIN', Pertant, Nese). Still wins, but only when the shader is specific to the concept.
 
 Navigation:
+
 - Three to four items max (Work, About, Contact, plus Lab or Writing). Numbered items (00, 01, 02) appear on Michelini, Lallé, Wodniack.
 - Two density modes for the work list (Landberg's Featured vs Full; Grellier's "See my projects" vs "Quick overview").
 - Footer as a second nav with socials, email in plain text, and a colophon (Chiang) or credits to designer and type foundry (Michelini, Baratta, Perozzi).
 
 Page transitions:
+
 - 2024 to 2025: GSAP timelines with Barba.js or Taxi.js (Volino, Baratta) or Nuxt page hooks.
 - 2026: View Transitions API coordinated with GSAP (Guignand), cross-document view transitions now baseline across browsers (Interop 2026). List-to-detail morph (project card into project page) is the canonical use.
 
 Project presentation:
+
 - Structured metadata line: Year, Client/Agency, Role, Stack, Awards (Michelini, Landberg, Saggiomo's "01 to 05 / role / year").
 - Contribution paragraph for team work: "what I built" (Bizarro).
 - Video walkthroughs and thumbnails of details rather than full case studies (Rauno's Craft, Mangham's modals).
@@ -246,6 +280,7 @@ Project presentation:
 - Live link plus archived screenshot; Laxenaire's warning that client sites die is real.
 
 About page storytelling:
+
 - Timeline (Bleasel by age; Wodniack by desk photos; Chiang by role).
 - Principles cards (Mazzucco) or a short manifesto (Yann Gillet).
 - Photography of place (Mazzucco's Dolomites). Place is identity; Turin can be used the same way.
@@ -274,6 +309,7 @@ Writing: every design-engineer site has it (Rauno Field Notes, Emil, Paco, Yann,
 ### B2. Anti-patterns and cliches that now read as dated or generic
 
 Be blunt about these; award judges are (Kuipers 2024 thread, copydennis.com):
+
 1. The Snellenberg kit: rounded slide-in mobile menu with curved edge, magnetic buttons, "Hello Ciao Hola" word preloader, project list where an image follows the cursor, curved sticky footer with a giant "Let's work together", Lenis plus Framer Motion. Judges call it out on sight. copydennis.com exists to shame it.
 2. Percentage preloader counters and progress bars on sites that load 400 KB of text.
 3. Dot custom cursor that grows on hover, blend-mode difference cursor, cursor trails.
@@ -298,6 +334,7 @@ Be blunt about these; award judges are (Kuipers 2024 thread, copydennis.com):
 ### B3. What signals "real engineer, not template user" to another developer
 
 Ranked by how quickly a peer notices:
+
 1. Speed. Instant first paint, no loader, no layout shift. Lallé, Baratta and Wodniack score WPO 7.8 to 8.2 while animating heavily. Design-engineer sites feel instant.
 2. Reduced motion handled as a parallel design (Guignand), not display:none on animations. Laxenaire disables gamification under prefers-reduced-motion. Emil's rule: opacity-only fallbacks. Almost no award winner does this well; Accessibility sub-scores of 5.7 to 7.0 prove it.
 3. Keyboard and screen-reader sanity: skip link (Chiang, Owen), focus states that match the hover design, semantic headings, real buttons. Wodniack's contrast toggle.
@@ -322,6 +359,7 @@ Ranked by how quickly a peer notices:
 ### B5. Handling client work under NDA or not publicly viewable
 
 What the surveyed portfolios and guides (IxDF, UX Playbook 2026, DESK/vanschneider, Wonderlist) actually do:
+
 1. Logo plus confidentiality note: client logo linking to a short note that the project is under NDA (Noemie le Coz with Apple, per DESK).
 2. Role description without visuals: "what I built" paragraphs (Bizarro's Xbox Museum) covering scope, stack, and your specific contribution.
 3. Abstracted visuals: recreate the interaction pattern with dummy content and neutral branding; blur or replace text; show design-system pieces (tokens, components, motion specs) rather than screens. Present as "recreated for portfolio, not client assets".
@@ -335,6 +373,7 @@ What the surveyed portfolios and guides (IxDF, UX Playbook 2026, DESK/vanschneid
 ### B6. Trends 2025 to 2026 versus 2022 to 2023
 
 2022 to 2023 (Snellenberg era):
+
 - Next.js or Nuxt plus GSAP plus Lenis plus Framer Motion; Barba.js or Taxi.js for transitions.
 - Preloaders with percentages or greeting words; dot cursors; marquees; magnetic buttons; curved footers.
 - Full-screen project image lists, image-follows-cursor, parallax.
@@ -344,6 +383,7 @@ What the surveyed portfolios and guides (IxDF, UX Playbook 2026, DESK/vanschneid
 - Case studies as long pages with device mockups.
 
 2025 to 2026:
+
 - WebGPU and TSL become mainstream (Bruno, Laxenaire, Bizarro; Interop 2026 baseline). Lightweight WebGL libraries (OGL, gpu-curtains) instead of full Three.js for 2D shader effects.
 - GSAP fully free (2025) so SplitText and MorphSVG are everywhere; the differentiator is restraint and purpose, not the plugin.
 - Native platform features replace libraries: View Transitions API for page morphs, CSS scroll-driven animations, anchor positioning, popover. Guignand coordinates GSAP with View Transitions.

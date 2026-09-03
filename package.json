@@ -27,14 +27,26 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/react": "16.3.3",
+    "@types/js-yaml": "4.0.9",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "6.1.1",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "husky": "9.1.7",
+    "js-yaml": "5.4.1",
+    "jsdom": "30.0.1",
+    "lint-staged": "17.4.1",
+    "prettier": "3.9.6",
+    "prettier-plugin-tailwindcss": "0.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "5.0.0"
   }
 }

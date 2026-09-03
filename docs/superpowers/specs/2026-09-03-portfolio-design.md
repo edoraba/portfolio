@@ -42,13 +42,13 @@ Navigation: four items, numbered in mono: `1 Work`, `2 Lab`, `3 Writing`, `4 Abo
 
 Case study set and framing (from `04-content-strategy.md` section 7.2, LoL Brain replaced by Envergo):
 
-| Slug | Title (outcome first) | Framing |
-|---|---|---|
-| refattura | Refattura: Italian e-invoicing self-invoices, 12,000+ documents generated | Anchor. Product, solo across design, frontend, backend, database, deployment |
-| traceability | On-chain traceability for a Formula 1 supplier | NDA. Sector-only naming, recreated mockups with fictional data, confidentiality note, private walkthrough offered |
-| html-to-figma | HTML to Figma: a Figma community plugin | Public artifact, the purest design-engineer piece |
-| redergo-sales | Redergo Sales: an AI-built site variant for every lead | The honest AI-in-product story: what is templated, what is generated, quality gates |
-| envergo | Envergo: encrypted environment variables for a ten-person team | Developer-to-developer depth: threat model, key handling, CLI and web, adoption |
+| Slug          | Title (outcome first)                                                     | Framing                                                                                                           |
+| ------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| refattura     | Refattura: Italian e-invoicing self-invoices, 12,000+ documents generated | Anchor. Product, solo across design, frontend, backend, database, deployment                                      |
+| traceability  | On-chain traceability for a Formula 1 supplier                            | NDA. Sector-only naming, recreated mockups with fictional data, confidentiality note, private walkthrough offered |
+| html-to-figma | HTML to Figma: a Figma community plugin                                   | Public artifact, the purest design-engineer piece                                                                 |
+| redergo-sales | Redergo Sales: an AI-built site variant for every lead                    | The honest AI-in-product story: what is templated, what is generated, quality gates                               |
+| envergo       | Envergo: encrypted environment variables for a ten-person team            | Developer-to-developer depth: threat model, key handling, CLI and web, adoption                                   |
 
 Short entries on /work: Athena (Lighthouse 100 in all four, live PageSpeed link), AI video localisation for a fitness course platform, Redergo Hub, Dynamic BG. Archive list: lampante.ai, boerotrucks.com, atavola.pro, rekupero.it, thefootballroyale.com, each with role stated honestly once Edoardo confirms it.
 
@@ -58,18 +58,18 @@ Short entries on /work: Athena (Lighthouse 100 in all four, live PageSpeed link)
 
 Two themes, one accent family. Roles, not names.
 
-| Role | Dark (default when the OS has no preference) | Light |
-|---|---|---|
-| canvas | #0B0C0E | #F1EDE4 |
-| surface | #15171B | #E6E0D3 |
-| surface-2 | #1C1F24 | #DDD6C6 |
-| ink | #F2F2EF | #141310 |
-| ink-muted | #8B8E93 | #6E685C |
-| hairline | rgba(242,242,239,0.10) | rgba(20,19,16,0.12) |
-| accent | #7D93FF | #1F3BFF |
-| accent-ink (text on accent) | #0B0C0E | #F1EDE4 |
-| field-on | #F2F2EF | #141310 |
-| field-off | #0B0C0E | #F1EDE4 |
+| Role                        | Dark (default when the OS has no preference) | Light               |
+| --------------------------- | -------------------------------------------- | ------------------- |
+| canvas                      | #0B0C0E                                      | #F1EDE4             |
+| surface                     | #15171B                                      | #E6E0D3             |
+| surface-2                   | #1C1F24                                      | #DDD6C6             |
+| ink                         | #F2F2EF                                      | #141310             |
+| ink-muted                   | #8B8E93                                      | #6E685C             |
+| hairline                    | rgba(242,242,239,0.10)                       | rgba(20,19,16,0.12) |
+| accent                      | #7D93FF                                      | #1F3BFF             |
+| accent-ink (text on accent) | #0B0C0E                                      | #F1EDE4             |
+| field-on                    | #F2F2EF                                      | #141310             |
+| field-off                   | #0B0C0E                                      | #F1EDE4             |
 
 Rules: the accent is used as ink (links, index numbers, the lit part of the field, focus rings), never as a fill for large areas. Contrast: every text pairing passes WCAG AA, body text targets AAA. No pure #000 or #FFF. No shadows; elevation is a surface step plus a hairline. Radius 0 everywhere. Grain is not used (the dither is the texture). The accent alternative, phosphor #E9FF6A on dark, stays in `DESIGN.md` as a one-token swap and is not the default.
 
@@ -111,16 +111,16 @@ Rules: the accent is used as ink (links, index numbers, the lit part of the fiel
 
 Tokens (also in `DESIGN.md`):
 
-| Token | Value | Use |
-|---|---|---|
-| --dur-micro | 150 to 250ms | hover, press, toggles |
-| --dur-reveal | 800ms | masked line reveals |
-| --dur-wipe | 1200ms | page transition wipe |
-| --dur-field | 2000ms | field intensity and mode changes |
-| --ease-out-expo | cubic-bezier(0.16, 1, 0.3, 1) | reveals, hover |
-| --ease-hop | cubic-bezier(0.56, 0, 0.35, 0.98) | page wipes |
-| --ease-inout-power3 | cubic-bezier(0.65, 0, 0.35, 1) | Flip, layout changes |
-| stagger | 0.06s lines, 0.04s list items | reveals |
+| Token               | Value                             | Use                              |
+| ------------------- | --------------------------------- | -------------------------------- |
+| --dur-micro         | 150 to 250ms                      | hover, press, toggles            |
+| --dur-reveal        | 800ms                             | masked line reveals              |
+| --dur-wipe          | 1200ms                            | page transition wipe             |
+| --dur-field         | 2000ms                            | field intensity and mode changes |
+| --ease-out-expo     | cubic-bezier(0.16, 1, 0.3, 1)     | reveals, hover                   |
+| --ease-hop          | cubic-bezier(0.56, 0, 0.35, 0.98) | page wipes                       |
+| --ease-inout-power3 | cubic-bezier(0.65, 0, 0.35, 1)    | Flip, layout changes             |
+| stagger             | 0.06s lines, 0.04s list items     | reveals                          |
 
 Choreography rules:
 
@@ -137,23 +137,23 @@ Choreography rules:
 
 Server Components by default. Each animated piece is an isolated client leaf.
 
-| Component | Responsibility | Depends on |
-|---|---|---|
-| `FieldCanvas` | persistent WebGL field, quality manager, theme uniforms | OGL, Tempus, field store |
-| `FieldController` | per-route intensity and mode, scroll mapping | field store, Lenis or native scroll |
-| `HeroMask` | h1, SVG mask, width-axis pointer logic, fallback dither | field store |
-| `SiteNav` | numbered nav, theme toggle, motion toggle, Cmd+K trigger | theme store |
-| `MarginIndex` | numbered index (home, work) and TOC (case study) | content |
-| `LineReveal` | SplitText masked reveal wrapper | GSAP, @gsap/react |
-| `Decode` | mono label decode on entry | shared 40ms ticker |
-| `WorkCard` | cover with dithered treatment, outcome title, meta line | next/image |
-| `CaseStudyLayout` | header block, sections, figures, tech notes, TOC | MDX components |
-| `LabFrame` | iframe-free live piece container with still fallback and Play | per-piece module |
-| `CommandMenu` | Cmd+K palette: goto, theme, motion, grid overlay, copy email | cmdk or Base UI |
-| `ThemeToggle` | dark and paper switch with designed transition (a wipe of the field) | theme store |
-| `Footer` | email with Copied state, Now and Colophon links, GitHub, LinkedIn | |
-| `GridOverlay` | baseline and column grid toggled from Cmd+K | |
-| `TypeTester` | colophon and Lab: sliders on wdth, opsz, wght of the site font | |
+| Component         | Responsibility                                                       | Depends on                          |
+| ----------------- | -------------------------------------------------------------------- | ----------------------------------- |
+| `FieldCanvas`     | persistent WebGL field, quality manager, theme uniforms              | OGL, Tempus, field store            |
+| `FieldController` | per-route intensity and mode, scroll mapping                         | field store, Lenis or native scroll |
+| `HeroMask`        | h1, SVG mask, width-axis pointer logic, fallback dither              | field store                         |
+| `SiteNav`         | numbered nav, theme toggle, motion toggle, Cmd+K trigger             | theme store                         |
+| `MarginIndex`     | numbered index (home, work) and TOC (case study)                     | content                             |
+| `LineReveal`      | SplitText masked reveal wrapper                                      | GSAP, @gsap/react                   |
+| `Decode`          | mono label decode on entry                                           | shared 40ms ticker                  |
+| `WorkCard`        | cover with dithered treatment, outcome title, meta line              | next/image                          |
+| `CaseStudyLayout` | header block, sections, figures, tech notes, TOC                     | MDX components                      |
+| `LabFrame`        | iframe-free live piece container with still fallback and Play        | per-piece module                    |
+| `CommandMenu`     | Cmd+K palette: goto, theme, motion, grid overlay, copy email         | cmdk or Base UI                     |
+| `ThemeToggle`     | dark and paper switch with designed transition (a wipe of the field) | theme store                         |
+| `Footer`          | email with Copied state, Now and Colophon links, GitHub, LinkedIn    |                                     |
+| `GridOverlay`     | baseline and column grid toggled from Cmd+K                          |                                     |
+| `TypeTester`      | colophon and Lab: sliders on wdth, opsz, wght of the site font       |                                     |
 
 Stores: a tiny Zustand store for `theme`, `motion`, `field` (mode, intensity, pointer). No global state for anything else.
 

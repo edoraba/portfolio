@@ -27,18 +27,18 @@ Data: 3 settembre 2026. Questo documento riassume i quattro report in `docs/rese
 
 ## 3. Stack raccomandato (report 03, versioni verificate su npm il 3 settembre 2026)
 
-| Livello | Scelta | Perché |
-|---|---|---|
-| Framework | Next.js 16.3.4, React 19.2.8, TypeScript 7 | È il tuo stack, è quello di Satus (darkroom.engineering), `cacheComponents` + `partialPrefetching` danno navigazioni istantanee, `<ViewTransition>` funziona senza configurazione |
-| Styling | Tailwind 4.3 per layout con token in `@theme`, CSS Modules per i componenti animati | Stesso contratto di Satus; i token sono anche variabili CSS animabili da GSAP |
-| Motion | GSAP 3.15 (gratis al 100% dal 3.13) con ScrollTrigger, SplitText, Flip via `@gsap/react` | Standard dei siti premiati; SplitText ha ARIA integrato |
-| Scroll | Lenis 1.3.26 opzionale, spento con reduced-motion, spento sulle pagine di lettura; Tempus come unico rAF | Lenis gira su scroll nativo, sticky e ancore funzionano |
-| 3D | Una sola scena: R3F 9.7 + WebGPURenderer con fallback WebGL2, oppure OGL per un singolo fragment shader | Lazy dopo LCP, poster, dpr cap, idle guard |
-| Contenuti | MDX nel repo tipizzato con Content Collections 0.15 | Git è il CMS; niente Sanity o Payload per cinque case study |
-| i18n | next-intl 4.14 con `[locale]` solo se serve la pagina /it | |
-| Qualità | Vitest 5, Playwright 1.62 + axe, Lighthouse CI con budget, bundle analyzer, `next/og`, sitemap, JSON-LD ProfilePage + Person, RSS, llms.txt | Sono le cose che un senior guarda nel repo |
-| Hosting | Cloudflare Workers via OpenNext 1.20 (piano 5$ per stare sotto il cap del Worker), Cloudflare DNS davanti | Vercel Hobby è solo non commerciale; Cloudflare Pages è in maintenance |
-| Analytics | Umami (MIT, cookieless) | Niente banner cookie |
+| Livello   | Scelta                                                                                                                                      | Perché                                                                                                                                                                            |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework | Next.js 16.3.4, React 19.2.8, TypeScript 7                                                                                                  | È il tuo stack, è quello di Satus (darkroom.engineering), `cacheComponents` + `partialPrefetching` danno navigazioni istantanee, `<ViewTransition>` funziona senza configurazione |
+| Styling   | Tailwind 4.3 per layout con token in `@theme`, CSS Modules per i componenti animati                                                         | Stesso contratto di Satus; i token sono anche variabili CSS animabili da GSAP                                                                                                     |
+| Motion    | GSAP 3.15 (gratis al 100% dal 3.13) con ScrollTrigger, SplitText, Flip via `@gsap/react`                                                    | Standard dei siti premiati; SplitText ha ARIA integrato                                                                                                                           |
+| Scroll    | Lenis 1.3.26 opzionale, spento con reduced-motion, spento sulle pagine di lettura; Tempus come unico rAF                                    | Lenis gira su scroll nativo, sticky e ancore funzionano                                                                                                                           |
+| 3D        | Una sola scena: R3F 9.7 + WebGPURenderer con fallback WebGL2, oppure OGL per un singolo fragment shader                                     | Lazy dopo LCP, poster, dpr cap, idle guard                                                                                                                                        |
+| Contenuti | MDX nel repo tipizzato con Content Collections 0.15                                                                                         | Git è il CMS; niente Sanity o Payload per cinque case study                                                                                                                       |
+| i18n      | next-intl 4.14 con `[locale]` solo se serve la pagina /it                                                                                   |                                                                                                                                                                                   |
+| Qualità   | Vitest 5, Playwright 1.62 + axe, Lighthouse CI con budget, bundle analyzer, `next/og`, sitemap, JSON-LD ProfilePage + Person, RSS, llms.txt | Sono le cose che un senior guarda nel repo                                                                                                                                        |
+| Hosting   | Cloudflare Workers via OpenNext 1.20 (piano 5$ per stare sotto il cap del Worker), Cloudflare DNS davanti                                   | Vercel Hobby è solo non commerciale; Cloudflare Pages è in maintenance                                                                                                            |
+| Analytics | Umami (MIT, cookieless)                                                                                                                     | Niente banner cookie                                                                                                                                                              |
 
 Alternativa onesta: Astro 7.3 con isole React, se contano più peso minimo e hosting statico gratis che mostrare React. Trade-off da saper raccontare: Next spedisce un runtime React su un sito quasi statico; `<ViewTransition>` è ancora canary sotto l'App Router; Lenis e ScrollSmoother si sovrappongono, Flip e ViewTransition si sovrappongono, GSAP e Motion si sovrappongono: uno per lavoro.
 
@@ -53,6 +53,7 @@ Template case study: titolo con esito, blocco header (cliente, anno, ruolo, team
 Copy: prima persona, verbi del fare, specifico, esito prima del processo, date ovunque, mai "AI" nella hero, il ruolo di socio come fatto in About e footer e mai come titolo, coordinamento descritto come pratica (review, convenzioni, spec) non come gerarchia. Lingua: inglese per tutto il sito, pagina /it condensata.
 
 Hero, tre opzioni:
+
 - A: "I design interfaces and then build them, end to end, from Figma to the database."
 - B: "I ship whole products: the design, the frontend, the backend, and the boring parts that keep them running."
 - C: "Designer by training, developer by choice. I build web products where the last ten percent is not optional."

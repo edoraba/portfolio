@@ -6,34 +6,34 @@ source_of_truth: app/globals.css (@theme). This file explains the tokens; the CS
 
 colors:
   dark:
-    canvas: "#0B0C0E"
-    surface: "#15171B"
-    surface-2: "#1C1F24"
-    ink: "#F2F2EF"
-    ink-muted: "#8B8E93"
-    hairline: "rgba(242,242,239,0.10)"
-    accent: "#7D93FF"
-    accent-ink: "#0B0C0E"
-    field-on: "#F2F2EF"
-    field-off: "#0B0C0E"
+    canvas: '#0B0C0E'
+    surface: '#15171B'
+    surface-2: '#1C1F24'
+    ink: '#F2F2EF'
+    ink-muted: '#8B8E93'
+    hairline: 'rgba(242,242,239,0.10)'
+    accent: '#7D93FF'
+    accent-ink: '#0B0C0E'
+    field-on: '#F2F2EF'
+    field-off: '#0B0C0E'
   light:
-    canvas: "#F1EDE4"
-    surface: "#E6E0D3"
-    surface-2: "#DDD6C6"
-    ink: "#141310"
-    ink-muted: "#6E685C"
-    hairline: "rgba(20,19,16,0.12)"
-    accent: "#1F3BFF"
-    accent-ink: "#F1EDE4"
-    field-on: "#141310"
-    field-off: "#F1EDE4"
+    canvas: '#F1EDE4'
+    surface: '#E6E0D3'
+    surface-2: '#DDD6C6'
+    ink: '#141310'
+    ink-muted: '#6E685C'
+    hairline: 'rgba(20,19,16,0.12)'
+    accent: '#1F3BFF'
+    accent-ink: '#F1EDE4'
+    field-on: '#141310'
+    field-off: '#F1EDE4'
   alternatives:
-    accent-phosphor-dark: "#E9FF6A"   # one-token swap, not default; fails contrast as text on paper
+    accent-phosphor-dark: '#E9FF6A' # one-token swap, not default; fails contrast as text on paper
 
 typography:
   families:
-    display-and-text: "Bricolage Grotesque, variable (opsz 12..96, wdth 75..100, wght 200..800), OFL, self-hosted"
-    mono: "Geist Mono, variable (wght 100..900), OFL, self-hosted"
+    display-and-text: 'Bricolage Grotesque, variable (opsz 12..96, wdth 75..100, wght 200..800), OFL, self-hosted'
+    mono: 'Geist Mono, variable (wght 100..900), OFL, self-hosted'
   display-xl:
     fontFamily: Bricolage Grotesque
     fontSize: clamp(4rem, 13vw, 14rem)

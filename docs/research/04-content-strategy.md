@@ -25,17 +25,17 @@ A note on evidence quality: the "statistics" quoted by portfolio-advice blogs (7
 
 ### 1.1 What the reference portfolios actually contain
 
-| Site | Nav / sections | Projects shown | Notes |
-|---|---|---|---|
-| rauno.me (Staff Design Engineer, Vercel) | Craft, Projects, History of Software Design, Field Notes, Devouring Details, archived years (2022, 2023) | 9 projects, title + year + link only | Home is a seven-line manifesto ("Make it fast ... Make it soulful ... Make it."), one sentence of identity. Craft page holds 60+ dated pieces. Photography exists as a grid. OS metaphor with dock and sounds. |
-| emilkowal.ski (Linear, ex Vercel) | Projects, Writing, Newsletter | 4 project cards (Sonner, Vaul, aiforui, animations.dev) | Intro: "I work on the Web team at Linear. I like to build things for designers and developers, think deeply about the user interface, how it looks, feels, behaves." Ten essays. No demos on the home page; the credibility comes from open source and writing. |
-| paco.me (Linear, ex Vercel) | Building, Projects, Writing, Now, Connect | 3 open-source projects | Intro: "Crafting interfaces. Building polished software and web experiences. Experimenting with magical details in user interfaces." Has a Now section that mixes philosophy and music. Single page. |
-| leerob.com | Bio, Notes, Blog | none as cards | Intro leads with "an engineer and writer". Career told parenthetically ("previously Cursor, Vercel"). Writing carries the site. |
-| brittanychiang.com | single page: About, Experience, Projects | 4 to 6 | Hero: builds "accessible, pixel-perfect experiences for the web". Timeline of roles with stack tags. Footer colophon quoted in section 6. |
-| delba.dev | single page: Work, Personal, About me | short lists with outcomes | Opens with a direct availability line: "I'm looking for my next role in developer education or technical video production." Result-led bullets ("millions of developers reached"). |
-| jesperlandberg.com (freelance design engineer) | Featured, Full index, newsletter, contact | 7 featured, full index | Hero states positioning plus proof: "Swedish design engineer, named Awwwards Independent of the Year in 2022 and 2024, building visually rich, motion-driven websites." Award count as a trust line. |
-| robbowen.digital (independent creative developer) | Home, Work, About, Writing | capability sections, 3 open-source releases | Work page is organised by themes ("Considered development", "Code Choreography") with client names inline (Aardman, UNHCR, RNLI, Honda). Footer in Welsh, dated MMXXVI. |
-| joshwcomeau.com | Category nav, courses, goodies, About | none | Sound toggle, dark mode, animated avatar. Educational site rather than a job-hunting portfolio, but the model for personality touches that do not feel gimmicky. |
+| Site                                              | Nav / sections                                                                                           | Projects shown                                          | Notes                                                                                                                                                                                                                                                           |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| rauno.me (Staff Design Engineer, Vercel)          | Craft, Projects, History of Software Design, Field Notes, Devouring Details, archived years (2022, 2023) | 9 projects, title + year + link only                    | Home is a seven-line manifesto ("Make it fast ... Make it soulful ... Make it."), one sentence of identity. Craft page holds 60+ dated pieces. Photography exists as a grid. OS metaphor with dock and sounds.                                                  |
+| emilkowal.ski (Linear, ex Vercel)                 | Projects, Writing, Newsletter                                                                            | 4 project cards (Sonner, Vaul, aiforui, animations.dev) | Intro: "I work on the Web team at Linear. I like to build things for designers and developers, think deeply about the user interface, how it looks, feels, behaves." Ten essays. No demos on the home page; the credibility comes from open source and writing. |
+| paco.me (Linear, ex Vercel)                       | Building, Projects, Writing, Now, Connect                                                                | 3 open-source projects                                  | Intro: "Crafting interfaces. Building polished software and web experiences. Experimenting with magical details in user interfaces." Has a Now section that mixes philosophy and music. Single page.                                                            |
+| leerob.com                                        | Bio, Notes, Blog                                                                                         | none as cards                                           | Intro leads with "an engineer and writer". Career told parenthetically ("previously Cursor, Vercel"). Writing carries the site.                                                                                                                                 |
+| brittanychiang.com                                | single page: About, Experience, Projects                                                                 | 4 to 6                                                  | Hero: builds "accessible, pixel-perfect experiences for the web". Timeline of roles with stack tags. Footer colophon quoted in section 6.                                                                                                                       |
+| delba.dev                                         | single page: Work, Personal, About me                                                                    | short lists with outcomes                               | Opens with a direct availability line: "I'm looking for my next role in developer education or technical video production." Result-led bullets ("millions of developers reached").                                                                              |
+| jesperlandberg.com (freelance design engineer)    | Featured, Full index, newsletter, contact                                                                | 7 featured, full index                                  | Hero states positioning plus proof: "Swedish design engineer, named Awwwards Independent of the Year in 2022 and 2024, building visually rich, motion-driven websites." Award count as a trust line.                                                            |
+| robbowen.digital (independent creative developer) | Home, Work, About, Writing                                                                               | capability sections, 3 open-source releases             | Work page is organised by themes ("Considered development", "Code Choreography") with client names inline (Aardman, UNHCR, RNLI, Honda). Footer in Welsh, dated MMXXVI.                                                                                         |
+| joshwcomeau.com                                   | Category nav, courses, goodies, About                                                                    | none                                                    | Sound toggle, dark mode, animated avatar. Educational site rather than a job-hunting portfolio, but the model for personality touches that do not feel gimmicky.                                                                                                |
 
 Patterns:
 
@@ -213,40 +213,40 @@ One tone note for the English copy: Italian professionals writing in English ten
 
 ## 5. Personal touches: what works in 2026 and what feels dated
 
-| Touch | Verdict | Evidence and reasoning |
-|---|---|---|
-| Photography | Keep only if the photos are genuinely his and good. | Rauno integrates a full-screen photo grid; reviewers praise it because it is sized well and clearly personal. A stock-looking "travel" grid reads as filler. |
-| Sketches and design process artifacts | Keep, inside case studies. | Hiring managers ask for "the messy middle". Sketches with captions are the cheapest way to show design thinking. |
-| 3D avatar hero | Skip. | 2026 trend pieces still praise "immersive 3D" but the curated galleries (Godly) favour restrained, typographic, editorial work, and the strongest design-engineer sites have none. A 3D avatar is the single most dated portfolio trope of 2021 to 2023. Edoardo's real 3D background is better shown as one crafted object in the Lab. |
-| Sound | Optional, off by default, subtle. | Rauno and Josh Comeau use interface sounds with a visible toggle and reviewers call it "really satisfying". Without a toggle it annoys. |
-| Timezone / local time / status | Keep, small. | "Turin, 14:32 local" in the footer or hero communicates remote-readiness in a glance. Keep it text, not a widget cluster. |
-| Now page | Keep, dated. | Derek Sivers' definition: what you would tell a friend you had not seen in a year. It is the natural home for the availability line and for "currently building". Update when things change; show the date. |
-| Uses page | Low value for hiring, cheap to add. | 934 sites on uses.tech; it is a community ritual, not a hiring signal. Fold a short "tools" list into the colophon instead of a full page. |
-| Reading list / bookshelf | Skip unless maintained. | Same failure mode as an abandoned blog. |
-| Spotify now-playing | Skip. | Widget culture from 2021 bento portfolios; reads as decoration. Paco lists music tastes in prose on the Now page, which is warmer and does not break. |
-| Bento grid home | Skip. | The 2023 to 2024 template look; recruiters now associate it with template sites. |
-| AI chatbot "ask me anything about Edoardo" | Skip. | Named as a 2026 trend by builder blogs, but it is gimmick territory for a person who wants to be judged on judgment about AI. |
-| Archived previous site versions | Keep. | Rauno links 2022 and 2023. It shows growth and craft over time. Plan for it from v1: a /2026 archive URL when v2 ships. |
-| Dark mode | Expected, not a feature. | Do it well; do not announce it. |
-| Guest book or comments | Skip. | Indie-web charm but maintenance and spam. |
+| Touch                                      | Verdict                                             | Evidence and reasoning                                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Photography                                | Keep only if the photos are genuinely his and good. | Rauno integrates a full-screen photo grid; reviewers praise it because it is sized well and clearly personal. A stock-looking "travel" grid reads as filler.                                                                                                                                                                            |
+| Sketches and design process artifacts      | Keep, inside case studies.                          | Hiring managers ask for "the messy middle". Sketches with captions are the cheapest way to show design thinking.                                                                                                                                                                                                                        |
+| 3D avatar hero                             | Skip.                                               | 2026 trend pieces still praise "immersive 3D" but the curated galleries (Godly) favour restrained, typographic, editorial work, and the strongest design-engineer sites have none. A 3D avatar is the single most dated portfolio trope of 2021 to 2023. Edoardo's real 3D background is better shown as one crafted object in the Lab. |
+| Sound                                      | Optional, off by default, subtle.                   | Rauno and Josh Comeau use interface sounds with a visible toggle and reviewers call it "really satisfying". Without a toggle it annoys.                                                                                                                                                                                                 |
+| Timezone / local time / status             | Keep, small.                                        | "Turin, 14:32 local" in the footer or hero communicates remote-readiness in a glance. Keep it text, not a widget cluster.                                                                                                                                                                                                               |
+| Now page                                   | Keep, dated.                                        | Derek Sivers' definition: what you would tell a friend you had not seen in a year. It is the natural home for the availability line and for "currently building". Update when things change; show the date.                                                                                                                             |
+| Uses page                                  | Low value for hiring, cheap to add.                 | 934 sites on uses.tech; it is a community ritual, not a hiring signal. Fold a short "tools" list into the colophon instead of a full page.                                                                                                                                                                                              |
+| Reading list / bookshelf                   | Skip unless maintained.                             | Same failure mode as an abandoned blog.                                                                                                                                                                                                                                                                                                 |
+| Spotify now-playing                        | Skip.                                               | Widget culture from 2021 bento portfolios; reads as decoration. Paco lists music tastes in prose on the Now page, which is warmer and does not break.                                                                                                                                                                                   |
+| Bento grid home                            | Skip.                                               | The 2023 to 2024 template look; recruiters now associate it with template sites.                                                                                                                                                                                                                                                        |
+| AI chatbot "ask me anything about Edoardo" | Skip.                                               | Named as a 2026 trend by builder blogs, but it is gimmick territory for a person who wants to be judged on judgment about AI.                                                                                                                                                                                                           |
+| Archived previous site versions            | Keep.                                               | Rauno links 2022 and 2023. It shows growth and craft over time. Plan for it from v1: a /2026 archive URL when v2 ships.                                                                                                                                                                                                                 |
+| Dark mode                                  | Expected, not a feature.                            | Do it well; do not announce it.                                                                                                                                                                                                                                                                                                         |
+| Guest book or comments                     | Skip.                                               | Indie-web charm but maintenance and spam.                                                                                                                                                                                                                                                                                               |
 
 ---
 
 ## 6. Trust signals for a solo person
 
-| Signal | Use it? | How, for Edoardo |
-|---|---|---|
-| Client logos | Not as a wall. | A logo grid reads as an agency and confuses recruiters scanning for one engineer (SlateGit, Keming). Name clients inline in case studies and in one sentence on About ("work for a Formula 1 supplier, a funeral home, a truck dealer and a fitness platform" is more memorable than six logos). |
-| Testimonials | Two or three short quotes, inside case studies. | Freelance advice says testimonials build trust fastest; job-hunting advice says carousels look like a studio. Compromise: one quote per case study from a client or colleague, with name and role, placed near the outcome. Ask the Refattura users and the traceability client. |
-| GitHub activity | Link, and curate. | Pin the plugin, Envergo, this portfolio. Write READMEs structured around the problem (TechInterview.org: "lead with the README"). Do not embed a contribution graph; agency work happens in private repos and the graph will undersell him. |
-| Talks and writing | Writing yes, three pieces at launch. | Every strong design-engineer site has essays. Suggested first three: the spec-driven workflow inside a small team, what the HTML to Figma mapping taught about both tools, how Refattura's extraction accuracy is measured. Talks: only if real. |
-| Open source | The Figma plugin is the asset. | Show community install count if it can be read from the Figma page; link to the listing; show the source if it is public. |
-| Lighthouse scores | Yes, once, in context. | "100 in all four categories" belongs in the Athena entry with a link to a live PageSpeed run. Also make the portfolio itself score 100 and say so in the colophon, since claiming performance on a slow site is fatal. |
-| Colophon | Yes. | Brittany's footer is the minimal model: "Loosely designed in Figma and coded in Visual Studio Code by yours truly. Built with Next.js and Tailwind CSS, deployed with Vercel. All text is set in the Inter typeface." Maggie Appleton's page is the maximal model: stack, typography, content workflow, custom components, with opinions. For a design engineer, include the design decisions (type scale, colour system, motion rules) and one honest paragraph on how AI tools were used to build the site. |
-| Changelog / site version | Lightweight. | A dated list of notable changes at the bottom of the colophon ("2026-09: v1 launched; 2026-11: added Lab pieces"). Do not run semver on a personal site; it looks precious. |
-| Design source files | Yes, this is a differentiator. | Publish the Figma file of the site (or an embed) in the colophon. Almost no developer does this, and it proves the designer half in thirty seconds. |
-| Awards | If any, one line in the style of Jesper. Otherwise skip. | |
-| Education | One line in About. | IAAD plus the engineering years, as a story beat, not a credentials block. |
+| Signal                   | Use it?                                                  | How, for Edoardo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Client logos             | Not as a wall.                                           | A logo grid reads as an agency and confuses recruiters scanning for one engineer (SlateGit, Keming). Name clients inline in case studies and in one sentence on About ("work for a Formula 1 supplier, a funeral home, a truck dealer and a fitness platform" is more memorable than six logos).                                                                                                                                                                                                              |
+| Testimonials             | Two or three short quotes, inside case studies.          | Freelance advice says testimonials build trust fastest; job-hunting advice says carousels look like a studio. Compromise: one quote per case study from a client or colleague, with name and role, placed near the outcome. Ask the Refattura users and the traceability client.                                                                                                                                                                                                                              |
+| GitHub activity          | Link, and curate.                                        | Pin the plugin, Envergo, this portfolio. Write READMEs structured around the problem (TechInterview.org: "lead with the README"). Do not embed a contribution graph; agency work happens in private repos and the graph will undersell him.                                                                                                                                                                                                                                                                   |
+| Talks and writing        | Writing yes, three pieces at launch.                     | Every strong design-engineer site has essays. Suggested first three: the spec-driven workflow inside a small team, what the HTML to Figma mapping taught about both tools, how Refattura's extraction accuracy is measured. Talks: only if real.                                                                                                                                                                                                                                                              |
+| Open source              | The Figma plugin is the asset.                           | Show community install count if it can be read from the Figma page; link to the listing; show the source if it is public.                                                                                                                                                                                                                                                                                                                                                                                     |
+| Lighthouse scores        | Yes, once, in context.                                   | "100 in all four categories" belongs in the Athena entry with a link to a live PageSpeed run. Also make the portfolio itself score 100 and say so in the colophon, since claiming performance on a slow site is fatal.                                                                                                                                                                                                                                                                                        |
+| Colophon                 | Yes.                                                     | Brittany's footer is the minimal model: "Loosely designed in Figma and coded in Visual Studio Code by yours truly. Built with Next.js and Tailwind CSS, deployed with Vercel. All text is set in the Inter typeface." Maggie Appleton's page is the maximal model: stack, typography, content workflow, custom components, with opinions. For a design engineer, include the design decisions (type scale, colour system, motion rules) and one honest paragraph on how AI tools were used to build the site. |
+| Changelog / site version | Lightweight.                                             | A dated list of notable changes at the bottom of the colophon ("2026-09: v1 launched; 2026-11: added Lab pieces"). Do not run semver on a personal site; it looks precious.                                                                                                                                                                                                                                                                                                                                   |
+| Design source files      | Yes, this is a differentiator.                           | Publish the Figma file of the site (or an embed) in the colophon. Almost no developer does this, and it proves the designer half in thirty seconds.                                                                                                                                                                                                                                                                                                                                                           |
+| Awards                   | If any, one line in the style of Jesper. Otherwise skip. |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Education                | One line in About.                                       | IAAD plus the engineering years, as a story beat, not a credentials block.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 ### 6.1 Presenting "partner and coordinator of a team" without sounding managerial
 
@@ -317,7 +317,7 @@ Title with the outcome when possible
 Header block (table or definition list)
   Client / Product     Refattura (Redergo product) | Confidential client, motorsport
   Year                 2023 to present
-  Role                 Design, frontend, backend, database, deployment, SEO (solo) 
+  Role                 Design, frontend, backend, database, deployment, SEO (solo)
                        or list who did what
   Team                 e.g. me + 1 backend developer + the client's operations lead
   Stack                Next.js, TypeScript, NestJS, PostgreSQL, Prisma, Vercel
@@ -449,6 +449,7 @@ Three essays at launch, 800 to 1500 words each, practical and opinionated:
 ## 9. Sources
 
 Portfolio sites studied directly:
+
 - https://rauno.me/ , https://rauno.me/craft , https://rauno.me/projects
 - https://emilkowal.ski/
 - https://paco.me/
@@ -468,6 +469,7 @@ Portfolio sites studied directly:
 - https://ui.land/interviews/rauno-freiberg
 
 Hiring manager and reviewer perspectives:
+
 - https://blog.opendoorscareers.com/p/how-recruiters-and-hiring-managers-actually-look-at-your-portfolio
 - https://blog.opendoorscareers.com/p/how-to-write-a-strong-case-study-for-your-portfolio-in-2025-a14b
 - https://www.greatfrontend.com/blog/frontend-developer-portfolio
@@ -478,16 +480,19 @@ Hiring manager and reviewer perspectives:
 - https://slategit.com/blog/developer-portfolio-examples-that-got-hired (summary via search; page blocked direct fetch)
 
 NDA and confidential work:
+
 - https://uxplaybook.org/articles/ux-design-portfolio-nda-guide-2026
 - https://ixdf.org/literature/article/how-to-handle-non-disclosure-agreements-ndas-when-you-write-your-ux-case-study
 - https://medium.com/design-bootcamp/tips-for-creating-a-design-portfolio-when-your-work-is-under-nda-e752088d015e
 
 Design engineer role:
+
 - https://vercel.com/blog/design-engineering-at-vercel
 - https://www.paraform.com/blog/what-is-a-design-engineer-and-how-they-re-different-from-product-engineers
 - https://uithings.com/design-engineering
 
 AI-assisted work and credibility:
+
 - https://www.techinterview.org/post/3233475399/ai-portfolio-built-with-ai-2026-interviews/
 - https://www.developersdigest.tech/blog/ai-developer-workflow-2026
 - https://developer.microsoft.com/blog/spec-driven-development-ai-native-engineering/
@@ -495,12 +500,14 @@ AI-assisted work and credibility:
 - https://medium.com/@codegrey/the-new-ai-aware-coding-interview-how-to-prepare-in-2026-6a207d94b23a
 
 Italian market and language:
+
 - https://aulab.it/blog/come-creare-un-buon-portfolio-da-web-developer
 - https://www.hostinger.com/it/tutorial/portfolio-per-sviluppatori-web/
 - https://jobtrackr.it/blog/it-it-job-market-april-2026
 - https://strapi.io/blog/multilingual-seo-best-practices
 
 Trends and personal touches:
+
 - https://blog.tomaszgil.me/rebuilding-my-personal-website-2025-edition
 - https://elements.envato.com/learn/portfolio-trends
 - https://www.socialscript.in/blog/design-inspiration-sites-for-2026 (on Godly's curation criteria)
