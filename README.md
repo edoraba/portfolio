@@ -1,11 +1,32 @@
 # Edoardo Baravaglio, personal site
 
-Work in progress. This repository will hold the source of my personal portfolio: a frontend developer with a design degree, building web products end to end in Turin, Italy.
+Source of my personal portfolio. Frontend developer with a design degree, building web products end to end in Turin, Italy.
 
-The site does not exist yet. What is here today:
+## Stack
 
-- `docs/research/` the research that precedes the design: award-winning developer portfolios, reference sites, the 2026 stack landscape, and a content strategy. Written in September 2026.
-- `docs/design-references/` a handful of `DESIGN.md` files from public sites (MIT, via VoltAgent's awesome-design-md) used as format and calibration references, not as identity.
-- `.claude/` agent skills used while building: impeccable, design-taste-frontend, web-design-guidelines, plus a small local skill describing the DESIGN.md convention.
+Next.js 16 (App Router, React 19, React Compiler, Cache Components), TypeScript, Tailwind CSS 4 with every token declared in `@theme` plus CSS Modules for animated components, MDX typed with Content Collections, GSAP and Lenis for motion, one WebGL surface rendered with OGL. Vitest, Playwright with axe, Lighthouse CI. Deployable to Cloudflare Workers through OpenNext or to Vercel.
 
-Stack, design system and build notes will land here as the project moves from research to spec to code.
+Design system: `DESIGN.md` (tokens and rules) and `docs/superpowers/specs/2026-09-03-portfolio-design.md` (spec). Product truth: `PRODUCT.md`. Research behind the direction: `docs/research/`. Implementation plans: `docs/superpowers/plans/`.
+
+## Run
+
+```bash
+pnpm install
+pnpm dev
+```
+
+The production build blocks on `TODO(edoardo)` markers in content until every fact is confirmed. `ALLOW_TODO=1 pnpm build` builds a preview anyway.
+
+## Verify
+
+```bash
+pnpm lint && pnpm typecheck && pnpm test
+ALLOW_TODO=1 pnpm build && pnpm test:e2e
+pnpm exec lhci autorun
+```
+
+Unit tests also enforce two house rules: every colour in `DESIGN.md` exists in `app/globals.css`, and no em-dash or en-dash appears anywhere in code, content or docs.
+
+## License
+
+Code is MIT. Text, images and case study content under `content/` and `public/images/` are all rights reserved.
