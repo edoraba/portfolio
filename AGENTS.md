@@ -16,3 +16,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Conventional commits, no co-author trailers.
 - Facts about Edoardo come only from `content/` and `PRODUCT.md`. Unknown facts are `TODO(edoardo)`. Never mention LoL Brain.
 - After any UI change, open the dev server in the in-app browser and check 1440x900 and 390x844 in both themes before reporting.
+- Everything is mobile responsive: design for 390px first, verify at 390x844, 768x1024 and 1440x900 in both themes. No horizontal overflow, touch targets at least 24px, hover states have a touch equivalent.
+- Before building a component, check `docs/research/05-components-to-borrow.md` for the reference implementation to follow; borrow only from permissively licensed sources and re-implement on our tokens.

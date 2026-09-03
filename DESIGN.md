@@ -126,6 +126,8 @@ field:
 
 ## Layout
 
+- Mobile first. Every component is designed at 390px and verified at 390x844, 768x1024 and 1440x900 in both themes. No horizontal overflow, touch targets at least 24px, every hover state has a touch equivalent (tap, visible by default, or irrelevant).
+
 - 12-column grid, 24px gutters, max 1400px, page padding clamp(16px, 4vw, 64px).
 - Desktop (1024px and up): the numbered index lives in the right margin on home and /work, and is the table of contents on case studies. Below 1024px it collapses into the flow above the content it indexes.
 - Sections are separated by space and one hairline, never by cards. Lab tiles are the only cards: surface step plus hairline, radius 0.

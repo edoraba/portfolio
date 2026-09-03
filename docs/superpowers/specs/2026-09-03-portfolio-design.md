@@ -199,6 +199,7 @@ Content that must be confirmed by Edoardo before publish: NDA scope for traceabi
 7. Both themes reviewed by Claude in the in-app browser at 1440x900 and 390x844 for every route before a phase is called complete, with screenshots. This is a standing rule from Edoardo.
 8. `TODO(edoardo)` count is zero in production content.
 9. The public repo README explains stack rationale, architecture, budgets and how to run.
+10. Fully mobile responsive: every route verified at 390x844 and 768x1024 in both themes, no horizontal overflow (Playwright), touch targets at least 24px (axe), hover-only interactions have a touch or visible equivalent.
 
 ## 11. Error handling and degraded states
 
