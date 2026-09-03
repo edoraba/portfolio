@@ -509,3 +509,8 @@ html[data-fx='negative'] .page {
 .toc__item--on a {
   border-left-color: var(--accent);
 }
+
+/* No transitions during the first frames: the theme attribute lands before anything can animate. */
+html.no-transitions * {
+  transition: none !important;
+}

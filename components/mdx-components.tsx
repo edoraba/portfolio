@@ -4,11 +4,9 @@ import { LineReveal } from './line-reveal'
 
 const components = {
   h2: ({ children, ...p }: ComponentProps<'h2'>) => (
-    <h2 className="mt-block scroll-mt-24 headline" {...p}>
-      <LineReveal as="span" className="block">
-        {children}
-      </LineReveal>
-    </h2>
+    <LineReveal as="h2" className="mt-block scroll-mt-24 headline" {...p}>
+      {children}
+    </LineReveal>
   ),
   h3: (p: ComponentProps<'h3'>) => <h3 className="mt-10 text-body font-medium" {...p} />,
   p: (p: ComponentProps<'p'>) => <p className="mt-5 measure text-ink-muted" {...p} />,
@@ -21,13 +19,9 @@ const components = {
       {...p}
     />
   ),
-  a: ({ className, ...p }: ComponentProps<'a'>) =>
-    className?.includes('heading-link') ? (
-      // Heading anchors (rehype-autolink-headings) keep the heading's own colour.
-      <a className="text-inherit no-underline" {...p} />
-    ) : (
-      <a className="text-accent underline-offset-4 hover:underline" {...p} />
-    ),
+  a: (p: ComponentProps<'a'>) => (
+    <a className="text-accent underline-offset-4 hover:underline" {...p} />
+  ),
   figure: (p: ComponentProps<'figure'>) => <figure className="mt-block" {...p} />,
   figcaption: (p: ComponentProps<'figcaption'>) => (
     <figcaption className="mt-3 label text-ink-muted" {...p} />

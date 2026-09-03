@@ -1,6 +1,5 @@
 import { defineCollection, defineConfig } from '@content-collections/core'
 import { compileMDX } from '@content-collections/mdx'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import GithubSlugger from 'github-slugger'
@@ -8,10 +7,7 @@ import { z } from 'zod'
 
 const mdxOptions: Parameters<typeof compileMDX>[2] = {
   remarkPlugins: [remarkGfm],
-  rehypePlugins: [
-    rehypeSlug,
-    [rehypeAutolinkHeadings, { behavior: 'wrap', properties: { className: ['heading-link'] } }],
-  ],
+  rehypePlugins: [rehypeSlug],
 }
 
 const slugOf = (p: string) => p.replace(/\.mdx$/, '')

@@ -97,6 +97,8 @@ void main() {
   pc.x *= uAspect;
   float dist = distance(p, pc);
   float near = (1.0 - smoothstep(0.0, 0.45, dist)) * uPointerStrength;
+  // Behind the footer the field is texture, not a spotlight: keep the pointer light faint.
+  if (uMode == 1) near *= 0.2;
   d = d * (0.6 + 0.4 * near) + near * 0.35;
 
   // Floor keeps the headline legible, intensity fades the whole field.

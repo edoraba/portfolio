@@ -42,9 +42,10 @@ test('theme toggle persists across reload', async ({ page }) => {
   await page.goto('/')
   const html = page.locator('html')
   const before = await html.getAttribute('data-theme')
-  await page.getByRole('button', { name: /Switch to/ }).click()
+  await page.getByRole('switch', { name: 'Theme' }).click()
+  // The switch applies the theme inside a view transition, so poll instead of reading at once.
+  await expect(html).not.toHaveAttribute('data-theme', before!)
   const after = await html.getAttribute('data-theme')
-  expect(after).not.toBe(before)
   await page.reload()
   await expect(html).toHaveAttribute('data-theme', after!)
 })

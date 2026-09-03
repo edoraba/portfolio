@@ -37,7 +37,6 @@ export function decodeFrame(final: string, step: number, steps: number, random =
 
 export function decode(el: HTMLElement, final: string, steps = 12): () => void {
   start()
-  el.setAttribute('aria-label', final)
   el.style.minWidth = `${el.getBoundingClientRect().width}px`
   let i = 0
   const tick = () => {
