@@ -1,0 +1,40 @@
+{
+  "name": "edoraba-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "prebuild": "node scripts/check-content.mjs",
+    "start": "next start",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
