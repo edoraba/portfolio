@@ -5,11 +5,14 @@ import { MarginIndex } from '@/components/margin-index'
 import { WorkList } from '@/components/work-list'
 import { featuredWorks, labs, writings } from '@/lib/content'
 import { site } from '@/lib/site'
+import { PageTransition } from '@/components/page-transition'
+import { SmoothScroll } from '@/components/smooth-scroll'
 
 export default function Home() {
   const four = featuredWorks.slice(0, 4)
   return (
-    <>
+    <PageTransition>
+      <SmoothScroll />
       <section className="site-container grid min-h-[80dvh] content-between page-x pt-8 pb-12 lg:grid-cols-[1fr_18rem] lg:gap-12">
         <div className="self-end">
           <HeroMask />
@@ -76,6 +79,6 @@ export default function Home() {
           </ul>
         </div>
       </section>
-    </>
+    </PageTransition>
   )
 }

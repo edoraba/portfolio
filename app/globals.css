@@ -247,3 +247,85 @@ html.js .reveal {
 .reveal .line {
   will-change: transform;
 }
+
+/* Page transitions (React ViewTransition classes). The header and the field never move. */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-group(site-header),
+::view-transition-group(field-canvas) {
+  animation: none;
+}
+::view-transition-old(site-header),
+::view-transition-old(field-canvas) {
+  display: none;
+}
+::view-transition-new(site-header),
+::view-transition-new(field-canvas) {
+  animation: none;
+}
+::view-transition-old(.vt-fade-out) {
+  animation: 300ms var(--ease-out-expo) both vt-fade reverse;
+}
+::view-transition-new(.vt-fade) {
+  animation: 200ms var(--ease-out-expo) both vt-fade;
+}
+::view-transition-new(.vt-wipe-up) {
+  animation: 1000ms var(--ease-hop) both vt-wipe-up;
+}
+::view-transition-new(.vt-wipe-down) {
+  animation: 1000ms var(--ease-hop) both vt-wipe-down;
+}
+::view-transition-group(.morph) {
+  animation-duration: 600ms;
+  animation-timing-function: var(--ease-hop);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-blur;
+}
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes vt-wipe-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes vt-wipe-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes vt-blur {
+  30% {
+    filter: blur(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 150ms !important;
+    animation-name: vt-fade !important;
+  }
+}
+html[data-motion='reduced'] ::view-transition-old(*),
+html[data-motion='reduced'] ::view-transition-new(*),
+html[data-motion='reduced'] ::view-transition-group(*) {
+  animation-duration: 150ms !important;
+  animation-name: vt-fade !important;
+}
+.field-canvas {
+  view-transition-name: field-canvas;
+}

@@ -2,12 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/page-header'
 import { writings } from '@/lib/content'
+import { PageTransition } from '@/components/page-transition'
 
 export const metadata: Metadata = { title: 'Writing' }
 
 export default function WritingPage() {
   return (
-    <>
+    <PageTransition>
       <PageHeader
         title="Writing"
         lede="Notes on building products, type and working with agents."
@@ -38,6 +39,6 @@ export default function WritingPage() {
           ))}
         </ol>
       )}
-    </>
+    </PageTransition>
   )
 }

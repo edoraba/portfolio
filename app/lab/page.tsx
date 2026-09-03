@@ -2,12 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/page-header'
 import { labs } from '@/lib/content'
+import { PageTransition } from '@/components/page-transition'
 
 export const metadata: Metadata = { title: 'Lab' }
 
 export default function LabPage() {
   return (
-    <>
+    <PageTransition>
       <PageHeader title="Lab" lede="Small live pieces, dated. Most come from real work." />
       <ul className="site-container mt-16 grid gap-px bg-hairline page-x md:grid-cols-2 lg:grid-cols-3">
         {labs.map((l) => (
@@ -23,6 +24,6 @@ export default function LabPage() {
           </li>
         ))}
       </ul>
-    </>
+    </PageTransition>
   )
 }

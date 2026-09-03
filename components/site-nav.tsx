@@ -7,7 +7,10 @@ import { ThemeToggle } from './theme-toggle'
 // Below sm the name collapses to the monogram so the four labelled items still fit on one line.
 export function SiteNav() {
   return (
-    <header className="site-container flex h-16 items-center justify-between gap-4 page-x">
+    <header
+      className="site-container flex h-16 items-center justify-between gap-4 page-x"
+      style={{ viewTransitionName: 'site-header' }}
+    >
       <Link
         href="/"
         aria-label={site.name}
@@ -26,6 +29,7 @@ export function SiteNav() {
             <li key={item.href}>
               <Link
                 href={item.href}
+                transitionTypes={['nav-forward']}
                 className="inline-flex min-h-6 min-w-6 items-center py-2 label text-ink-muted transition-colors duration-200 hover:text-ink"
               >
                 <Decode className="text-accent">{item.n}</Decode>

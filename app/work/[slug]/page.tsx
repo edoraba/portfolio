@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { ViewTransition } from 'react'
 import { Decode } from '@/components/decode'
 import { Mdx } from '@/components/mdx-components'
+import { PageTransition } from '@/components/page-transition'
 import { workBySlug, works } from '@/lib/content'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -29,33 +32,44 @@ export default async function WorkDetail({ params }: Props) {
     ['Status', w.status],
   ]
   return (
-    <article className="site-container page-x pt-16 md:pt-24">
-      <p className="label text-accent">{String(w.order).padStart(2, '0')}</p>
-      <h1 className="mt-4 display">{w.title}</h1>
-      <p className="mt-8 measure text-ink-muted">{w.summary}</p>
-      <dl className="mt-12 grid gap-y-4 py-6 hairline-b hairline-t md:grid-cols-3">
-        {meta.map(([k, v]) => (
-          <div key={k}>
-            <dt className="label text-ink-muted">
-              <Decode>{k}</Decode>
-            </dt>
-            <dd className="mt-1">{v}</dd>
-          </div>
-        ))}
-        {Object.entries(w.links).map(([k, href]) => (
-          <div key={k}>
-            <dt className="label text-ink-muted">{k}</dt>
-            <dd className="mt-1">
-              <a href={href} className="text-accent">
-                {href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-              </a>
-            </dd>
-          </div>
-        ))}
-      </dl>
-      <div className="mt-8">
-        <Mdx code={w.body} />
-      </div>
-    </article>
+    <PageTransition>
+      <article className="site-container page-x pt-16 md:pt-24">
+        <Link
+          href="/work"
+          transitionTypes={['nav-back']}
+          className="label text-ink-muted hover:text-ink"
+        >
+          Back to work
+        </Link>
+        <p className="mt-8 label text-accent">{String(w.order).padStart(2, '0')}</p>
+        <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
+          <h1 className="mt-4 display">{w.title}</h1>
+        </ViewTransition>
+        <p className="mt-8 measure text-ink-muted">{w.summary}</p>
+        <dl className="mt-12 grid gap-y-4 py-6 hairline-b hairline-t md:grid-cols-3">
+          {meta.map(([k, v]) => (
+            <div key={k}>
+              <dt className="label text-ink-muted">
+                <Decode>{k}</Decode>
+              </dt>
+              <dd className="mt-1">{v}</dd>
+            </div>
+          ))}
+          {Object.entries(w.links).map(([k, href]) => (
+            <div key={k}>
+              <dt className="label text-ink-muted">{k}</dt>
+              <dd className="mt-1">
+                <a href={href} className="text-accent">
+                  {href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                </a>
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <div className="mt-8">
+          <Mdx code={w.body} />
+        </div>
+      </article>
+    </PageTransition>
   )
 }
