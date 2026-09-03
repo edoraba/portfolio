@@ -103,6 +103,7 @@ motion:
   dur-reveal: 800ms
   dur-wipe: 1200ms
   dur-field: 2000ms
+  ease-editorial: cubic-bezier(0.625, 0.05, 0, 1)
   ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1)
   ease-hop: cubic-bezier(0.56, 0, 0.35, 0.98)
   ease-inout-power3: cubic-bezier(0.65, 0, 0.35, 1)
