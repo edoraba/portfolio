@@ -92,7 +92,7 @@ Convergent structure across GreatFrontend (frontend-specific), Open Doors Career
 - Robb Owen organises work by capability themes and drops client names inline instead of using a logo wall.
 - Delba leads every item with the outcome and a link, no process narrative at all; the audience (developer education) reads results.
 
-For Edoardo the right hybrid is: narrative case studies for product work (Refattura, traceability, Redergo Sales), outcome-led short entries for sites and internal tools, a public artifact with numbers for the Figma plugin, and a developer-facing "tech notes" layer for LoL Brain.
+For Edoardo the right hybrid is: narrative case studies for product work (Refattura, traceability, Redergo Sales), outcome-led short entries for sites and internal tools, a public artifact with numbers for the Figma plugin, and a developer-facing "tech notes" layer for the internal tools with public source.
 
 ### 2.3 Showing NDA work honestly
 
