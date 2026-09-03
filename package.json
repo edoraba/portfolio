@@ -15,11 +15,13 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "content-collections build && next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "prepare": "husky"
+    "prepare": "husky",
+    "content": "content-collections build",
+    "pretest": "content-collections build"
   },
   "dependencies": {
     "next": "16.3.4",
@@ -31,6 +33,7 @@
     "@axe-core/playwright": "4.13.0",
     "@commitlint/cli": "21.2.2",
     "@commitlint/config-conventional": "21.2.2",
+    "@content-collections/cli": "0.1.9",
     "@content-collections/core": "0.15.2",
     "@content-collections/mdx": "0.2.2",
     "@content-collections/next": "0.2.11",
