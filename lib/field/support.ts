@@ -1,6 +1,9 @@
+import { isReduced } from '@/lib/motion/store'
+
 // Feature detection for the field. Runs on the client only.
+// Motion preference comes from the site store (OS setting or the visible toggle).
 export function prefersReducedMotion(): boolean {
-  return typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
+  return isReduced()
 }
 
 const SOFTWARE = /swiftshader|llvmpipe|softpipe|software|mesa offscreen|microsoft basic render/i

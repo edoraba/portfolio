@@ -1,8 +1,15 @@
 import { MDXContent } from '@content-collections/mdx/react'
 import type { ComponentProps } from 'react'
+import { LineReveal } from './line-reveal'
 
 const components = {
-  h2: (p: ComponentProps<'h2'>) => <h2 className="mt-block scroll-mt-24 headline" {...p} />,
+  h2: ({ children, ...p }: ComponentProps<'h2'>) => (
+    <h2 className="mt-block scroll-mt-24 headline" {...p}>
+      <LineReveal as="span" className="block">
+        {children}
+      </LineReveal>
+    </h2>
+  ),
   h3: (p: ComponentProps<'h3'>) => <h3 className="mt-10 text-body font-medium" {...p} />,
   p: (p: ComponentProps<'p'>) => <p className="mt-5 measure text-ink-muted" {...p} />,
   ul: (p: ComponentProps<'ul'>) => (

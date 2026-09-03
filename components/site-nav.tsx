@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { navItems, site } from '@/lib/site'
+import { Decode } from './decode'
 import { ThemeToggle } from './theme-toggle'
 
 // Every interactive element in the bar is at least 24px in both dimensions (WCAG 2.5.8).
@@ -27,7 +28,7 @@ export function SiteNav() {
                 href={item.href}
                 className="inline-flex min-h-6 min-w-6 items-center py-2 label text-ink-muted transition-colors duration-200 hover:text-ink"
               >
-                <span className="text-accent">{item.n}</span>
+                <Decode className="text-accent">{item.n}</Decode>
                 <span className="ml-1">{item.label}</span>
               </Link>
             </li>

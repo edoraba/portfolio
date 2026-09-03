@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { Decode } from '@/components/decode'
 import { Mdx } from '@/components/mdx-components'
 import { workBySlug, works } from '@/lib/content'
 
@@ -35,7 +36,9 @@ export default async function WorkDetail({ params }: Props) {
       <dl className="mt-12 grid gap-y-4 py-6 hairline-b hairline-t md:grid-cols-3">
         {meta.map(([k, v]) => (
           <div key={k}>
-            <dt className="label text-ink-muted">{k}</dt>
+            <dt className="label text-ink-muted">
+              <Decode>{k}</Decode>
+            </dt>
             <dd className="mt-1">{v}</dd>
           </div>
         ))}

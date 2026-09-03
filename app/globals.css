@@ -238,3 +238,12 @@
     transition: none;
   }
 }
+
+/* Masked line reveals: hidden only when JS runs, until GSAP splits and animates. */
+html.js .reveal {
+  visibility: hidden;
+  text-wrap: initial;
+}
+.reveal .line {
+  will-change: transform;
+}
