@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { Footer } from '@/components/footer'
+import { SiteNav } from '@/components/site-nav'
+import { SkipLink } from '@/components/skip-link'
 import { fontClassNames } from '@/lib/fonts'
 import { themeScript } from '@/lib/theme-script'
 import './globals.css'
@@ -17,7 +20,12 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <Script id="theme" strategy="beforeInteractive">
           {themeScript}
         </Script>
-        {children}
+        <SkipLink />
+        <SiteNav />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )
