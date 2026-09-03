@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    // Project ignores: agent tooling, docs, generated content.
+    '.claude/**',
+    'docs/**',
+    '.content-collections/**',
   ]),
 ])
 

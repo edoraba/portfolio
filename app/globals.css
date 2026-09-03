@@ -1,26 +1,192 @@
 @import 'tailwindcss';
 
+/* Runtime tokens. Dark is the brand default; light is a complete second world.
+   DESIGN.md explains these values; tests/unit/tokens.test.ts keeps them in sync. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas: #0b0c0e;
+  --surface: #15171b;
+  --surface-2: #1c1f24;
+  --ink: #f2f2ef;
+  --ink-muted: #8b8e93;
+  --hairline: rgba(242, 242, 239, 0.1);
+  --accent: #7d93ff;
+  --accent-ink: #0b0c0e;
+  --field-on: #f2f2ef;
+  --field-off: #0b0c0e;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme='light'] {
+  --canvas: #f1ede4;
+  --surface: #e6e0d3;
+  --surface-2: #ddd6c6;
+  --ink: #141310;
+  --ink-muted: #6e685c;
+  --hairline: rgba(20, 19, 16, 0.12);
+  --accent: #1f3bff;
+  --accent-ink: #f1ede4;
+  --field-on: #141310;
+  --field-off: #f1ede4;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* No-JS fallback: follow the OS when no explicit theme was stamped. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --canvas: #f1ede4;
+    --surface: #e6e0d3;
+    --surface-2: #ddd6c6;
+    --ink: #141310;
+    --ink-muted: #6e685c;
+    --hairline: rgba(20, 19, 16, 0.12);
+    --accent: #1f3bff;
+    --accent-ink: #f1ede4;
+    --field-on: #141310;
+    --field-off: #f1ede4;
+    color-scheme: light;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --color-*: initial;
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --text-display-xl: clamp(4rem, 13vw, 14rem);
+  --text-display-xl--line-height: 0.86;
+  --text-display-xl--letter-spacing: -0.045em;
+  --text-display: clamp(2.5rem, 6.5vw, 6rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.04em;
+  --text-headline: clamp(1.5rem, 2.6vw, 2.25rem);
+  --text-headline--line-height: 1.1;
+  --text-headline--letter-spacing: -0.02em;
+  --text-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-body--line-height: 1.5;
+  --text-label: clamp(0.6875rem, 0.65rem + 0.15vw, 0.8125rem);
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.06em;
+
+  --spacing-page: clamp(16px, 4vw, 64px);
+  --spacing-section: clamp(96px, 12vw, 192px);
+  --spacing-block: clamp(32px, 4vw, 64px);
+  --container-site: 1400px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-hop: cubic-bezier(0.56, 0, 0.35, 0.98);
+  --ease-inout-power3: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --radius-*: initial;
+  --radius-none: 0px;
+}
+
+@layer base {
+  html {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-variation-settings:
+      'opsz' 14,
+      'wdth' 100;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-variant-numeric: tabular-nums;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-weight: 500;
+    margin: 0;
+  }
+  p {
+    text-wrap: pretty;
+    margin: 0;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+@utility display-xl {
+  font-size: var(--text-display-xl);
+  line-height: var(--text-display-xl--line-height);
+  letter-spacing: var(--text-display-xl--letter-spacing);
+  font-variation-settings:
+    'opsz' 96,
+    'wdth' 100;
+  font-weight: 500;
+}
+@utility display {
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-variation-settings:
+    'opsz' 96,
+    'wdth' 100;
+  font-weight: 500;
+}
+@utility headline {
+  font-size: var(--text-headline);
+  line-height: var(--text-headline--line-height);
+  letter-spacing: var(--text-headline--letter-spacing);
+  font-variation-settings:
+    'opsz' 48,
+    'wdth' 100;
+  font-weight: 500;
+}
+@utility label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+}
+@utility measure {
+  max-width: 62ch;
+}
+@utility hairline-t {
+  border-top: 1px solid var(--hairline);
+}
+@utility hairline-b {
+  border-bottom: 1px solid var(--hairline);
+}
+@utility page-x {
+  padding-inline: var(--spacing-page);
+}
+@utility site-container {
+  max-width: var(--container-site);
+  margin-inline: auto;
 }

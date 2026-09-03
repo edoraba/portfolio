@@ -11,7 +11,7 @@ colors:
     surface-2: '#1C1F24'
     ink: '#F2F2EF'
     ink-muted: '#8B8E93'
-    hairline: 'rgba(242,242,239,0.10)'
+    hairline: 'rgba(242,242,239,0.1)'
     accent: '#7D93FF'
     accent-ink: '#0B0C0E'
     field-on: '#F2F2EF'
