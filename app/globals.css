@@ -463,6 +463,51 @@ html[data-motion='reduced'] .notes-plate__dither {
   animation: none;
 }
 
+/* P/05. Tags fall into a ruled container and stay there; the list is the source of truth, so
+   without physics it is a plain wrapped row. */
+.toolbox {
+  position: relative;
+  overflow: hidden;
+  min-height: 42vh;
+  touch-action: pan-y;
+}
+@media (min-width: 1024px) {
+  .toolbox {
+    min-height: 48vh;
+  }
+}
+.toolbox__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: var(--cell-pad);
+  list-style: none;
+}
+.toolbox__tag {
+  border: 1px solid var(--ink);
+  padding: 8px 12px;
+  color: var(--ink);
+  background-color: var(--canvas);
+  white-space: nowrap;
+}
+/* Once the engine owns them, the tags are placed by the simulation. */
+.toolbox__list[data-physics] {
+  display: block;
+  padding: 0;
+}
+.toolbox__list[data-physics] .toolbox__tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  cursor: grab;
+}
+.toolbox__list[data-physics] .toolbox__tag:active {
+  cursor: grabbing;
+}
+
 /* P/06. Hairlines converge on a vanishing point and the frames fly out of it. */
 .tunnel {
   position: relative;

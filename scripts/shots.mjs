@@ -56,7 +56,8 @@ for (const size of sizes) {
       .filter((n) => Number.isFinite(n) && n > 0)
     for (const stop of stops) {
       await page.evaluate((to) => window.scrollTo(0, to), stop)
-      await page.waitForTimeout(1100)
+      // WAIT=4000 lets a simulation settle before the frame is taken.
+      await page.waitForTimeout(Number(process.env.WAIT ?? 1100))
       await page.screenshot({ path: path.join(out, `${size.name}-${slug}-${stop}.png`) })
     }
     if (stops.length) await page.evaluate(() => window.scrollTo(0, 0))

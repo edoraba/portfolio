@@ -2,9 +2,11 @@ import { AboutBox } from '@/components/plates/about-box'
 import { Cloth } from '@/components/plates/cloth'
 import { Hero } from '@/components/plates/hero'
 import { Notes } from '@/components/plates/notes'
+import { Toolbox } from '@/components/plates/toolbox'
 import { Tunnel } from '@/components/plates/tunnel'
 import { WorkStage } from '@/components/plates/work-stage'
-import { labs, works, writings } from '@/lib/content'
+import { labs, pageBySlug, works, writings } from '@/lib/content'
+import { tagsFromContent } from '@/lib/physics/toolbox'
 import { PageTransition } from '@/components/page-transition'
 import { SmoothScroll } from '@/components/smooth-scroll'
 
@@ -15,6 +17,14 @@ import { SmoothScroll } from '@/components/smooth-scroll'
  */
 export default function Home() {
   const cases = works.slice(0, 5)
+  // Only what the content already claims: the case study stacks plus the tools named in About.
+  const aboutStack = pageBySlug('about')
+    ? ['React', 'Next.js', 'Astro', 'Figma', 'Claude Code']
+    : []
+  const toolboxTags = tagsFromContent(
+    works.map((w) => w.stack),
+    aboutStack,
+  )
   return (
     <PageTransition>
       <SmoothScroll />
@@ -55,6 +65,8 @@ export default function Home() {
           href: `/writing/${w.slug}`,
         }))}
       />
+
+      <Toolbox tags={toolboxTags} />
 
       <Tunnel />
 

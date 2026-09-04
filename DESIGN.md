@@ -215,5 +215,5 @@ field:
 
 - No percentage counter or fake loader (the calibration entrance reports real readiness, lasts at most 1.2s, shows once per session and never under reduced motion), no custom cursor, no marquee, no magnetic buttons, no curved sticky footer, no image-follows-cursor lists, no greeting-word intro, no "rotate your device", no horizontal-only scroll, no bento grid, no 3D avatar, no skill bars, no logo wall, no testimonial carousel, no scroll cue, no decorative status dots, no version stamps, no locale and weather strips, no glassmorphism, no purple gradients.
 - No section-number eyebrows and at most one eyebrow per three sections. The numbering that exists (nav 1 to 4, project index 01 to 05, Fig. 01) encodes real order.
-- No second WebGL scene. The field is the only rendered surface.
+- No second WebGL scene. The field is the only rendered surface. One physics plate (the Toolbox), tags only, gravity 1, restitution 0.25, and the list stays real text.
 - Never mention LoL Brain.

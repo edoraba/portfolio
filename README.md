@@ -29,7 +29,7 @@ Unit tests also enforce the house rules: every theme token in `DESIGN.md` matche
 
 ## The home
 
-Seven plates, each a section of the grid with its own scroll choreography: the hero with the field showing through the headline and a strip, the about box that flattens, the pinned work stage with its timecode, the notes index, the toolbox, the since tunnel and the grid cloth. Nothing pins below 1024px and every plate has a static layout under reduced motion.
+Seven plates, each a section of the grid with its own scroll choreography: the hero with the field showing through the headline and a strip, the about box that flattens, the pinned work stage with its timecode, the notes index, the toolbox where the stack falls into a container with 2D physics (Matter.js, loaded only when the plate is near), the since tunnel and the grid cloth. Nothing pins below 1024px and every plate has a static layout under reduced motion.
 
 ## Layout and themes
 

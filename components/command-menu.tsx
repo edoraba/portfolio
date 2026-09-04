@@ -166,6 +166,13 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
             Dither: coarse
           </Command.Item>
           <Command.Item
+            value="shake toolbox physics"
+            onSelect={run(() => window.dispatchEvent(new Event('toolbox:shake')))}
+            className="palette__item"
+          >
+            Shake the toolbox
+          </Command.Item>
+          <Command.Item
             value="reset"
             onSelect={run(() => {
               setFx('none')

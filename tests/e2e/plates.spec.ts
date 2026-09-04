@@ -16,7 +16,7 @@ test('the home has all seven plates in order', async ({ page }) => {
   const ids = await page.evaluate(() =>
     Array.from(document.querySelectorAll('section.plate')).map((el) => el.id),
   )
-  expect(ids).toEqual(['hero', 'about', 'work', 'notes', 'since', 'contact'])
+  expect(ids).toEqual(['hero', 'about', 'work', 'notes', 'toolbox', 'since', 'contact'])
 })
 
 test('pinned plates reach their end state after scrolling through', async ({ page, isMobile }) => {
