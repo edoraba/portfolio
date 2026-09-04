@@ -27,6 +27,10 @@ for (const size of sizes) {
     isMobile: !!size.mobile,
     deviceScaleFactor: 1,
   })
+  // THEME=field picks a world before the first paint, the way a returning visitor would.
+  if (process.env.THEME) {
+    await ctx.addInitScript((t) => localStorage.setItem('theme', t), process.env.THEME)
+  }
   const page = await ctx.newPage()
   for (const route of routes) {
     await page.goto(base + route, { waitUntil: 'networkidle' })
@@ -39,7 +43,8 @@ for (const size of sizes) {
       await page.waitForTimeout(600)
     }
     await page.waitForTimeout(300)
-    const slug = route === '/' ? 'home' : route.replace(/\//g, '_').replace(/^_/, '')
+    const theme = process.env.THEME ? `${process.env.THEME}-` : ''
+    const slug = theme + (route === '/' ? 'home' : route.replace(/\//g, '_').replace(/^_/, ''))
     await page.screenshot({
       path: path.join(out, `${size.name}-${slug}.png`),
       fullPage: process.env.FULL === '1',
