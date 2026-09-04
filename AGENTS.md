@@ -10,11 +10,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Project rules
 
-- Read `DESIGN.md`, `PRODUCT.md` and the spec in `docs/superpowers/specs/` before touching UI.
-- Tokens live in `app/globals.css` under `@theme inline`; update `DESIGN.md` in the same commit. `tests/unit/tokens.test.ts` enforces parity.
+- Start with `docs/superpowers/HANDOFF-2026-09-04.md`: state of the project, decisions, workflow, gotchas, next plans.
+- Read `DESIGN.md`, `PRODUCT.md` and the specs in `docs/superpowers/specs/` (v2: `2026-09-04-v2-ruled-sheet-design.md`) before touching UI.
+- Theme tokens live in `lib/themes.data.mjs` (run `pnpm themes` to regenerate `app/themes.css`); sheet and type tokens in `app/globals.css`. Update `DESIGN.md` in the same commit. `tests/unit/themes.test.ts` and `tests/unit/sheet.test.ts` enforce parity and WCAG AA.
+- Every section is a `.sheet`; text lives in `Cell`s (see `components/sheet/`). No padding wrappers or containers: the G overlay must coincide with every hairline.
 - No em-dash or en-dash anywhere (enforced by `tests/unit/dashes.test.ts`). Hyphens only.
 - Conventional commits, no co-author trailers.
 - Facts about Edoardo come only from `content/` and `PRODUCT.md`. Unknown facts are `TODO(edoardo)`. Never mention LoL Brain.
-- After any UI change, open the dev server in the in-app browser and check 1440x900 and 390x844 in both themes before reporting.
+- After any UI change, review screenshots at 1440x900 and 390x844 in at least signal, field and paper with the grid on (`node scripts/shots.mjs`, run from PowerShell) and check `node scripts/console-check.mjs` for console and hydration errors before reporting.
 - Everything is mobile responsive: design for 390px first, verify at 390x844, 768x1024 and 1440x900 in both themes. No horizontal overflow, touch targets at least 24px, hover states have a touch equivalent.
 - Before building a component, check `docs/research/05-components-to-borrow.md` for the reference implementation to follow; borrow only from permissively licensed sources and re-implement on our tokens.
