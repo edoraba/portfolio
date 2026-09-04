@@ -158,6 +158,7 @@ motion:
   reduced-motion: field static, no smooth scroll, no split text, width axis static, 150ms opacity fades only
   rules-draw: 800ms editorial, stagger 60ms, on enter, once
   slice-flip: 4 strips, 500ms hop, 30ms stagger, alternating directions
+  plates: rules draw on enter, pins scrub only transforms and clip-path, never filters
   loader: calibration entrance, real readiness only (fonts, shader, content, images), 600ms to 1200ms, hard cap 1500ms, once per session, never under reduced motion, no percentage
 
 field:
@@ -175,9 +176,11 @@ field:
 
 - Mobile first. Every component is designed at 390px and verified at 390x844, 768x1024 and 1440x900 in both themes. No horizontal overflow, touch targets at least 24px, every hover state has a touch equivalent (tap, visible by default, or irrelevant).
 
+- The home is one story in seven plates (P/01 hero, P/02 about, P/03 work, P/04 notes, P/05 toolbox, P/06 since, P/07 contact). Each plate is a sheet section with a mono number, its own scroll choreography, and a static layout under reduced motion and below 1024px.
+- Pins: at most 200vh on desktop, none below 1024px, one on screen at a time, always starting below the sticky console. A pinned plate fits one screen.
 - The sheet: every section is a `.sheet` (one full-bleed CSS grid with named column lines), every piece of text lives in a `.cell` whose hairlines sit on column lines. No padding wrappers, no container. The G overlay is the same grid, so it coincides with every hairline by construction. Rules draw on enter.
 - Desktop (1024px and up): the numbered index lives in the right margin on home and /work, and is the table of contents on case studies. Below 1024px it collapses into the flow above the content it indexes.
-- Sections are separated by space and one hairline, never by cards. Lab tiles are the only cards: surface step plus hairline, radius 0.
+- Sections are separated by space and one hairline, never by cards. Lab tiles and work covers are the only cards: surface step plus hairline, radius 0.
 - Every image is a `<figure>` with a mono caption; case study figures are numbered "Fig. 01".
 - Hero fits the first viewport: headline (three words), one sub line of at most 20 words, the email line. Nothing else above the fold.
 

@@ -7,7 +7,7 @@ const isProd = process.env.NODE_ENV === 'production' || process.env.CI === 'true
 if (!isProd || process.env.ALLOW_TODO === '1') process.exit(0)
 
 const root = path.resolve(import.meta.dirname, '..')
-const targets = ['content', 'lib/site.ts']
+const targets = ['content', 'lib/site.ts', 'lib/since-frames.ts']
 const hits = []
 
 function walk(p) {

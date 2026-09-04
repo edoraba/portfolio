@@ -27,6 +27,10 @@ pnpm exec lhci autorun
 
 Unit tests also enforce the house rules: every theme token in `DESIGN.md` matches `lib/themes.data.mjs` and the generated `app/themes.css`, every ink passes WCAG AA on every surface, the sheet tokens match between CSS and `lib/sheet.ts`, and no em-dash or en-dash appears anywhere in code, content or docs.
 
+## The home
+
+Seven plates, each a section of the grid with its own scroll choreography: the hero with the field showing through the headline and a strip, the about box that flattens, the pinned work stage with its timecode, the notes index, the toolbox, the since tunnel and the grid cloth. Nothing pins below 1024px and every plate has a static layout under reduced motion.
+
 ## Layout and themes
 
 Every section is a `.sheet`: one full-bleed grid with 12, 6 or 4 columns; text lives in cells whose hairlines sit on column lines. Press `G` to see the grid, `T` to cycle the six themes (signal, field, paper, phosphor, cobalt, ash), `Cmd K` for the command palette. Themes live in `lib/themes.data.mjs`; `pnpm themes` regenerates `app/themes.css`.

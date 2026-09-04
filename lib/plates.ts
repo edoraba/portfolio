@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, type RefObject } from 'react'
+import Tempus from 'tempus'
 import { useConsole } from './console-store'
 
 /** The seven home plates, in story order. The console prints `P/0n TITLE` for the visible one. */
@@ -21,24 +22,53 @@ export function plateLabel(id: PlateId) {
 }
 
 /**
- * Registers a plate element: while it is the most visible plate on screen the console shows
- * its number and title. Cheap: one IntersectionObserver with a few thresholds per plate.
+ * One registry and one loop for every plate. Intersection ratios are ambiguous once sections
+ * are pinned (a pin spacer and a fixed section can both be "visible"), so the console names the
+ * plate that actually covers the middle of the screen, falling back to the nearest one.
  */
+const registry = new Map<PlateId, HTMLElement>()
+let stop: (() => void) | undefined
+
+function pick(): PlateId | null {
+  const middle = window.innerHeight / 2
+  let nearest: { id: PlateId; distance: number } | null = null
+  for (const [id, el] of registry) {
+    const r = el.getBoundingClientRect()
+    if (r.top <= middle && r.bottom >= middle) return id
+    const distance = r.top > middle ? r.top - middle : middle - r.bottom
+    if (!nearest || distance < nearest.distance) nearest = { id, distance }
+  }
+  return nearest?.id ?? null
+}
+
+function start() {
+  if (stop) return
+  let last: PlateId | null = null
+  stop = Tempus.add(
+    () => {
+      const id = pick()
+      if (id && id !== last) {
+        last = id
+        useConsole.getState().setPlate(plateLabel(id))
+      }
+    },
+    { fps: 10, label: 'plates' },
+  )
+}
+
 export function usePlate(id: PlateId, ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting && e.intersectionRatio >= 0.3) {
-            useConsole.getState().setPlate(plateLabel(id))
-          }
-        }
-      },
-      { threshold: [0.3, 0.6] },
-    )
-    io.observe(el)
-    return () => io.disconnect()
+    registry.set(id, el)
+    start()
+    return () => {
+      registry.delete(id)
+      if (registry.size === 0) {
+        stop?.()
+        stop = undefined
+        useConsole.getState().setPlate('')
+      }
+    }
   }, [id, ref])
 }
