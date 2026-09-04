@@ -457,6 +457,30 @@ html[data-motion='reduced'] .flip-text__strips {
   transform: translateX(0);
 }
 
+/* The EB monogram: ten rectangles on the same modular grid as the sheet. Parts grow along their
+   own axis as the loader marks resources ready; hovering the brand retracts the two tongues. */
+.monogram {
+  display: block;
+}
+.monogram__part {
+  transition: transform 500ms var(--ease-editorial);
+}
+.monogram__part[data-grow='y']:not([data-on]) {
+  transform: scaleY(0);
+}
+.monogram__part[data-grow='x']:not([data-on]) {
+  transform: scaleX(0);
+}
+.monogram__part[data-grow='c']:not([data-on]) {
+  transform: scale(0);
+}
+.console-link:hover .monogram__part[data-grow='c'] {
+  transform: scale(0.55);
+}
+html[data-motion='reduced'] .monogram__part {
+  transition: none;
+}
+
 /* Calibration loader */
 .loader {
   position: fixed;
@@ -471,13 +495,6 @@ html[data-motion='reduced'] .flip-text__strips {
   display: grid;
   justify-items: center;
   gap: 16px;
-}
-.loader__bar {
-  transform: scaleY(0.15);
-  transition: transform 500ms var(--ease-editorial);
-}
-.loader__bar[data-on] {
-  transform: scaleY(1);
 }
 .loader__line {
   color: var(--ink-muted);

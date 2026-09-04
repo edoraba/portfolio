@@ -5,7 +5,7 @@ import { canRenderField } from '@/lib/field/support'
 import { cellForProgress, createReadiness, shouldShowLoader, type LoaderStep } from '@/lib/loader'
 import { useMotion } from '@/lib/motion/store'
 import { useMounted } from '@/lib/use-mounted'
-import { MONOGRAM_BARS } from './console/monogram'
+import { Monogram } from './console/monogram'
 
 const HOP = 'cubic-bezier(0.56, 0, 0.35, 0.98)'
 const KEY = 'calibrated'
@@ -111,24 +111,7 @@ export function Loader() {
   return (
     <div ref={ref} className="loader" data-loader={phase} aria-hidden="true">
       <div className="loader__mark">
-        <svg width="116" height="96" viewBox="0 0 116 96" focusable="false">
-          {MONOGRAM_BARS.map((h, i) => {
-            const on = i < marked.length
-            return (
-              <rect
-                key={i}
-                className="loader__bar"
-                data-on={on || undefined}
-                x={i * 24}
-                y={96 - 96 * h}
-                width={12}
-                height={96 * h}
-                fill="currentColor"
-                style={{ transformOrigin: `${i * 24 + 6}px 96px` }}
-              />
-            )
-          })}
-        </svg>
+        <Monogram size={96} parts={marked.length} />
         <p className="loader__line label">
           {phase === 'out' ? 'Calibrated' : 'Calibrating'} <span aria-hidden="true">·</span> cell{' '}
           {cell}
