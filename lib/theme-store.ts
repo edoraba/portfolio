@@ -1,20 +1,20 @@
 'use client'
 import { create } from 'zustand'
-
-export type Theme = 'dark' | 'light'
+import { DEFAULT_THEME, isThemeName, nextTheme, type ThemeName } from './themes'
 
 type ThemeState = {
-  theme: Theme
-  setTheme: (t: Theme) => void
-  toggle: () => void
+  theme: ThemeName
+  set: (t: ThemeName) => void
+  cycle: (step?: number) => void
 }
 
-function readInitial(): Theme {
-  if (typeof document === 'undefined') return 'dark'
-  return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
+function readInitial(): ThemeName {
+  if (typeof document === 'undefined') return DEFAULT_THEME
+  const v = document.documentElement.getAttribute('data-theme')
+  return isThemeName(v) ? v : DEFAULT_THEME
 }
 
-function apply(t: Theme) {
+function apply(t: ThemeName) {
   document.documentElement.setAttribute('data-theme', t)
   try {
     localStorage.setItem('theme', t)
@@ -25,9 +25,9 @@ function apply(t: Theme) {
 
 export const useTheme = create<ThemeState>((set, get) => ({
   theme: readInitial(),
-  setTheme: (t) => {
+  set: (t) => {
     apply(t)
     set({ theme: t })
   },
-  toggle: () => get().setTheme(get().theme === 'dark' ? 'light' : 'dark'),
+  cycle: (step = 1) => get().set(nextTheme(get().theme, step)),
 }))

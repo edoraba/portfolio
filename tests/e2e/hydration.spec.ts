@@ -16,7 +16,10 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
       await page.goto(route)
       await page.waitForTimeout(1200)
       expect(errors, errors.join('\n')).toEqual([])
-      await expect(page.locator('html')).toHaveAttribute('data-theme', /dark|light/)
+      await expect(page.locator('html')).toHaveAttribute(
+        'data-theme',
+        /^(signal|field|paper|phosphor|cobalt|ash)$/,
+      )
       await expect(page.locator('html')).toHaveClass(/\bjs\b/)
       await expect(page.locator('html')).toHaveAttribute(
         'data-motion',

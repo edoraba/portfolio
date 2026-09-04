@@ -3,6 +3,7 @@ import { CommandMenuServer } from '@/components/command-menu-server'
 import { FieldMount } from '@/components/field-mount'
 import { Footer } from '@/components/footer'
 import { GridOverlay } from '@/components/grid-overlay'
+import { Hotkeys } from '@/components/console/hotkeys'
 import { SiteNav } from '@/components/site-nav'
 import { SkipLink } from '@/components/skip-link'
 import { fontClassNames } from '@/lib/fonts'
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         </div>
         <CommandMenuServer />
         <GridOverlay />
+        <Hotkeys />
       </body>
     </html>
   )

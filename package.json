@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "prebuild": "node scripts/check-content.mjs",
+    "prebuild": "node scripts/gen-themes.mjs && node scripts/check-content.mjs",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -21,7 +21,8 @@
     "test:e2e": "playwright test",
     "prepare": "husky",
     "content": "content-collections build",
-    "pretest": "content-collections build"
+    "pretest": "node scripts/gen-themes.mjs && content-collections build",
+    "themes": "node scripts/gen-themes.mjs"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",

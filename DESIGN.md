@@ -5,30 +5,73 @@ description: "Design system of edoardo baravaglio's personal site. A typographic
 source_of_truth: app/globals.css (@theme). This file explains the tokens; the CSS defines them. Change both in the same commit.
 
 colors:
-  dark:
+  signal:
+    canvas: '#F5401F'
+    surface: '#F7573A'
+    surface-2: '#F96E55'
+    ink: '#140E0C'
+    ink-muted: '#2A0A04'
+    hairline: 'rgba(20, 14, 12, 0.22)'
+    accent: '#140E0C'
+    accent-ink: '#F5401F'
+    field-on: '#140E0C'
+    field-off: '#F5401F'
+  field:
     canvas: '#0B0C0E'
     surface: '#15171B'
     surface-2: '#1C1F24'
     ink: '#F2F2EF'
     ink-muted: '#8B8E93'
-    hairline: 'rgba(242,242,239,0.1)'
+    hairline: 'rgba(242, 242, 239, 0.1)'
     accent: '#7D93FF'
     accent-ink: '#0B0C0E'
     field-on: '#F2F2EF'
     field-off: '#0B0C0E'
-  light:
+  paper:
     canvas: '#F1EDE4'
     surface: '#E6E0D3'
     surface-2: '#DDD6C6'
     ink: '#141310'
     ink-muted: '#625C50'
-    hairline: 'rgba(20,19,16,0.12)'
+    hairline: 'rgba(20, 19, 16, 0.12)'
     accent: '#1F3BFF'
     accent-ink: '#F1EDE4'
     field-on: '#141310'
     field-off: '#F1EDE4'
-  alternatives:
-    accent-phosphor-dark: '#E9FF6A' # one-token swap, not default; fails contrast as text on paper
+  phosphor:
+    canvas: '#0C0F0A'
+    surface: '#151A10'
+    surface-2: '#1C2315'
+    ink: '#E9FF6A'
+    ink-muted: '#9DAF52'
+    hairline: 'rgba(233, 255, 106, 0.1)'
+    accent: '#F2F2EF'
+    accent-ink: '#0C0F0A'
+    field-on: '#E9FF6A'
+    field-off: '#0C0F0A'
+  cobalt:
+    canvas: '#1F3BFF'
+    surface: '#1B34E6'
+    surface-2: '#172ECF'
+    ink: '#F1EDE4'
+    ink-muted: '#D8DCFA'
+    hairline: 'rgba(241, 237, 228, 0.22)'
+    accent: '#E9FF6A'
+    accent-ink: '#1F3BFF'
+    field-on: '#F1EDE4'
+    field-off: '#1F3BFF'
+  ash:
+    canvas: '#9C9E97'
+    surface: '#A6A8A1'
+    surface-2: '#B0B2AB'
+    ink: '#1A1B18'
+    ink-muted: '#262823'
+    hairline: 'rgba(26, 27, 24, 0.22)'
+    accent: '#1A1B18'
+    accent-ink: '#9C9E97'
+    field-on: '#F16D50'
+    field-off: '#9C9E97'
+  notes: signal is the default; hairline alpha 0.22 on bold canvases (signal, cobalt, ash), 0.10 on field and phosphor, 0.12 on paper
 
 typography:
   families:

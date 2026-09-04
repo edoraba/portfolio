@@ -36,13 +36,14 @@ test('G toggles the grid overlay and persists', async ({ page }) => {
   await expect(page.locator('.guides')).toHaveCount(0)
 })
 
-test('theme control is a switch that flips the theme', async ({ page }) => {
+test('theme swatches form a radiogroup with six worlds', async ({ page }) => {
   await page.goto('/')
-  const sw = page.getByRole('switch', { name: 'Theme' })
-  const before = await page.locator('html').getAttribute('data-theme')
-  await sw.click()
-  await expect(page.locator('html')).not.toHaveAttribute('data-theme', before!)
-  await expect(sw).toHaveAttribute('aria-checked', before === 'dark' ? 'true' : 'false')
+  const group = page.getByRole('radiogroup', { name: 'Theme' }).first()
+  await expect(group.getByRole('radio')).toHaveCount(6)
+  await expect(group.getByRole('radio', { name: 'Signal' })).toHaveAttribute('aria-checked', 'true')
+  await group.getByRole('radio', { name: 'Cobalt' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'cobalt')
+  await expect(group.getByRole('radio', { name: 'Cobalt' })).toHaveAttribute('aria-checked', 'true')
 })
 
 test('work index to case study transition lands on the case', async ({ page }) => {

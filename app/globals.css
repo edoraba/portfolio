@@ -1,51 +1,8 @@
 @import 'tailwindcss';
+@import './themes.css';
 
-/* Runtime tokens. Dark is the brand default; light is a complete second world.
-   DESIGN.md explains these values; tests/unit/tokens.test.ts keeps them in sync. */
-:root {
-  --canvas: #0b0c0e;
-  --surface: #15171b;
-  --surface-2: #1c1f24;
-  --ink: #f2f2ef;
-  --ink-muted: #8b8e93;
-  --hairline: rgba(242, 242, 239, 0.1);
-  --accent: #7d93ff;
-  --accent-ink: #0b0c0e;
-  --field-on: #f2f2ef;
-  --field-off: #0b0c0e;
-  color-scheme: dark;
-}
-
-[data-theme='light'] {
-  --canvas: #f1ede4;
-  --surface: #e6e0d3;
-  --surface-2: #ddd6c6;
-  --ink: #141310;
-  --ink-muted: #625c50;
-  --hairline: rgba(20, 19, 16, 0.12);
-  --accent: #1f3bff;
-  --accent-ink: #f1ede4;
-  --field-on: #141310;
-  --field-off: #f1ede4;
-  color-scheme: light;
-}
-
-/* No-JS fallback: follow the OS when no explicit theme was stamped. */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
-    --canvas: #f1ede4;
-    --surface: #e6e0d3;
-    --surface-2: #ddd6c6;
-    --ink: #141310;
-    --ink-muted: #625c50;
-    --hairline: rgba(20, 19, 16, 0.12);
-    --accent: #1f3bff;
-    --accent-ink: #f1ede4;
-    --field-on: #141310;
-    --field-off: #f1ede4;
-    color-scheme: light;
-  }
-}
+/* Runtime tokens live in themes.css, generated from lib/themes.data.mjs (six themes).
+   DESIGN.md explains the values; tests/unit/themes.test.ts keeps all three in sync. */
 
 @theme inline {
   --color-*: initial;
@@ -330,12 +287,34 @@ html[data-motion='reduced'] ::view-transition-group(*) {
   view-transition-name: field-canvas;
 }
 
-/* Theme switch */
-.theme-switch__on {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.45em;
+/* Theme swatches: six 24px targets, each showing a 12px square in that theme's canvas with
+   an ink outline; the active one is filled with ink. */
+.swatches {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+.swatch {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+}
+.swatch::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: var(--swatch);
+  border: 1px solid var(--ink);
+  transition: transform 200ms var(--ease-out-expo);
+}
+.swatch:hover::after {
+  transform: translateY(-2px);
+}
+.swatch[data-active]::after {
+  background: var(--ink);
+  outline: 1px solid var(--ink);
+  outline-offset: 2px;
 }
 html[data-theme-switching] ::view-transition-old(root),
 html[data-theme-switching] ::view-transition-new(root) {

@@ -6,3 +6,4 @@ playwright-report
 test-results
 docs/design-references
 .claude/skills
+app/themes.css

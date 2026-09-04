@@ -5,9 +5,11 @@ export type Fx = 'none' | 'bw' | 'negative'
 
 type UiState = {
   paletteOpen: boolean
+  menuOpen: boolean
   grid: boolean
   fx: Fx
   setPaletteOpen: (open: boolean) => void
+  setMenuOpen: (open: boolean) => void
   toggleGrid: () => void
   setFx: (fx: Fx) => void
 }
@@ -28,9 +30,11 @@ function applyFx(fx: Fx) {
 
 export const useUi = create<UiState>((set, get) => ({
   paletteOpen: false,
+  menuOpen: false,
   grid: typeof window === 'undefined' ? false : readGrid(),
   fx: 'none',
   setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
+  setMenuOpen: (menuOpen) => set({ menuOpen }),
   toggleGrid: () => {
     const grid = !get().grid
     try {

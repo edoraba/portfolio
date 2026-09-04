@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { navItems, site } from '@/lib/site'
 import { Decode } from './decode'
 import { PaletteTrigger } from './palette-trigger'
-import { ThemeToggle } from './theme-toggle'
+import { ThemeSwatches } from './console/theme-swatches'
 
 // Every interactive element in the bar is at least 24px in both dimensions (WCAG 2.5.8).
 // Below sm the name collapses to the monogram so the four labelled items still fit on one line.
@@ -39,7 +39,7 @@ export function SiteNav() {
             </li>
           ))}
           <li>
-            <ThemeToggle />
+            <ThemeSwatches />
           </li>
           <li className="hidden md:block">
             <PaletteTrigger />

@@ -6,7 +6,8 @@ import { useField } from '@/lib/field/store'
 import type { Cell } from '@/lib/field/quality'
 import { useMotion } from '@/lib/motion/store'
 import { site } from '@/lib/site'
-import { useTheme } from '@/lib/theme-store'
+import { THEMES } from '@/lib/themes'
+import { switchTheme } from './console/theme-swatches'
 import { useUi } from '@/lib/ui-store'
 
 export type CommandItem = { group: string; label: string; href: string; hint?: string }
@@ -38,7 +39,6 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
   const setOpen = useUi((s) => s.setPaletteOpen)
   const toggleGrid = useUi((s) => s.toggleGrid)
   const setFx = useUi((s) => s.setFx)
-  const setTheme = useTheme((s) => s.setTheme)
   const setPreference = useMotion((s) => s.setPreference)
   const setCell = useField((s) => s.setCell)
 
@@ -101,20 +101,17 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
           </Command.Group>
         ))}
         <Command.Group heading="Site" className="palette__group">
-          <Command.Item
-            value="theme field dark"
-            onSelect={run(() => setTheme('dark'))}
-            className="palette__item"
-          >
-            Theme: field
-          </Command.Item>
-          <Command.Item
-            value="theme paper light"
-            onSelect={run(() => setTheme('light'))}
-            className="palette__item"
-          >
-            Theme: paper
-          </Command.Item>
+          {THEMES.map((t) => (
+            <Command.Item
+              key={t.name}
+              value={`theme ${t.name} ${t.label}`}
+              onSelect={run(() => switchTheme(t.name))}
+              className="palette__item"
+            >
+              Theme: {t.label}
+              <span className="palette__hint">{t.description}</span>
+            </Command.Item>
+          ))}
           <Command.Item
             value="grid overlay columns baseline"
             onSelect={run(toggleGrid)}

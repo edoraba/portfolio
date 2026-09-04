@@ -44,10 +44,10 @@ test('theme toggle persists across reload', async ({ page }) => {
   await page.goto('/')
   const html = page.locator('html')
   const before = await html.getAttribute('data-theme')
-  await page.getByRole('switch', { name: 'Theme' }).click()
-  // The switch applies the theme inside a view transition, so poll instead of reading at once.
-  await expect(html).not.toHaveAttribute('data-theme', before!)
-  const after = await html.getAttribute('data-theme')
+  expect(before).toBe('signal')
+  await page.getByRole('radio', { name: 'Paper' }).first().click()
+  // The swatch applies the theme inside a view transition, so poll instead of reading at once.
+  await expect(html).toHaveAttribute('data-theme', 'paper')
   await page.reload()
-  await expect(html).toHaveAttribute('data-theme', after!)
+  await expect(html).toHaveAttribute('data-theme', 'paper')
 })

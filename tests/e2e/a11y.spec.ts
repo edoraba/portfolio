@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 
 const routes = ['/', '/work', '/work/refattura', '/lab', '/writing', '/about', '/colophon']
 
-for (const theme of ['dark', 'light'] as const) {
+for (const theme of ['signal', 'field', 'paper'] as const) {
   for (const route of routes) {
     test(`${route} has no axe violations in ${theme}`, async ({ page }) => {
       await page.addInitScript((t) => localStorage.setItem('theme', t), theme)

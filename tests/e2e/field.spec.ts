@@ -36,7 +36,7 @@ test('pages without a hero never mount the field', async ({ page }) => {
 })
 
 test('home with the hero has no axe violations in both themes', async ({ page }) => {
-  for (const theme of ['dark', 'light']) {
+  for (const theme of ['signal', 'field', 'paper']) {
     await page.addInitScript((t) => localStorage.setItem('theme', t), theme)
     await page.goto('/')
     await page.waitForTimeout(1000)

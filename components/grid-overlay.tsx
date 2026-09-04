@@ -11,23 +11,7 @@ const COLS = 12
  */
 export function GridOverlay() {
   const grid = useUi((s) => s.grid)
-  const toggleGrid = useUi((s) => s.toggleGrid)
-  const paletteOpen = useUi((s) => s.paletteOpen)
   const [width, setWidth] = useState(0)
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const t = e.target
-      const editable =
-        t instanceof HTMLElement &&
-        (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
-      if (e.key === 'g' && !e.metaKey && !e.ctrlKey && !e.altKey && !editable && !paletteOpen) {
-        toggleGrid()
-      }
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [toggleGrid, paletteOpen])
 
   useEffect(() => {
     if (!grid) return
