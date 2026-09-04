@@ -436,6 +436,172 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   background: none;
 }
 
+/* P/04. The lab column carries a dither plate that shifts on a slow cycle. */
+.notes-plate__dither {
+  margin-top: 24px;
+  height: 120px;
+  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
+  background-size: 4px 4px;
+  opacity: 0.25;
+  animation: notes-dither 9s steps(3) infinite;
+}
+@keyframes notes-dither {
+  0% {
+    background-position: 0 0;
+  }
+  33% {
+    background-position: 2px 0;
+  }
+  66% {
+    background-position: 2px 2px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+html[data-motion='reduced'] .notes-plate__dither {
+  animation: none;
+}
+
+/* P/06. Hairlines converge on a vanishing point and the frames fly out of it. */
+.tunnel {
+  position: relative;
+  min-height: 70vh;
+}
+@media (min-width: 1024px) {
+  .tunnel {
+    min-height: calc(100dvh - var(--header-h) - 60px);
+  }
+}
+.tunnel__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: inherit;
+  perspective: 900px;
+  overflow: hidden;
+}
+.tunnel__rays {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: color-mix(in srgb, var(--ink) 20%, transparent);
+}
+.tunnel__title {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  max-width: 18ch;
+  text-align: center;
+  transform: scale(var(--title-s, 1));
+  opacity: var(--title-o, 1);
+}
+.tunnel__frames {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.tunnel__frame {
+  grid-area: 1 / 1;
+  width: min(52ch, 76%);
+  transform: translateZ(var(--frame-z, 0px));
+  opacity: var(--frame-o, 1);
+}
+.tunnel__figure {
+  margin: 0;
+  border: 1px solid var(--hairline);
+  background-color: var(--surface);
+  padding: var(--cell-pad);
+  display: grid;
+  gap: 12px;
+}
+.tunnel__panel {
+  display: block;
+  height: 140px;
+  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
+  background-size: 4px 4px;
+  opacity: 0.3;
+}
+/* Without the pin the frames are a plain stack in front of the rays. */
+@media (max-width: 1023.98px) {
+  .tunnel__frames {
+    position: static;
+    display: grid;
+    gap: 16px;
+    padding: var(--cell-pad);
+  }
+  .tunnel__frame {
+    grid-area: auto;
+    width: 100%;
+    transform: none;
+    opacity: 1;
+  }
+  .tunnel__title {
+    position: static;
+    margin-bottom: 24px;
+  }
+  .tunnel__stage {
+    display: block;
+    padding-block: var(--spacing-block);
+  }
+}
+html[data-motion='reduced'] .tunnel__frame {
+  transform: none;
+  opacity: 1;
+}
+html[data-motion='reduced'] .tunnel__frames {
+  position: static;
+  gap: 16px;
+  padding: var(--cell-pad);
+}
+
+/* P/07. A ruled cloth that bulges away from the pointer, with the invitation at its centre. */
+.cloth {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 70vh;
+  padding: var(--spacing-block) var(--cell-pad);
+}
+@media (min-width: 1024px) {
+  .cloth {
+    min-height: calc(100dvh - var(--header-h) - 120px);
+  }
+}
+.cloth__grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--hairline);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.cloth__grid polyline {
+  vector-effect: non-scaling-stroke;
+}
+.cloth__centre {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.cloth__cta {
+  margin: 0;
+}
+.cloth__email {
+  font-family: var(--font-mono);
+}
+
 /* P/03. The word stands vertically beside a stage where the letter field slides in behind the
    covers. Covers are the only cards on the site besides the lab tiles: a surface step, a
    hairline, no radius and no shadow. */
@@ -748,15 +914,24 @@ html[data-motion='reduced'] .letters {
   gap: 24px;
 }
 
-/* Sliced-letter flip: strips slide out in alternating directions and return with the alt label. */
+/* Sliced-letter flip: four strips slide out in alternating directions and return carrying the
+   alternate label. A hidden twin sizes the box to the wider of the two, so neither is clipped. */
 .flip-text {
   position: relative;
-  display: inline-block;
+  display: inline-grid;
   white-space: nowrap;
 }
-/* The real label keeps its box and its accessible name; the strips paint over it. */
+.flip-text__real,
+.flip-text__ghost,
+.flip-text__strips {
+  grid-area: 1 / 1;
+}
 .flip-text__real {
   color: transparent;
+}
+.flip-text__ghost {
+  visibility: hidden;
+  pointer-events: none;
 }
 html:not(.js) .flip-text__real,
 html[data-motion='reduced'] .flip-text__real {
@@ -766,12 +941,7 @@ html[data-motion='reduced'] .flip-text__strips {
   display: none;
 }
 .flip-text__strips {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  min-width: 100%;
-  width: max-content;
+  position: relative;
 }
 .flip-text__strip {
   position: absolute;
@@ -781,10 +951,7 @@ html[data-motion='reduced'] .flip-text__strips {
 .flip-text__a,
 .flip-text__b {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: max-content;
+  inset: 0;
   white-space: nowrap;
   transition: transform 500ms var(--ease-hop);
   transition-delay: var(--d);
@@ -801,30 +968,6 @@ html[data-motion='reduced'] .flip-text__strips {
 .flip:focus-visible .flip-text__b,
 .flip[data-flipped] .flip-text__b {
   transform: translateX(0);
-}
-
-/* The EB monogram: ten rectangles on the same modular grid as the sheet. Parts grow along their
-   own axis as the loader marks resources ready; hovering the brand retracts the two tongues. */
-.monogram {
-  display: block;
-}
-.monogram__part {
-  transition: transform 500ms var(--ease-editorial);
-}
-.monogram__part[data-grow='y']:not([data-on]) {
-  transform: scaleY(0);
-}
-.monogram__part[data-grow='x']:not([data-on]) {
-  transform: scaleX(0);
-}
-.monogram__part[data-grow='c']:not([data-on]) {
-  transform: scale(0);
-}
-.console-link:hover .monogram__part[data-grow='c'] {
-  transform: scale(0.55);
-}
-html[data-motion='reduced'] .monogram__part {
-  transition: none;
 }
 
 /* Calibration loader */
