@@ -19,7 +19,13 @@ export function SmoothScroll() {
     const lenis = new Lenis({ lerp: 0.08, autoRaf: false, smoothWheel: true, syncTouch: false })
     lenis.on('scroll', ScrollTrigger.update)
     const unsub = Tempus.add(({ time }) => lenis.raf(time), { order: -5, label: 'lenis' })
+    // Pinned plates measure in pixels: remeasure once the real fonts are in and the layout settles.
+    let cancelled = false
+    document.fonts.ready.then(() => {
+      if (!cancelled) ScrollTrigger.refresh()
+    })
     return () => {
+      cancelled = true
       unsub?.()
       lenis.destroy()
     }

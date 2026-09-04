@@ -1,10 +1,12 @@
-import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from 'react'
 
 type Props<T extends ElementType> = {
   as?: T
   className?: string
   children?: ReactNode
-} & Omit<ComponentPropsWithoutRef<T>, 'as' | 'className' | 'children'>
+  /** React 19 passes ref as a plain prop; plates need one to build their ScrollTrigger. */
+  ref?: Ref<HTMLElement>
+} & Omit<ComponentPropsWithoutRef<T>, 'as' | 'className' | 'children' | 'ref'>
 
 /**
  * One row band of the site grid: a full-bleed CSS grid with the page gutters as outer tracks
