@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Project rules
 
-- Start with `docs/superpowers/HANDOFF-2026-09-04.md`: state of the project, decisions, workflow, gotchas. The open work is `docs/superpowers/plans/2026-09-05-07-field-fixes-and-plate-rework.md`.
+- Start with `docs/superpowers/HANDOFF-2026-09-04.md`: state of the project, decisions, workflow, gotchas. The open work is `docs/superpowers/plans/2026-09-04-07-field-fixes-and-plate-rework.md`.
 - Motion and ScrollTrigger rules live in `docs/motion.md` once Plan 07 Task 5 writes it; until then follow the rules in that task.
 - Read `DESIGN.md`, `PRODUCT.md` and the specs in `docs/superpowers/specs/` (v2: `2026-09-04-v2-ruled-sheet-design.md`) before touching UI.
 - Theme tokens live in `lib/themes.data.mjs` (run `pnpm themes` to regenerate `app/themes.css`); sheet and type tokens in `app/globals.css`. Update `DESIGN.md` in the same commit. `tests/unit/themes.test.ts` and `tests/unit/sheet.test.ts` enforce parity and WCAG AA.

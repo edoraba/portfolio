@@ -4,7 +4,7 @@
 
 **Goal:** Fix the defects Edoardo found after Plan 05, rebuild the two plates he rejected (P/02 about, P/03 work) on a better reference, and put the GSAP work on a correct footing.
 
-**Written 2026-09-04 by the session that built Plan 05, from Edoardo's review. Nothing here was implemented; every task is open.** Root causes below were traced in the code, not guessed; file and line numbers are from commit `9b28e99`.
+**Written 2026-09-04 by the session that built Plan 05, from Edoardo's review. Nothing here was implemented; every task is open.** Root causes below were traced in the code, not guessed; file and line numbers are from commit `9b28e99`. Appendix A says how to see each defect, Appendix B holds first hand notes on the reference site, Appendix C maps the files.
 
 **Edoardo's words, so the intent does not get lost in translation:**
 
@@ -206,3 +206,38 @@ Read before writing any of the reworks. The local skill `taste-gpt-tasteskill` i
 - Lighthouse mobile is 0.85, held back by LCP 3.9s. See Plan 06 Task 3 for the approach.
 - Plan 06 still owes: palette commands to jump to a plate, `Calibrate again`, colophon theme swatches.
 - Facts Edoardo still owes: team and role per case study, the years for IAAD and Politecnico (they block the production build through `scripts/check-content.mjs`), the availability line, domain and hosting, real cover screenshots.
+
+---
+
+## Appendix A: How to see each defect
+
+Run `pnpm dev` and use the review scripts from the handoff. The field only renders with hardware WebGL, so anything about the dither needs `GPU=1` or a real browser.
+
+- **Band flicker (Task 3).** Open the home in a real browser at 1440, make sure the palette says Dither: fine (cell 2, the default), and scroll the first viewport slowly with the wheel. The strip above the headline shimmers along its top and bottom edge and lags behind the page. Switch to Dither: coarse from the palette and it goes away. To measure rather than watch, sample `requestAnimationFrame` deltas while scrolling and compare against `BUDGET_MS` in `lib/field/quality.ts`.
+- **Field leaking upward (Task 1).** Load the home, scroll slowly past the about plate to the tunnel and watch the lower half of the screen: the dither band is still there behind sections that never asked for it. Confirm in the console with `useField.getState()` (the store is not exposed on window; add a temporary log in `lib/field/store.ts` or read it through React DevTools): `mode` stays `band` and `requests` still contains `about`.
+- **Footer text (Task 2).** Press `T` until the theme is field or phosphor, scroll to the footer. The text sits in the same colour as the lit dither cells. The table in Task 2 shows this is true in five of the six themes, so any theme except ash will show it.
+- **Selection noise (Task 4).** Drag across the hero headline, or try to drag a toolbox tag: the drag selects text instead of moving the tag.
+
+## Appendix B: Reference notes on wodniack.dev, taken 2026-09-04
+
+Observed first hand in this session, so the next one does not have to start from nothing. Re-check the timings before building; these are impressions, not measurements.
+
+- **Stack:** Astro, GSAP, Lenis. Two colours only, crimson `#f40c3f` and near-black `#160000`, plus an off-white. Three families: a display sans, a serif for body, a mono for labels. Every section is a bordered cell in what reads as a technical drawing.
+- **Work section, the sequence Edoardo pointed at.** First a stadium shaped aperture, roughly a third of the screen wide and most of it tall, dark inside, with the word WORK set vertically in it and a dotted texture on the interior. As you scroll the aperture grows until its interior is the whole screen. Inside, the letters W O R K are repeated across the field at large size and spread apart, and the project screenshots float between them at different sizes and slight rotations, drifting slowly rather than sitting still. Scrolling further moves the reader through that space; the screenshots pass at different depths. The letters never read as a background pattern, they read as objects in the same space as the projects.
+- **About section.** A narrow ruled column of running text, about 40 percent of the width, everything else left as ruled emptiness. The three dimensional treatment is a separate object below it: the awards, in a box whose side planes are ruled and which is seen slightly from above. The text is never inside the 3D object. This is the correction our about plate needs.
+- **Ending.** A grid cloth that deforms toward the pointer with a round GO button at its centre, then a headline whose letters are sliced horizontally and flip between two words.
+- **What we should not copy:** their palette, their serif, the percentage of screen given to decoration. Our system is the ruled sheet with six themes; the borrowing is in the choreography, not the skin.
+
+## Appendix C: Files each task touches
+
+| Task                | Files                                                                                                                                                                                                                                    |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 field ownership   | `lib/field/store.ts`, `components/plates/about-box.tsx`, `components/console/mobile-menu.tsx`, `components/footer-field.tsx`, `components/hero-mask.tsx`, `components/loader.tsx`, `tests/unit/field.test.ts`, `tests/e2e/field.spec.ts` |
+| 2 footer legibility | `components/footer-field.tsx`, `components/footer.tsx`, `DESIGN.md`, `tests/e2e/contrast.spec.ts` (new)                                                                                                                                  |
+| 3 band flicker      | `components/hero-mask.tsx`, `components/plates/hero.tsx`, `app/globals.css`, `lib/field/quality.ts`, `tests/unit/field.test.ts`                                                                                                          |
+| 4 user-select       | `app/globals.css`, `tests/e2e/plates.spec.ts`                                                                                                                                                                                            |
+| 5 GSAP foundation   | `docs/motion.md` (new), `lib/motion/gsap.ts`, `AGENTS.md`                                                                                                                                                                                |
+| 6 about rebuild     | `components/plates/about-box.tsx`, `lib/about-facts.ts`, `app/globals.css`                                                                                                                                                               |
+| 7 work rebuild      | `components/plates/work-stage.tsx`, `work-cover.tsx`, `letter-grid.tsx`, `timecode.tsx`, `app/globals.css`, `DESIGN.md`, `tests/e2e/plates.spec.ts`                                                                                      |
+| 8 tunnel            | `components/plates/tunnel.tsx`, `lib/since-frames.ts`, `app/globals.css`                                                                                                                                                                 |
+| 9 docs              | `DESIGN.md`, `docs/motion.md`, `content/pages/colophon.mdx`, `README.md`, `docs/superpowers/HANDOFF-2026-09-04.md`                                                                                                                       |
