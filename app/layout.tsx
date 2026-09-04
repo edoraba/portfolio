@@ -1,34 +1,36 @@
 import type { Metadata } from 'next'
 import { CommandMenuServer } from '@/components/command-menu-server'
+import { Hotkeys } from '@/components/console/hotkeys'
+import { SiteHeader } from '@/components/console/site-header'
 import { FieldMount } from '@/components/field-mount'
 import { Footer } from '@/components/footer'
 import { GridOverlay } from '@/components/grid-overlay'
-import { Hotkeys } from '@/components/console/hotkeys'
-import { SiteNav } from '@/components/site-nav'
+import { RulesObserver } from '@/components/sheet/rules-observer'
 import { SkipLink } from '@/components/skip-link'
 import { fontClassNames } from '@/lib/fonts'
+import { site } from '@/lib/site'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: { default: 'Edoardo Baravaglio', template: '%s, Edoardo Baravaglio' },
-  description:
-    'Frontend developer with a design degree, building whole products end to end from Turin, Italy.',
+  metadataBase: new URL(site.url),
+  title: { default: site.name, template: `%s, ${site.name}` },
+  description: `${site.role}. Whole products, from the interface to the database, shipped from ${site.location}.`,
+  openGraph: { type: 'website', siteName: site.name },
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={fontClassNames} suppressHydrationWarning>
       <head>
-        {/* Sync on purpose: the theme must be on <html> before the first paint. 500 bytes, cached. */}
+        {/* Sync so the theme is set before the first paint. next/script runs after paint in prod. */}
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="/theme.js" />
       </head>
       <body className="flex min-h-dvh flex-col">
         <FieldMount />
-        {/* .page is the filter target for the playful palette commands; the field stays outside. */}
         <div className="page flex min-h-dvh flex-col">
           <SkipLink />
-          <SiteNav />
+          <SiteHeader />
           <main id="main" className="flex-1">
             {children}
           </main>
@@ -37,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <CommandMenuServer />
         <GridOverlay />
         <Hotkeys />
+        <RulesObserver />
       </body>
     </html>
   )

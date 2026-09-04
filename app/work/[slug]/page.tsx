@@ -2,9 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ViewTransition } from 'react'
+import { ConsolePlate } from '@/components/console/console-plate'
 import { Decode } from '@/components/decode'
 import { Mdx } from '@/components/mdx-components'
 import { PageTransition } from '@/components/page-transition'
+import { Cell } from '@/components/sheet/cell'
+import { PlateNumber } from '@/components/sheet/plate-number'
+import { Sheet } from '@/components/sheet/sheet'
 import { Toc } from '@/components/toc'
 import { workBySlug, works } from '@/lib/content'
 
@@ -31,50 +35,72 @@ export default async function WorkDetail({ params }: Props) {
     ['Team', w.team],
     ['Stack', w.stack.join(', ')],
     ['Status', w.status],
+    ...Object.entries(w.links).map(([k, href]) => [k, href] as [string, string]),
   ]
+  const isLink = (v: string) => /^https?:\/\//.test(v)
   return (
     <PageTransition>
-      <article className="site-container page-x pt-16 md:pt-24">
-        <Link
-          href="/work"
-          transitionTypes={['nav-back']}
-          className="label text-ink-muted hover:text-ink"
-        >
-          Back to work
-        </Link>
-        <p className="mt-8 label text-accent">{String(w.order).padStart(2, '0')}</p>
-        <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
-          <h1 className="mt-4 display">{w.title}</h1>
-        </ViewTransition>
-        <p className="mt-8 measure text-ink-muted">{w.summary}</p>
-        <dl className="mt-12 grid gap-y-4 py-6 hairline-b hairline-t md:grid-cols-3">
-          {meta.map(([k, v]) => (
-            <div key={k}>
-              <dt className="label text-ink-muted">
-                <Decode>{k}</Decode>
-              </dt>
-              <dd className="mt-1">{v}</dd>
-            </div>
-          ))}
-          {Object.entries(w.links).map(([k, href]) => (
-            <div key={k}>
-              <dt className="label text-ink-muted">{k}</dt>
-              <dd className="mt-1">
-                <a href={href} className="text-accent">
-                  {href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                </a>
-              </dd>
-            </div>
-          ))}
-        </dl>
-        <div className="mt-8 lg:grid lg:grid-cols-12 lg:gap-6">
-          <aside className="hidden lg:col-span-3 lg:block">
+      <article className="pb-16">
+        <ConsolePlate label={`P/${String(w.order).padStart(2, '0')} ${w.client}`} />
+        <Sheet as="header">
+          <PlateNumber n={w.order} col={1} end={3} md={{ col: 1, end: 3 }} />
+          <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r t>
+            <Link
+              href="/work"
+              transitionTypes={['nav-back']}
+              className="label text-ink-muted hover:text-ink"
+            >
+              Back to work
+            </Link>
+          </Cell>
+          <Cell col={1} end={10} md={{ col: 1, end: 7 }} l t b className="pt-8 pb-10 md:pt-12">
+            <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
+              <h1 className="display">{w.title}</h1>
+            </ViewTransition>
+            <p className="mt-8 measure text-ink-muted">{w.summary}</p>
+          </Cell>
+          <Cell col={10} end={13} l r t b className="hidden lg:block" />
+        </Sheet>
+
+        <Sheet as="dl" className="case-meta">
+          {meta.map(([k, v], i) => {
+            const c = (i % 3) * 4 + 1
+            return (
+              <Cell
+                key={k}
+                col={c}
+                end={c + 4}
+                md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
+                sm={{ col: 1, end: 5 }}
+                l
+                r={i % 3 === 2}
+                b
+              >
+                <dt className="label text-ink-muted">
+                  <Decode>{k}</Decode>
+                </dt>
+                <dd className="mt-1">
+                  {isLink(v) ? (
+                    <a href={v} className="text-accent underline underline-offset-4">
+                      {v.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                    </a>
+                  ) : (
+                    v
+                  )}
+                </dd>
+              </Cell>
+            )
+          })}
+        </Sheet>
+
+        <Sheet className="mt-8">
+          <Cell col={1} end={4} l className="hidden lg:block">
             <Toc headings={w.headings} />
-          </aside>
-          <div id="case-body" className="lg:col-span-7 lg:col-start-4">
+          </Cell>
+          <Cell id="case-body" col={4} end={11} md={{ col: 1, end: 7 }} l r className="prose-cell">
             <Mdx code={w.body} />
-          </div>
-        </div>
+          </Cell>
+        </Sheet>
       </article>
     </PageTransition>
   )

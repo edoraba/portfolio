@@ -33,11 +33,10 @@
   --text-label--line-height: 1.2;
   --text-label--letter-spacing: 0.06em;
 
-  --spacing-page: clamp(16px, 4vw, 64px);
   --spacing-section: clamp(96px, 12vw, 192px);
   --spacing-block: clamp(32px, 4vw, 64px);
-  --container-site: 1400px;
 
+  --ease-editorial: cubic-bezier(0.625, 0.05, 0, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-hop: cubic-bezier(0.56, 0, 0.35, 0.98);
   --ease-inout-power3: cubic-bezier(0.65, 0, 0.35, 1);
@@ -48,6 +47,11 @@
 
 @layer base {
   html {
+    /* The sheet. Mirrored in lib/sheet.ts; tests/unit/sheet.test.ts keeps them equal. */
+    --page: clamp(16px, 4vw, 64px);
+    --gap: 12px;
+    --cols: 4;
+    --cell-pad: 12px;
     background: var(--canvas);
     color: var(--ink);
     font-family: var(--font-sans);
@@ -57,6 +61,23 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-variant-numeric: tabular-nums;
+  }
+  @media (min-width: 768px) {
+    html {
+      --gap: 16px;
+      --cols: 6;
+    }
+  }
+  @media (min-width: 1024px) {
+    html {
+      --gap: 24px;
+      --cols: 12;
+    }
+  }
+  @media (min-width: 1600px) {
+    html {
+      --page: calc((100vw - 1600px) / 2 + 64px);
+    }
   }
   body {
     margin: 0;
@@ -140,12 +161,245 @@
 @utility hairline-b {
   border-bottom: 1px solid var(--hairline);
 }
-@utility page-x {
-  padding-inline: var(--spacing-page);
+
+/* The sheet: full-bleed grid, gutters as outer tracks, content columns between named lines
+   c 1 .. c cols+1. Every section is a sheet; every child is placed with --cs/--ce variables
+   (see components/sheet/span.ts). Hairlines sit on column lines by construction. */
+.sheet {
+  display: grid;
+  grid-template-columns: [page-start] var(--page) repeat(4, [c] minmax(0, 1fr)) [c] var(
+      --page
+    ) [page-end];
+  column-gap: var(--gap);
 }
-@utility site-container {
-  max-width: var(--container-site);
-  margin-inline: auto;
+@media (min-width: 768px) {
+  .sheet {
+    grid-template-columns: [page-start] var(--page) repeat(6, [c] minmax(0, 1fr)) [c] var(
+        --page
+      ) [page-end];
+  }
+}
+@media (min-width: 1024px) {
+  .sheet {
+    grid-template-columns: [page-start] var(--page) repeat(12, [c] minmax(0, 1fr)) [c] var(
+        --page
+      ) [page-end];
+  }
+}
+.on-sheet {
+  grid-column: c var(--cs-sm, 1) / c var(--ce-sm, 5);
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .on-sheet {
+    grid-column: c var(--cs-md, 1) / c var(--ce-md, 7);
+  }
+}
+@media (min-width: 1024px) {
+  .on-sheet {
+    grid-column: c var(--cs, 1) / c var(--ce, 13);
+  }
+}
+.col-full {
+  grid-column: page-start / page-end;
+}
+
+/* Cells: padding keeps text off the lines; hairlines are pseudo-elements so they can draw in. */
+.cell {
+  position: relative;
+  padding: var(--cell-pad);
+}
+.cell-flush {
+  padding: 0;
+}
+.cell-l::before,
+.cell-r::after,
+.cell-t > .cell-line-t,
+.cell-b > .cell-line-b {
+  content: '';
+  position: absolute;
+  background: var(--hairline);
+  pointer-events: none;
+}
+.cell-l::before,
+.cell-r::after {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform-origin: top;
+}
+.cell-l::before {
+  left: 0;
+}
+.cell-r::after {
+  right: 0;
+}
+.cell-t {
+  background: linear-gradient(var(--hairline), var(--hairline)) top left / var(--line-w, 100%) 1px
+    no-repeat;
+}
+.cell-b {
+  background: linear-gradient(var(--hairline), var(--hairline)) bottom left / var(--line-w, 100%)
+    1px no-repeat;
+}
+.cell-t.cell-b {
+  background:
+    linear-gradient(var(--hairline), var(--hairline)) top left / var(--line-w, 100%) 1px no-repeat,
+    linear-gradient(var(--hairline), var(--hairline)) bottom left / var(--line-w, 100%) 1px
+      no-repeat;
+}
+.rule {
+  height: 1px;
+  background: var(--hairline);
+  transform-origin: left;
+  pointer-events: none;
+}
+.rule-v {
+  width: 1px;
+  height: 100%;
+  transform-origin: top;
+}
+
+/* Drawing: until a cell or rule enters the viewport its lines are collapsed; is-drawn releases
+   them on the editorial ease. Only with JS and full motion; reduced motion draws at once. */
+html.js[data-motion='full'] .rule {
+  transition: transform 800ms var(--ease-editorial);
+}
+html.js[data-motion='full'] .rule:not(.is-drawn) {
+  transform: scaleX(0);
+}
+html.js[data-motion='full'] .rule-v:not(.is-drawn) {
+  transform: scaleY(0);
+}
+html.js[data-motion='full'] .cell-l::before,
+html.js[data-motion='full'] .cell-r::after {
+  transition: transform 800ms var(--ease-editorial);
+}
+html.js[data-motion='full'] .cell:not(.is-drawn).cell-l::before,
+html.js[data-motion='full'] .cell:not(.is-drawn).cell-r::after {
+  transform: scaleY(0);
+}
+html.js[data-motion='full'] .cell-t,
+html.js[data-motion='full'] .cell-b {
+  transition: --line-w 800ms var(--ease-editorial);
+}
+html.js[data-motion='full'] .cell:not(.is-drawn).cell-t,
+html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
+  --line-w: 0%;
+}
+@property --line-w {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+
+@layer components {
+  /* The console header: two rows of cells, sticky, on the canvas so content scrolls under it. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--canvas);
+    grid-auto-rows: 48px;
+    border-top: 1px solid var(--hairline);
+  }
+  @media (min-width: 1024px) {
+    .site-header {
+      grid-auto-rows: 40px;
+    }
+  }
+  .site-header .cell {
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+  }
+  .site-header .cell > p {
+    min-width: 0;
+  }
+  /* A link or button that fills its cell so the whole cell is the target. */
+  .console-link {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 24px;
+    padding-inline: var(--cell-pad);
+    transition: background-color 200ms var(--ease-out-expo);
+  }
+  .console-link:hover {
+    background: var(--surface);
+  }
+  .console-link[aria-pressed='true'] {
+    background: var(--surface-2);
+  }
+  .console-line {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .site-header .swatch {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Full-screen menu below lg. */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(48px * 2 + var(--page)) var(--page) var(--page);
+  background: color-mix(in srgb, var(--canvas) 92%, transparent);
+}
+.menu__list {
+  display: grid;
+  gap: 4px;
+  text-align: right;
+}
+.menu__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 16px;
+  width: 100%;
+  justify-content: flex-end;
+  padding-block: 4px;
+  color: var(--ink);
+}
+.menu__link[aria-current='page'] {
+  color: var(--accent);
+}
+.menu__n {
+  width: 2ch;
+  text-align: left;
+}
+.menu__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--cell-pad);
+  border-top: 1px solid var(--hairline);
+}
+
+/* Long-form text inside a cell keeps the measure. */
+.prose-cell {
+  padding-block: var(--spacing-block);
+}
+.prose-cell > * {
+  max-width: 65ch;
+}
+.page-header {
+  margin-top: 0;
+}
+.work-row {
+  display: grid;
+}
+.hero-sheet .hero-mask {
+  padding-inline: var(--cell-pad);
 }
 
 /* The field: one fixed canvas behind everything, pixels are dither cells. */
@@ -342,7 +596,7 @@ html[data-fx='negative'] .page {
   z-index: 61;
   left: 50%;
   top: 15vh;
-  width: min(560px, calc(100vw - 2 * var(--spacing-page)));
+  width: min(560px, calc(100vw - 2 * var(--page)));
   transform: translateX(-50%);
   background: var(--canvas);
   border: 1px solid var(--hairline);
@@ -427,32 +681,23 @@ html[data-fx='negative'] .page {
   inset: 0;
   z-index: 70;
   pointer-events: none;
-  --guide: color-mix(in srgb, var(--accent) 28%, transparent);
+  --guide: var(--accent);
   background: repeating-linear-gradient(to bottom, var(--guide) 0 1px, transparent 1px 8px);
+  opacity: 0.3;
 }
-.guides__cols {
+.guides__sheet {
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
 }
 .guides__col {
   border-inline: 1px solid var(--guide);
-  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  background: color-mix(in srgb, var(--guide) 8%, transparent);
 }
-@media (max-width: 1023px) {
-  .guides__cols {
-    grid-template-columns: repeat(6, 1fr);
-  }
+@media (max-width: 1023.98px) {
   .guides__col:nth-child(n + 7) {
     display: none;
   }
 }
-@media (max-width: 767px) {
-  .guides__cols {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
+@media (max-width: 767.98px) {
   .guides__col:nth-child(n + 5) {
     display: none;
   }
@@ -464,7 +709,7 @@ html[data-fx='negative'] .page {
   right: 8px;
   font: 11px var(--font-mono);
   letter-spacing: 0.06em;
-  color: var(--accent);
+  color: var(--guide);
 }
 
 /* Table of contents on long-form pages */

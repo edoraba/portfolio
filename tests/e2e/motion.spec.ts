@@ -36,8 +36,10 @@ test('G toggles the grid overlay and persists', async ({ page }) => {
   await expect(page.locator('.guides')).toHaveCount(0)
 })
 
-test('theme swatches form a radiogroup with six worlds', async ({ page }) => {
+test('theme swatches form a radiogroup with six worlds', async ({ page, isMobile }) => {
   await page.goto('/')
+  // Below lg the swatches live in the full-screen menu.
+  if (isMobile) await page.getByRole('button', { name: 'Menu' }).click()
   const group = page.getByRole('radiogroup', { name: 'Theme' }).first()
   await expect(group.getByRole('radio')).toHaveCount(6)
   await expect(group.getByRole('radio', { name: 'Signal' })).toHaveAttribute('aria-checked', 'true')

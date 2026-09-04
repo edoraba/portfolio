@@ -3,19 +3,26 @@ import Link from 'next/link'
 import { ViewTransition } from 'react'
 import { Decode } from './decode'
 import { LineReveal } from './line-reveal'
+import { Cell } from './sheet/cell'
 
+/**
+ * The case study index as rows of cells on the sheet: number, title and summary, year.
+ * The whole row is one link; the title morphs into the case study heading.
+ */
 export function WorkList({ works }: { works: Work[] }) {
   return (
-    <ol className="hairline-t">
+    <ol className="work-list">
       {works.map((w) => (
-        <li key={w.slug} className="hairline-b">
+        <li key={w.slug}>
           <Link
             href={`/work/${w.slug}`}
             transitionTypes={['nav-forward']}
-            className="group grid gap-3 py-8 md:grid-cols-[3rem_1fr_auto] md:items-baseline"
+            className="work-row sheet group"
           >
-            <Decode className="label text-accent">{String(w.order).padStart(2, '0')}</Decode>
-            <span>
+            <Cell as="span" col={1} end={2} md={{ col: 1, end: 2 }} sm={{ col: 1, end: 2 }} l t>
+              <Decode className="label text-accent">{`P/${String(w.order).padStart(2, '0')}`}</Decode>
+            </Cell>
+            <Cell as="span" col={2} end={11} md={{ col: 2, end: 6 }} sm={{ col: 2, end: 5 }} l t>
               <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
                 <LineReveal
                   as="span"
@@ -25,11 +32,21 @@ export function WorkList({ works }: { works: Work[] }) {
                 </LineReveal>
               </ViewTransition>
               <span className="mt-3 block measure text-ink-muted">{w.summary}</span>
-            </span>
-            <span className="label text-ink-muted">
+            </Cell>
+            <Cell
+              as="span"
+              col={11}
+              end={13}
+              md={{ col: 6, end: 7 }}
+              sm={{ col: 1, end: 5 }}
+              l
+              r
+              t
+              className="label text-ink-muted"
+            >
               {w.year}
               {w.confidential ? ' NDA' : ''}
-            </span>
+            </Cell>
           </Link>
         </li>
       ))}

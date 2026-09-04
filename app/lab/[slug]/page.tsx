@@ -1,8 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { ConsolePlate } from '@/components/console/console-plate'
 import { Mdx } from '@/components/mdx-components'
 import { labBySlug, labs } from '@/lib/content'
 import { PageTransition } from '@/components/page-transition'
+import { Cell } from '@/components/sheet/cell'
+import { PlateNumber } from '@/components/sheet/plate-number'
+import { Sheet } from '@/components/sheet/sheet'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -22,18 +26,29 @@ export default async function LabDetail({ params }: Props) {
   if (!l) notFound()
   return (
     <PageTransition>
-      <article className="site-container page-x pt-16 md:pt-24">
-        <p className="label text-ink-muted">{l.date}</p>
-        <h1 className="mt-4 display">{l.title}</h1>
-        <div className="mt-12 aspect-video bg-surface" aria-hidden="true" />
-        <div className="mt-8">
-          <Mdx code={l.body} />
-        </div>
-        {l.source ? (
-          <a href={l.source} className="mt-8 inline-block label text-accent">
-            Source
-          </a>
-        ) : null}
+      <article className="pb-16">
+        <ConsolePlate label={`Lab ${l.title}`} />
+        <Sheet as="header">
+          <PlateNumber n="Lab" label={l.date} col={1} end={3} md={{ col: 1, end: 3 }} />
+          <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r t />
+          <Cell col={1} end={9} md={{ col: 1, end: 7 }} l t b className="pt-8 pb-10 md:pt-12">
+            <h1 className="display">{l.title}</h1>
+          </Cell>
+          <Cell col={9} end={13} l r t b className="hidden lg:block" />
+        </Sheet>
+        <Sheet className="mt-8">
+          <Cell col={1} end={13} l r b flush>
+            <div className="aspect-video bg-surface" aria-hidden="true" />
+          </Cell>
+          <Cell col={1} end={9} md={{ col: 1, end: 7 }} l r className="prose-cell">
+            <Mdx code={l.body} />
+            {l.source ? (
+              <a href={l.source} className="mt-8 inline-block label text-accent">
+                Source
+              </a>
+            ) : null}
+          </Cell>
+        </Sheet>
       </article>
     </PageTransition>
   )

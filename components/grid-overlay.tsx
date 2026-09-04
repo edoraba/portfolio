@@ -1,13 +1,16 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { BREAKPOINTS } from '@/lib/sheet'
 import { useUi } from '@/lib/ui-store'
+import { spanStyle } from './sheet/span'
 
-const COLS = 12
+const COLS = BREAKPOINTS.lg.cols
 
 /**
- * The layout grid made visible: 12 columns at lg, 6 at md, 4 below, plus an 8px baseline
- * and the viewport width in a mono corner. Toggled with G (outside inputs) or from the palette,
- * persisted per visitor. An easter egg that shows the system the site is built on.
+ * The sheet made visible: the same grid every component sits on (same page tracks, same gaps,
+ * same column count per breakpoint), plus an 8px baseline and the viewport width in a mono
+ * corner. Because it is literally a `.sheet`, its lines coincide with every hairline on the
+ * page by construction. Toggled with G (see console/hotkeys.tsx) or from the palette.
  */
 export function GridOverlay() {
   const grid = useUi((s) => s.grid)
@@ -24,9 +27,18 @@ export function GridOverlay() {
   if (!grid) return null
   return (
     <div className="guides" aria-hidden="true" data-width={width}>
-      <div className="guides__cols site-container page-x">
+      <div className="guides__sheet sheet">
         {Array.from({ length: COLS }, (_, i) => (
-          <div key={i} className="guides__col" />
+          <div
+            key={i}
+            className="guides__col on-sheet"
+            style={spanStyle({
+              col: i + 1,
+              end: i + 2,
+              md: { col: i + 1, end: i + 2 },
+              sm: { col: i + 1, end: i + 2 },
+            })}
+          />
         ))}
       </div>
     </div>

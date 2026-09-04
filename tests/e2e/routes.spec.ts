@@ -40,11 +40,12 @@ test('skip link is first in tab order and works', async ({ page }) => {
   await expect(page).toHaveURL(/#main$/)
 })
 
-test('theme toggle persists across reload', async ({ page }) => {
+test('theme toggle persists across reload', async ({ page, isMobile }) => {
   await page.goto('/')
   const html = page.locator('html')
   const before = await html.getAttribute('data-theme')
   expect(before).toBe('signal')
+  if (isMobile) await page.getByRole('button', { name: 'Menu' }).click()
   await page.getByRole('radio', { name: 'Paper' }).first().click()
   // The swatch applies the theme inside a view transition, so poll instead of reading at once.
   await expect(html).toHaveAttribute('data-theme', 'paper')

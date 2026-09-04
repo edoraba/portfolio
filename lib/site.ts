@@ -9,6 +9,11 @@ export const site = {
   github: 'https://github.com/edoraba',
   linkedin: 'https://www.linkedin.com/in/edoardo-baravaglio/',
   repo: 'https://github.com/edoraba/portfolio',
+  /** Console header, row one. */
+  status1: 'Frontend developer with a design degree. Turin, IT',
+  /** Console header, row two, followed by the email. */
+  status2: 'Partner at Redergo. Write me',
+  coordinates: '45.07 N, 7.69 E',
 } as const
 
 export const navItems = [
