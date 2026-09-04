@@ -186,6 +186,24 @@
       [page-end];
   }
 }
+/* A grid nested inside a cell that spans the full sheet: the same named column lines without
+   the page gutters, so cells placed inside it still land on the site grid. */
+.subsheet {
+  display: grid;
+  grid-template-columns: repeat(4, [c] minmax(0, 1fr)) [c];
+  column-gap: var(--gap);
+}
+@media (min-width: 768px) {
+  .subsheet {
+    grid-template-columns: repeat(6, [c] minmax(0, 1fr)) [c];
+  }
+}
+@media (min-width: 1024px) {
+  .subsheet {
+    grid-template-columns: repeat(12, [c] minmax(0, 1fr)) [c];
+  }
+}
+
 .on-sheet {
   grid-column: c var(--cs-sm, 1) / c var(--ce-sm, 5);
   min-width: 0;
@@ -404,6 +422,84 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 /* The field paints through the mask, so nothing in the hero may sit on an opaque background. */
 .hero-sheet .hero-band {
   background: none;
+}
+
+/* P/02. A ruled box seen slightly from above: the front face carries the text, four ruled sides
+   give it depth, and the scroll flattens both the tilt and the depth to leave a plain table. */
+.about-stage {
+  perspective: 900px;
+  perspective-origin: 50% 32%;
+  display: grid;
+  align-content: center;
+  min-height: 74vh;
+  padding-block: var(--spacing-block);
+}
+.box3d {
+  --box-tilt: 0deg;
+  --box-depth: 0px;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--box-tilt));
+  transform-origin: 50% 100%;
+}
+.box3d__face {
+  position: relative;
+  z-index: 1;
+}
+.box3d__facts {
+  margin: 0;
+}
+.box3d__side {
+  position: absolute;
+  pointer-events: none;
+  background-color: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.box3d__side--top,
+.box3d__side--bottom {
+  left: 0;
+  right: 0;
+  height: var(--box-depth);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--hairline) 0 1px,
+    transparent 1px 24px
+  );
+}
+.box3d__side--left,
+.box3d__side--right {
+  top: 0;
+  bottom: 0;
+  width: var(--box-depth);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--hairline) 0 1px,
+    transparent 1px 24px
+  );
+}
+.box3d__side--top {
+  top: 0;
+  transform-origin: top;
+  transform: rotateX(90deg);
+}
+.box3d__side--bottom {
+  bottom: 0;
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+}
+.box3d__side--left {
+  left: 0;
+  transform-origin: left;
+  transform: rotateY(-90deg);
+}
+.box3d__side--right {
+  right: 0;
+  transform-origin: right;
+  transform: rotateY(90deg);
+}
+/* Facts fade and rise as the box flattens; without JS they are simply there. */
+.fact {
+  opacity: calc(0.12 + 0.88 * var(--fact-in, 1));
+  transform: translateY(calc((1 - var(--fact-in, 1)) * 14px));
 }
 
 /* P/01. The band is the second window in the hero mask: an empty strip whose height the scroll

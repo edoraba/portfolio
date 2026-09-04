@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { AboutBox } from '@/components/plates/about-box'
 import { Hero } from '@/components/plates/hero'
 import { WorkList } from '@/components/work-list'
 import { featuredWorks, labs, writings } from '@/lib/content'
@@ -23,6 +24,8 @@ export default function Home() {
           year: w.year,
         }))}
       />
+
+      <AboutBox />
 
       <div className="mt-section">
         <Sheet>

@@ -2,6 +2,8 @@ import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from 'reac
 
 type Props<T extends ElementType> = {
   as?: T
+  /** A grid nested inside a cell: same content columns, without the page gutter tracks. */
+  nested?: boolean
   className?: string
   children?: ReactNode
   /** React 19 passes ref as a plain prop; plates need one to build their ScrollTrigger. */
@@ -15,13 +17,14 @@ type Props<T extends ElementType> = {
  */
 export function Sheet<T extends ElementType = 'section'>({
   as,
+  nested,
   className,
   children,
   ...rest
 }: Props<T>) {
   const Tag = (as ?? 'section') as ElementType
   return (
-    <Tag className={['sheet', className].filter(Boolean).join(' ')} {...rest}>
+    <Tag className={[nested ? 'subsheet' : 'sheet', className].filter(Boolean).join(' ')} {...rest}>
       {children}
     </Tag>
   )
