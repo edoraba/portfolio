@@ -354,7 +354,7 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   flex-direction: column;
   justify-content: space-between;
   padding: calc(48px * 2 + var(--page)) var(--page) var(--page);
-  background: color-mix(in srgb, var(--canvas) 92%, transparent);
+  background: color-mix(in srgb, var(--canvas) 96%, transparent);
 }
 .menu__list {
   display: grid;

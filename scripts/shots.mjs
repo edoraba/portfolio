@@ -25,6 +25,10 @@ for (const size of sizes) {
     await page.waitForTimeout(1500)
     const grid = process.env.GRID !== '0'
     if (grid) await page.keyboard.press('g')
+    if (process.env.MENU === '1' && size.mobile) {
+      await page.getByRole('button', { name: 'Menu' }).click()
+      await page.waitForTimeout(600)
+    }
     await page.waitForTimeout(300)
     const slug = route === '/' ? 'home' : route.replace(/\//g, '_').replace(/^_/, '')
     await page.screenshot({
