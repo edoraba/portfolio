@@ -44,11 +44,17 @@ for (const size of sizes) {
       path: path.join(out, `${size.name}-${slug}.png`),
       fullPage: process.env.FULL === '1',
     })
-    if (process.env.SCROLL) {
-      await page.mouse.wheel(0, Number(process.env.SCROLL))
-      await page.waitForTimeout(1200)
-      await page.screenshot({ path: path.join(out, `${size.name}-${slug}-scrolled.png`) })
+    // SCROLLS=800,1600,2400 captures one frame per scroll position, for choreography review.
+    const stops = (process.env.SCROLLS ?? process.env.SCROLL ?? '')
+      .split(',')
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isFinite(n) && n > 0)
+    for (const stop of stops) {
+      await page.evaluate((to) => window.scrollTo(0, to), stop)
+      await page.waitForTimeout(1100)
+      await page.screenshot({ path: path.join(out, `${size.name}-${slug}-${stop}.png`) })
     }
+    if (stops.length) await page.evaluate(() => window.scrollTo(0, 0))
     if (grid) await page.keyboard.press('g')
   }
   await ctx.close()

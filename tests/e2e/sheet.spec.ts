@@ -14,9 +14,20 @@ for (const route of routes) {
       const cols = Array.from(document.querySelectorAll('.guides__col'))
         .filter((el) => getComputedStyle(el).display !== 'none')
         .map((el) => Math.round(el.getBoundingClientRect().left * 10) / 10)
-      const cells = Array.from(document.querySelectorAll('.cell'))
+      // Layout position, not painted position: a cell inside a 3D transformed plate is still
+      // on the grid even though its projected rect is not.
+      const layoutLeft = (el: HTMLElement) => {
+        let x = 0
+        let node: HTMLElement | null = el
+        while (node) {
+          x += node.offsetLeft
+          node = node.offsetParent as HTMLElement | null
+        }
+        return Math.round(x * 10) / 10
+      }
+      const cells = Array.from(document.querySelectorAll<HTMLElement>('.cell'))
         .filter((el) => el.getBoundingClientRect().width > 0)
-        .map((el) => Math.round(el.getBoundingClientRect().left * 10) / 10)
+        .map(layoutLeft)
       return { cols, cells }
     })
     expect(cols.length).toBeGreaterThanOrEqual(4)

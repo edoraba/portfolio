@@ -10,6 +10,13 @@ import { useMotion } from '@/lib/motion/store'
  * Native scroll stays underneath (anchors, sticky, keyboard and the field's scrollY all work),
  * the wheel just gets a light lerp. Never created under reduced motion, never on reading pages.
  */
+let instance: Lenis | null = null
+
+/** The live Lenis instance, or null on reading pages and under reduced motion. */
+export function getLenis(): Lenis | null {
+  return instance
+}
+
 export function SmoothScroll() {
   const reduced = useMotion((s) => s.reduced)
 
@@ -17,6 +24,7 @@ export function SmoothScroll() {
     if (reduced) return
     setupGsap()
     const lenis = new Lenis({ lerp: 0.08, autoRaf: false, smoothWheel: true, syncTouch: false })
+    instance = lenis
     lenis.on('scroll', ScrollTrigger.update)
     const unsub = Tempus.add(({ time }) => lenis.raf(time), { order: -5, label: 'lenis' })
     // Pinned plates measure in pixels: remeasure once the real fonts are in and the layout settles.
@@ -27,6 +35,7 @@ export function SmoothScroll() {
     return () => {
       cancelled = true
       unsub?.()
+      instance = null
       lenis.destroy()
     }
   }, [reduced])

@@ -25,3 +25,10 @@ export function fitSpan(span: Span, from: number, to: number): Span {
   const end = Math.max(col + 1, Math.min(to + 1, Math.round((span.end - 1) * scale) + 1))
   return { col, end }
 }
+
+/** Height of the sticky console header, measured live so pinned plates start below it. */
+export function headerHeight(): number {
+  if (typeof document === 'undefined') return 80
+  const el = document.querySelector<HTMLElement>('.site-header')
+  return el ? Math.round(el.getBoundingClientRect().height) : 80
+}

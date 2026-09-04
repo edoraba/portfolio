@@ -6,6 +6,7 @@ import { useField } from '@/lib/field/store'
 import { gsap, setupGsap } from '@/lib/motion/gsap'
 import { itemProgress } from '@/lib/motion/scrub'
 import { useMotion } from '@/lib/motion/store'
+import { headerHeight } from '@/lib/sheet'
 import { Monogram } from '../console/monogram'
 import { Decode } from '../decode'
 import { Cell } from '../sheet/cell'
@@ -42,7 +43,7 @@ export function AboutBox() {
           ease: 'none',
           scrollTrigger: {
             trigger: section,
-            start: 'top top',
+            start: () => `top top+=${headerHeight()}`,
             end: '+=150%',
             pin: true,
             scrub: true,

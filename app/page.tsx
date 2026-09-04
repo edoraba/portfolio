@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { AboutBox } from '@/components/plates/about-box'
 import { Hero } from '@/components/plates/hero'
-import { WorkList } from '@/components/work-list'
-import { featuredWorks, labs, writings } from '@/lib/content'
+import { WorkStage } from '@/components/plates/work-stage'
+import { labs, works, writings } from '@/lib/content'
 import { PageTransition } from '@/components/page-transition'
 import { SmoothScroll } from '@/components/smooth-scroll'
 import { Cell } from '@/components/sheet/cell'
@@ -12,12 +12,12 @@ import { Sheet } from '@/components/sheet/sheet'
 
 // Plan 04 shell: the home on the sheet. The plates (P/02 to P/07) arrive with Plan 05.
 export default function Home() {
-  const four = featuredWorks.slice(0, 4)
+  const cases = works.slice(0, 5)
   return (
     <PageTransition>
       <SmoothScroll />
       <Hero
-        works={four.map((w) => ({
+        works={cases.map((w) => ({
           slug: w.slug,
           order: w.order,
           client: w.client,
@@ -27,27 +27,17 @@ export default function Home() {
 
       <AboutBox />
 
-      <div className="mt-section">
-        <Sheet>
-          <PlateNumber
-            n={3}
-            label="Selected work"
-            col={1}
-            end={4}
-            md={{ col: 1, end: 4 }}
-            sm={{ col: 1, end: 3 }}
-          />
-          <Cell col={4} end={13} md={{ col: 4, end: 7 }} sm={{ col: 3, end: 5 }} l r t />
-        </Sheet>
-        <WorkList works={four} />
-        <Sheet>
-          <Cell col={1} end={13} l r t b>
-            <Link href="/work" className="label text-accent">
-              All work
-            </Link>
-          </Cell>
-        </Sheet>
-      </div>
+      <WorkStage
+        works={cases.map((w) => ({
+          slug: w.slug,
+          order: w.order,
+          title: w.title,
+          client: w.client,
+          year: w.year,
+          stack: [...w.stack],
+          confidential: w.confidential,
+        }))}
+      />
 
       <Sheet className="mt-section pb-16">
         <PlateNumber
