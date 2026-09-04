@@ -16,11 +16,14 @@ export function Plate({
   id,
   className,
   children,
+  meta,
   sectionRef,
 }: {
   id: PlateId
   className?: string
   children?: ReactNode
+  /** Mono facts printed in the ruled cell next to the plate number. */
+  meta?: ReactNode
   sectionRef?: RefObject<HTMLElement | null>
 }) {
   const own = useRef<HTMLElement>(null)
@@ -43,7 +46,18 @@ export function Plate({
         md={{ col: 1, end: 4 }}
         sm={{ col: 1, end: 3 }}
       />
-      <Cell col={4} end={13} md={{ col: 4, end: 7 }} sm={{ col: 3, end: 5 }} l r t />
+      <Cell
+        col={4}
+        end={13}
+        md={{ col: 4, end: 7 }}
+        sm={{ col: 3, end: 5 }}
+        l
+        r
+        t
+        className="label text-ink-muted"
+      >
+        {meta}
+      </Cell>
       {children}
     </Sheet>
   )

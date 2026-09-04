@@ -401,6 +401,32 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 .hero-sheet .hero-mask {
   padding-inline: var(--cell-pad);
 }
+/* The field paints through the mask, so nothing in the hero may sit on an opaque background. */
+.hero-sheet .hero-band {
+  background: none;
+}
+
+/* P/01. The band is the second window in the hero mask: an empty strip whose height the scroll
+   closes. Without a live field it carries the same static dither as the headline. */
+.hero-band {
+  --band-scale: 1;
+  height: calc(14vh * var(--band-scale));
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .hero-band {
+    height: calc(22vh * var(--band-scale));
+  }
+}
+.hero-band__fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.hero-meta {
+  display: flex;
+  gap: 24px;
+}
 
 /* Sliced-letter flip: strips slide out in alternating directions and return with the alt label. */
 .flip-text {

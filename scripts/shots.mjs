@@ -11,7 +11,16 @@ const sizes = [
   { name: 'mobile', width: 390, height: 844, mobile: true },
 ]
 mkdirSync(out, { recursive: true })
-const browser = await chromium.launch()
+// GPU=1 launches a headed browser with hardware WebGL so the field really renders.
+const gpu = process.env.GPU === '1'
+const browser = await chromium.launch(
+  gpu
+    ? {
+        headless: false,
+        args: ['--use-angle=d3d11', '--ignore-gpu-blocklist', '--window-position=-3000,0'],
+      }
+    : {},
+)
 for (const size of sizes) {
   const ctx = await browser.newContext({
     viewport: { width: size.width, height: size.height },
@@ -22,7 +31,7 @@ for (const size of sizes) {
   for (const route of routes) {
     await page.goto(base + route, { waitUntil: 'networkidle' })
     await page.evaluate(() => document.fonts.ready)
-    await page.waitForTimeout(1500)
+    await page.waitForTimeout(gpu ? 2600 : 1500)
     const grid = process.env.GRID !== '0'
     if (grid) await page.keyboard.press('g')
     if (process.env.MENU === '1' && size.mobile) {
