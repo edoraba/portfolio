@@ -129,10 +129,10 @@ rounded:
 
 spacing:
   unit: 4px
-  page-padding: clamp(16px, 4vw, 64px)
-  container-max: 1400px
-  grid-columns: 12
-  gutter: 24px
+  sheet: full bleed, no max width; page gutters are grid tracks (clamp(16px, 4vw, 64px), growing past 1600px)
+  columns: 12 at 1024px and up, 6 at 768px, 4 below
+  gap: 24px, 16px, 12px per breakpoint
+  cell-pad: 12px
   section-gap: clamp(96px, 12vw, 192px)
   block-gap: clamp(32px, 4vw, 64px)
   stack-gap: 12px
@@ -156,6 +156,9 @@ motion:
   pointer-release: 175ms
   decode-tick: 40ms
   reduced-motion: field static, no smooth scroll, no split text, width axis static, 150ms opacity fades only
+  rules-draw: 800ms editorial, stagger 60ms, on enter, once
+  slice-flip: 4 strips, 500ms hop, 30ms stagger, alternating directions
+  loader: calibration entrance, real readiness only (fonts, shader, content, images), 600ms to 1200ms, hard cap 1500ms, once per session, never under reduced motion, no percentage
 
 field:
   renderer: hand-written WebGL2, one fragment shader, full-screen triangle, parallel shader compile
@@ -172,7 +175,7 @@ field:
 
 - Mobile first. Every component is designed at 390px and verified at 390x844, 768x1024 and 1440x900 in both themes. No horizontal overflow, touch targets at least 24px, every hover state has a touch equivalent (tap, visible by default, or irrelevant).
 
-- 12-column grid, 24px gutters, max 1400px, page padding clamp(16px, 4vw, 64px).
+- The sheet: every section is a `.sheet` (one full-bleed CSS grid with named column lines), every piece of text lives in a `.cell` whose hairlines sit on column lines. No padding wrappers, no container. The G overlay is the same grid, so it coincides with every hairline by construction. Rules draw on enter.
 - Desktop (1024px and up): the numbered index lives in the right margin on home and /work, and is the table of contents on case studies. Below 1024px it collapses into the flow above the content it indexes.
 - Sections are separated by space and one hairline, never by cards. Lab tiles are the only cards: surface step plus hairline, radius 0.
 - Every image is a `<figure>` with a mono caption; case study figures are numbered "Fig. 01".
@@ -189,7 +192,7 @@ field:
 
 - The accent is ink, not fill: links, index numbers, focus rings, the lit part of the field. Never a button background larger than a label, never a section background.
 - No pure black or white, no shadows, no gradients except the dither itself.
-- Both themes are complete. Dark is the default when the OS states no preference. The toggle transitions the field (a 2000ms wipe of field colours), not just the CSS variables.
+- Six complete themes (signal, field, paper, phosphor, cobalt, ash), signal is the default. On bold canvases (signal, cobalt, ash) the accent is the ink itself. The toggle transitions the field (a 2000ms wipe of field colours), not just the CSS variables.
 
 ## Motion
 
@@ -207,7 +210,7 @@ field:
 
 ## Do not
 
-- No preloader or percentage counter, no custom cursor, no marquee, no magnetic buttons, no curved sticky footer, no image-follows-cursor lists, no greeting-word intro, no "rotate your device", no horizontal-only scroll, no bento grid, no 3D avatar, no skill bars, no logo wall, no testimonial carousel, no scroll cue, no decorative status dots, no version stamps, no locale and weather strips, no glassmorphism, no purple gradients.
+- No percentage counter or fake loader (the calibration entrance reports real readiness, lasts at most 1.2s, shows once per session and never under reduced motion), no custom cursor, no marquee, no magnetic buttons, no curved sticky footer, no image-follows-cursor lists, no greeting-word intro, no "rotate your device", no horizontal-only scroll, no bento grid, no 3D avatar, no skill bars, no logo wall, no testimonial carousel, no scroll cue, no decorative status dots, no version stamps, no locale and weather strips, no glassmorphism, no purple gradients.
 - No section-number eyebrows and at most one eyebrow per three sections. The numbering that exists (nav 1 to 4, project index 01 to 05, Fig. 01) encodes real order.
 - No second WebGL scene. The field is the only rendered surface.
 - Never mention LoL Brain.

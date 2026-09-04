@@ -14,6 +14,17 @@
     // storage blocked: default stands
   }
   h.setAttribute('data-theme', t)
+  // Motion: the site toggle wins, otherwise the OS decides. Same rule as lib/motion/store.ts,
+  // applied here so rules and reveals never flash between the first paint and hydration.
+  var reduced = false
+  try {
+    var m = localStorage.getItem('motion')
+    reduced =
+      m === 'reduced' || (m !== 'full' && matchMedia('(prefers-reduced-motion: reduce)').matches)
+  } catch {
+    reduced = false
+  }
+  h.setAttribute('data-motion', reduced ? 'reduced' : 'full')
   h.classList.add('js', 'no-transitions')
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {

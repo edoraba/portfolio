@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { BREAKPOINTS } from '@/lib/sheet'
 import { useUi } from '@/lib/ui-store'
+import { useMounted } from '@/lib/use-mounted'
 import { spanStyle } from './sheet/span'
 
 const COLS = BREAKPOINTS.lg.cols
@@ -14,6 +15,7 @@ const COLS = BREAKPOINTS.lg.cols
  */
 export function GridOverlay() {
   const grid = useUi((s) => s.grid)
+  const mounted = useMounted()
   const [width, setWidth] = useState(0)
 
   useEffect(() => {
@@ -24,7 +26,9 @@ export function GridOverlay() {
     return () => window.removeEventListener('resize', update)
   }, [grid])
 
-  if (!grid) return null
+  // The stored preference is read on the client only: rendering it during hydration would
+  // mismatch the server markup and make React throw the whole document away.
+  if (!mounted || !grid) return null
   return (
     <div className="guides" aria-hidden="true" data-width={width}>
       <div className="guides__sheet sheet">

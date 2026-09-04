@@ -27,7 +27,11 @@ export function FieldMount() {
         if (!cancelled) setLoad(true)
       })
     }
-    if (document.readyState === 'complete') start()
+    // The calibration loader wants the field on screen at once; every other requester waits
+    // for the page to load and the browser to idle.
+    if (useField.getState().requests.includes('loader'))
+      queueMicrotask(() => !cancelled && setLoad(true))
+    else if (document.readyState === 'complete') start()
     else window.addEventListener('load', start, { once: true })
     return () => {
       cancelled = true

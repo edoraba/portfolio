@@ -421,7 +421,11 @@ html[data-motion='reduced'] .flip-text__strips {
 }
 .flip-text__strips {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  min-width: 100%;
+  width: max-content;
 }
 .flip-text__strip {
   position: absolute;
@@ -431,7 +435,10 @@ html[data-motion='reduced'] .flip-text__strips {
 .flip-text__a,
 .flip-text__b {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: max-content;
   white-space: nowrap;
   transition: transform 500ms var(--ease-hop);
   transition-delay: var(--d);

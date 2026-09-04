@@ -28,3 +28,18 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
     })
   }
 }
+
+// Stored preferences are read on the client only; they must never shape the server markup.
+test('a stored grid preference does not break hydration', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text())
+  })
+  await page.addInitScript(() => localStorage.setItem('grid', 'true'))
+  await page.goto('/')
+  await page.waitForTimeout(1000)
+  expect(errors, errors.join('\n')).toEqual([])
+  await expect(page.locator('.guides')).toHaveCount(1)
+  await expect(page.locator('html')).toHaveClass(/\bjs\b/)
+})
