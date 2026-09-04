@@ -167,23 +167,23 @@
    (see components/sheet/span.ts). Hairlines sit on column lines by construction. */
 .sheet {
   display: grid;
-  grid-template-columns: [page-start] var(--page) repeat(4, [c] minmax(0, 1fr)) [c] var(
-      --page
-    ) [page-end];
+  grid-template-columns:
+    [page-start] var(--page) repeat(4, [c] minmax(0, 1fr)) [c] var(--page)
+    [page-end];
   column-gap: var(--gap);
 }
 @media (min-width: 768px) {
   .sheet {
-    grid-template-columns: [page-start] var(--page) repeat(6, [c] minmax(0, 1fr)) [c] var(
-        --page
-      ) [page-end];
+    grid-template-columns:
+      [page-start] var(--page) repeat(6, [c] minmax(0, 1fr)) [c] var(--page)
+      [page-end];
   }
 }
 @media (min-width: 1024px) {
   .sheet {
-    grid-template-columns: [page-start] var(--page) repeat(12, [c] minmax(0, 1fr)) [c] var(
-        --page
-      ) [page-end];
+    grid-template-columns:
+      [page-start] var(--page) repeat(12, [c] minmax(0, 1fr)) [c] var(--page)
+      [page-end];
   }
 }
 .on-sheet {
@@ -400,6 +400,81 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 }
 .hero-sheet .hero-mask {
   padding-inline: var(--cell-pad);
+}
+
+/* Sliced-letter flip: strips slide out in alternating directions and return with the alt label. */
+.flip-text {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+/* The real label keeps its box and its accessible name; the strips paint over it. */
+.flip-text__real {
+  color: transparent;
+}
+html:not(.js) .flip-text__real,
+html[data-motion='reduced'] .flip-text__real {
+  color: inherit;
+}
+html[data-motion='reduced'] .flip-text__strips {
+  display: none;
+}
+.flip-text__strips {
+  position: absolute;
+  inset: 0;
+}
+.flip-text__strip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.flip-text__a,
+.flip-text__b {
+  position: absolute;
+  inset: 0;
+  white-space: nowrap;
+  transition: transform 500ms var(--ease-hop);
+  transition-delay: var(--d);
+}
+.flip-text__b {
+  transform: translateX(calc(var(--dir) * -100%));
+}
+.flip:hover .flip-text__a,
+.flip:focus-visible .flip-text__a,
+.flip[data-flipped] .flip-text__a {
+  transform: translateX(calc(var(--dir) * 100%));
+}
+.flip:hover .flip-text__b,
+.flip:focus-visible .flip-text__b,
+.flip[data-flipped] .flip-text__b {
+  transform: translateX(0);
+}
+
+/* Calibration loader */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--canvas) 78%, transparent);
+  color: var(--ink);
+}
+.loader__mark {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+.loader__bar {
+  transform: scaleY(0.15);
+  transition: transform 500ms var(--ease-editorial);
+}
+.loader__bar[data-on] {
+  transform: scaleY(1);
+}
+.loader__line {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 /* The field: one fixed canvas behind everything, pixels are dither cells. */

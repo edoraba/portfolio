@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 import type { Cell } from './quality'
 
-export type FieldMode = 'hero' | 'band' | 'off'
+export type FieldMode = 'hero' | 'band' | 'off' | 'calibrate'
 
 type FieldState = {
   /** WebGL, CSS masks and motion are all available on this device. */

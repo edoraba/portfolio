@@ -10,6 +10,7 @@ const ATTACK_MS = 25
 const RELEASE_MS = 175
 const FLOOR_HERO = 0.55
 const FLOOR_BAND = 0.04
+const FLOOR_CALIBRATE = 0.35
 
 /**
  * The one persistent WebGL surface. Mounted lazily by FieldMount, it draws only while
@@ -99,7 +100,8 @@ export default function FieldCanvas() {
           mode: s.mode,
           intensity: s.intensity,
           pointer: smooth,
-          floor: s.mode === 'hero' ? FLOOR_HERO : FLOOR_BAND,
+          floor:
+            s.mode === 'hero' ? FLOOR_HERO : s.mode === 'calibrate' ? FLOOR_CALIBRATE : FLOOR_BAND,
           band: s.band,
         })
         if (deltaTime < IGNORE_ABOVE_MS) {

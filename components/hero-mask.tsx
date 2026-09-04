@@ -43,6 +43,7 @@ export function HeroMask() {
       }
       const s = store.getState()
       if (!s.enabled) return
+      if (s.mode === 'calibrate') return
       const intensity = heroIntensity(window.scrollY, window.innerHeight)
       if (intensity > 0) {
         // The hero owns the field while it is on screen.
@@ -72,11 +73,26 @@ export function HeroMask() {
     }
     window.addEventListener('pointermove', onMove, { passive: true })
     document.documentElement.addEventListener('pointerleave', onLeave)
+    // After the calibration loader: the words open from the narrow width to full.
+    const onCalibrated = () => {
+      if (reduced) return
+      spans.forEach((span, i) => {
+        span.animate(
+          [
+            { fontVariationSettings: `'opsz' 96, 'wdth' ${WIDTH_MIN}` },
+            { fontVariationSettings: `'opsz' 96, 'wdth' ${WIDTH_MAX}` },
+          ],
+          { duration: 800, delay: i * 80, easing: 'cubic-bezier(0.625, 0.05, 0, 1)' },
+        )
+      })
+    }
+    window.addEventListener('calibrated', onCalibrated)
 
     return () => {
       unsub?.()
       window.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('pointerleave', onLeave)
+      window.removeEventListener('calibrated', onCalibrated)
       const s = store.getState()
       if (s.mode === 'hero') {
         s.setMode('off')

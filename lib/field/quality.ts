@@ -1,5 +1,6 @@
 export const CELLS = [2, 3, 4] as const
-export type Cell = (typeof CELLS)[number]
+/** Quality tiers plus the coarse 8px cell the loader starts from. */
+export type Cell = (typeof CELLS)[number] | 8
 export const WINDOW = 60
 // Frame interval budget in ms. At 60Hz a healthy interval is about 16.7ms; a p75
 // above 22ms means frames are being dropped and the field costs too much.
@@ -17,6 +18,7 @@ export function p75(values: number[]): number {
 export function pickCell(frameTimes: number[], current: Cell): Cell {
   if (frameTimes.length < WINDOW) return current
   if (p75(frameTimes.slice(-WINDOW)) <= BUDGET_MS) return current
-  const i = CELLS.indexOf(current)
+  const i = CELLS.indexOf(current as (typeof CELLS)[number])
+  if (i < 0) return current
   return CELLS[Math.min(CELLS.length - 1, i + 1)]
 }

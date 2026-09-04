@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useConsole } from '@/lib/console-store'
 import { navItems } from '@/lib/site'
+import { FlipText } from '../flip-text'
 import { Cell } from '../sheet/cell'
 
 /**
@@ -28,14 +29,16 @@ export function NavCells() {
           <Link
             href={item.href}
             transitionTypes={['nav-forward']}
-            className="console-link label"
+            className="console-link flip label"
             onPointerEnter={() => setHover(item.label)}
             onPointerLeave={() => setHover(null)}
             onFocus={() => setHover(item.label)}
             onBlur={() => setHover(null)}
           >
             <span className="text-accent">{item.n}</span>
-            <span className="ml-2 text-ink">{item.label}</span>
+            <FlipText className="ml-2 text-ink" alt={`${item.label} ${item.n}`}>
+              {item.label}
+            </FlipText>
           </Link>
         </Cell>
       ))}

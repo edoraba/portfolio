@@ -5,6 +5,7 @@ import { useConsole } from '@/lib/console-store'
 import { site } from '@/lib/site'
 import { useUi } from '@/lib/ui-store'
 import { CopyEmail } from '../copy-email'
+import { FlipText } from '../flip-text'
 import { Cell } from '../sheet/cell'
 import { Sheet } from '../sheet/sheet'
 import { ConsoleLine } from './console-line'
@@ -117,23 +118,24 @@ export function SiteHeader() {
         <Cell col={11} end={12} row={2} l b flush className="hidden lg:block">
           <button
             type="button"
-            className="console-link label"
+            className="console-link flip label"
+            aria-label="Command palette"
             onClick={() => setPaletteOpen(true)}
             {...echo('Command palette')}
           >
-            <kbd className="font-mono">Cmd K</kbd>
+            <FlipText alt="Palette">Cmd K</FlipText>
           </button>
         </Cell>
         <Cell col={12} end={13} row={2} l r b flush className="hidden lg:block">
           <button
             type="button"
-            className="console-link label"
+            className="console-link flip label"
+            aria-label="Grid overlay"
             aria-pressed={mounted ? grid : false}
             onClick={toggleGrid}
             {...echo('Grid overlay')}
           >
-            <kbd className="font-mono">G</kbd>
-            <span className="ml-2 text-ink-muted">Grid</span>
+            <FlipText alt="Grid">G</FlipText>
           </button>
         </Cell>
       </Sheet>

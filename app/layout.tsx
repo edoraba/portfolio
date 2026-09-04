@@ -5,6 +5,7 @@ import { SiteHeader } from '@/components/console/site-header'
 import { FieldMount } from '@/components/field-mount'
 import { Footer } from '@/components/footer'
 import { GridOverlay } from '@/components/grid-overlay'
+import { Loader } from '@/components/loader'
 import { RulesObserver } from '@/components/sheet/rules-observer'
 import { SkipLink } from '@/components/skip-link'
 import { fontClassNames } from '@/lib/fonts'
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       </head>
       <body className="flex min-h-dvh flex-col">
         <FieldMount />
+        <Loader />
         <div className="page flex min-h-dvh flex-col">
           <SkipLink />
           <SiteHeader />

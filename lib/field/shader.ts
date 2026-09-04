@@ -39,7 +39,7 @@ uniform float uFloor;          // minimum density (keeps text legible in hero mo
 uniform vec3 uOn;
 uniform vec3 uOff;
 uniform vec3 uAccent;
-uniform int uMode;             // 0 hero, 1 band, 2 off
+uniform int uMode;             // 0 hero, 1 band, 2 off, 3 calibrate (full, unmasked)
 uniform vec2 uBand;            // band range in 0..1 from the top, band mode only
 
 float hash(vec2 p) {

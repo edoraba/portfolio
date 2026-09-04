@@ -15,7 +15,7 @@ export type FrameInput = {
   band?: [number, number]
 }
 
-const MODE = { hero: 0, band: 1, off: 2 } as const
+const MODE = { hero: 0, band: 1, off: 2, calibrate: 3 } as const
 
 function hexToRgb(hex: string): [number, number, number] {
   const h = hex.trim().replace('#', '')
