@@ -15,6 +15,9 @@ export function setupGsap() {
   if (ready || typeof window === 'undefined') return gsap
   ready = true
   gsap.registerPlugin(CustomEase, ScrollTrigger, SplitText)
+  // The mobile browser chrome hiding changes the viewport height mid-scroll; without this every
+  // pin refreshes and jumps. See docs/motion.md.
+  ScrollTrigger.config({ ignoreMobileResize: true })
   CustomEase.create('editorial', '0.625, 0.05, 0, 1')
   CustomEase.create('wipe', '0.56, 0, 0.35, 0.98')
   gsap.ticker.remove(gsap.updateRoot)

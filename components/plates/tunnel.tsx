@@ -43,6 +43,7 @@ export function Tunnel() {
             scrub: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            refreshPriority: 3,
           },
           onUpdate: () => {
             const p = state.p

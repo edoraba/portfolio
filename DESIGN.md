@@ -158,7 +158,7 @@ motion:
   reduced-motion: field static, no smooth scroll, no split text, width axis static, 150ms opacity fades only
   rules-draw: 800ms editorial, stagger 60ms, on enter, once
   slice-flip: 4 strips, 500ms hop, 30ms stagger, alternating directions
-  plates: rules draw on enter, pins scrub only transforms and clip-path, never filters
+  plates: rules draw on enter, pins scrub only transforms and clip-path, never filters (docs/motion.md)
   loader: calibration entrance, real readiness only (fonts, shader, content, images), 600ms to 1200ms, hard cap 1500ms, once per session, never under reduced motion, no percentage
 
 field:

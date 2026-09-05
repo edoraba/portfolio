@@ -57,6 +57,7 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
             scrub: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            refreshPriority: 2,
           },
           onUpdate: () => {
             const p = state.p

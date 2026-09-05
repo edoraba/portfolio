@@ -48,6 +48,7 @@ export function AboutBox() {
             scrub: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            refreshPriority: 1,
           },
           onUpdate: () => {
             const p = state.p
