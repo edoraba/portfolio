@@ -34,7 +34,14 @@ export default async function Essay({ params }: Props) {
           <PlateNumber n="Essay" label={w.date} col={1} end={3} md={{ col: 1, end: 3 }} />
           <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r />
           <Rule />
-          <Cell col={1} end={9} md={{ col: 1, end: 7 }} l className="pt-8 pb-10 md:pt-12">
+          <Cell
+            col={1}
+            end={9}
+            md={{ col: 1, end: 7 }}
+            l
+            r
+            className="pt-8 pb-10 md:pt-12 lg:after:hidden"
+          >
             <h1 className="display">{w.title}</h1>
             <p className="mt-8 measure text-ink-muted">{w.description}</p>
           </Cell>

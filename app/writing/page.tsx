@@ -35,7 +35,16 @@ export default function WritingPage() {
                 <Cell as="span" col={1} end={2} md={{ col: 1, end: 2 }} sm={{ col: 1, end: 2 }} l>
                   <span className="label text-accent">{String(i + 1).padStart(2, '0')}</span>
                 </Cell>
-                <Cell as="span" col={2} end={11} md={{ col: 2, end: 6 }} sm={{ col: 2, end: 5 }} l>
+                <Cell
+                  as="span"
+                  col={2}
+                  end={11}
+                  md={{ col: 2, end: 6 }}
+                  sm={{ col: 2, end: 5 }}
+                  l
+                  r
+                  className="md:after:hidden"
+                >
                   <span className="block headline transition-colors group-hover:text-accent">
                     {w.title}
                   </span>

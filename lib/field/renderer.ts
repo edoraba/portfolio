@@ -13,6 +13,8 @@ export type FrameInput = {
   /** minimum density, 0.55 under the hero text */
   floor: number
   band?: [number, number]
+  /** Pattern offset in viewport heights, so the dither travels with the page. */
+  offset?: number
 }
 
 const MODE = { hero: 0, band: 1, off: 2, calibrate: 3 } as const
@@ -50,6 +52,7 @@ export class FieldRenderer {
     this.field.setUniform('uFloor', 0.55)
     this.field.setUniform('uBand', [0.4, 0.6])
     this.field.setUniform('uMode', MODE.off)
+    this.field.setUniform('uOffset', [0, 0])
   }
 
   get lost() {
@@ -100,6 +103,7 @@ export class FieldRenderer {
     ])
     this.field.setUniform('uPointerStrength', input.pointer.s)
     if (input.band) this.field.setUniform('uBand', input.band)
+    this.field.setUniform('uOffset', [0, input.offset ?? 0])
     this.field.draw()
   }
 

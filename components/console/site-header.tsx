@@ -105,12 +105,33 @@ export function SiteHeader() {
         </Cell>
 
         {/* Row 2 */}
-        <Cell col={1} end={3} md={{ col: 1, end: 4 }} sm={{ col: 1, end: 5 }} row={2} l r>
+        {/* Four columns: fewer cut the readout mid-word, and a plate name without its scroll
+            counter reads as a broken box rather than a live one. */}
+        <Cell
+          col={1}
+          end={5}
+          md={{ col: 1, end: 4 }}
+          sm={{ col: 1, end: 5 }}
+          row={2}
+          l
+          r
+          className="md:after:hidden"
+        >
           <ConsoleLine />
         </Cell>
-        <Cell col={3} end={9} md={{ col: 4, end: 7 }} row={2} l className="hidden md:block">
+        {/* Each of these closes the row's right edge only while it is the last cell in it. */}
+        <Cell
+          col={5}
+          end={9}
+          md={{ col: 4, end: 7 }}
+          row={2}
+          l
+          r
+          className="hidden md:block lg:after:hidden"
+        >
           <p className="truncate label text-ink-muted">
-            <span className="hidden lg:inline">{site.status2} </span>
+            {/* The address always fits; the line in front of it only does on a wide screen. */}
+            <span className="hidden 2xl:inline">{site.status2} </span>
             <CopyEmail className="label" />
           </p>
         </Cell>

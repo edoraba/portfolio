@@ -24,7 +24,16 @@ export function WorkList({ works }: { works: Work[] }) {
             <Cell as="span" col={1} end={2} md={{ col: 1, end: 2 }} sm={{ col: 1, end: 2 }} l>
               <Decode className="label text-accent">{`P/${String(w.order).padStart(2, '0')}`}</Decode>
             </Cell>
-            <Cell as="span" col={2} end={11} md={{ col: 2, end: 6 }} sm={{ col: 2, end: 5 }} l>
+            <Cell
+              as="span"
+              col={2}
+              end={11}
+              md={{ col: 2, end: 6 }}
+              sm={{ col: 2, end: 5 }}
+              l
+              r
+              className="md:after:hidden"
+            >
               <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
                 <LineReveal
                   as="span"

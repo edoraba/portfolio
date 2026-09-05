@@ -8,6 +8,7 @@ import { Mdx } from '@/components/mdx-components'
 import { PageTransition } from '@/components/page-transition'
 import { Cell } from '@/components/sheet/cell'
 import { PlateNumber } from '@/components/sheet/plate-number'
+import { rowEdge } from '@/components/sheet/edge'
 import { Rule } from '@/components/sheet/rule'
 import { Sheet } from '@/components/sheet/sheet'
 import { Toc } from '@/components/toc'
@@ -56,7 +57,14 @@ export default async function WorkDetail({ params }: Props) {
             </Link>
           </Cell>
           <Rule />
-          <Cell col={1} end={10} md={{ col: 1, end: 7 }} l className="pt-8 pb-10 md:pt-12">
+          <Cell
+            col={1}
+            end={10}
+            md={{ col: 1, end: 7 }}
+            l
+            r
+            className="pt-8 pb-10 md:pt-12 lg:after:hidden"
+          >
             <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
               <h1 className="display">{w.title}</h1>
             </ViewTransition>
@@ -77,6 +85,8 @@ export default async function WorkDetail({ params }: Props) {
                 md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
                 sm={{ col: 1, end: 5 }}
                 l
+                r
+                className={rowEdge(i)}
               >
                 <dt className="label text-ink-muted">
                   <Decode>{k}</Decode>

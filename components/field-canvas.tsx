@@ -39,6 +39,10 @@ export default function FieldCanvas() {
       .then(() => store.getState().setMounted(true))
       .catch(() => store.getState().setEnabled(false))
 
+    // The pattern travels with the page in whole cells, and the flow holds still while the page
+    // moves: a texture that both drifts and slides under a moving window reads as flicker.
+    let clock = 0
+    let lastScroll = window.scrollY
     const target: Target = { x: -1, y: -1, active: false }
     let smooth: Smoothed = { x: window.innerWidth * 0.6, y: window.innerHeight * 0.4, s: 0 }
     const intervals: number[] = []
@@ -91,7 +95,7 @@ export default function FieldCanvas() {
     })
 
     const unsubTick = Tempus.add(
-      ({ time, deltaTime }) => {
+      ({ deltaTime }) => {
         if (document.hidden) return
         const s = store.getState()
         if (s.mode === 'off' || s.intensity <= 0) {
@@ -102,9 +106,18 @@ export default function FieldCanvas() {
           return
         }
         cleared = false
+        const scroll = window.scrollY
+        const moving = Math.abs(scroll - lastScroll) > 0.5
+        lastScroll = scroll
+        if (!moving) clock += deltaTime
+        // Negative because the shader's y axis points up: scrolling down has to move the
+        // pattern up with the page. Quantised to whole cells so it never resamples between
+        // canvas pixels.
+        const offset = -(Math.round(scroll / cell) * cell) / window.innerHeight
         smooth = smoothPointer(smooth, target, deltaTime, ATTACK_MS, RELEASE_MS)
         renderer.frame({
-          time: time / 1000,
+          time: clock / 1000,
+          offset,
           mode: s.mode,
           intensity: s.intensity,
           pointer: smooth,

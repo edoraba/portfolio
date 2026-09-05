@@ -12,6 +12,7 @@ export const UNIFORMS = [
   'uAccent',
   'uMode',
   'uBand',
+  'uOffset',
 ] as const
 
 export const vertex = /* glsl */ `#version 300 es
@@ -41,6 +42,7 @@ uniform vec3 uOff;
 uniform vec3 uAccent;
 uniform int uMode;             // 0 hero, 1 band, 2 off, 3 calibrate (full, unmasked)
 uniform vec2 uBand;            // band range in 0..1 from the top, band mode only
+uniform vec2 uOffset;            // pattern offset in the same space as p, quantised to cells
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -86,10 +88,13 @@ void main() {
   vec2 p = cell / uCells;
   p.x *= uAspect;
 
-  // Domain-warped flow, slow.
+  // Domain-warped flow, slow. The noise is sampled at an offset position so the pattern can be
+  // pinned to the page while the canvas stays fixed to the viewport; the pointer maths below
+  // keeps using the unshifted p, so the light stays under the cursor.
+  vec2 pn = p + uOffset;
   float t = uTime * 0.06;
-  vec2 q = vec2(fbm(p * 1.6 + t), fbm(p * 1.6 - t * 0.7 + 5.2));
-  float d = fbm(p * 2.2 + 1.5 * q + vec2(t * 0.3, -t * 0.2));
+  vec2 q = vec2(fbm(pn * 1.6 + t), fbm(pn * 1.6 - t * 0.7 + 5.2));
+  float d = fbm(pn * 2.2 + 1.5 * q + vec2(t * 0.3, -t * 0.2));
   d = smoothstep(0.28, 0.82, d);
 
   // Pointer light: brighter and accented near the pointer, radius relative to the short side.

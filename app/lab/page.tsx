@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/page-header'
 import { labs } from '@/lib/content'
 import { PageTransition } from '@/components/page-transition'
 import { Cell } from '@/components/sheet/cell'
+import { rowEdge } from '@/components/sheet/edge'
 import { Sheet } from '@/components/sheet/sheet'
 
 export const metadata: Metadata = { title: 'Lab' }
@@ -24,9 +25,11 @@ export default function LabPage() {
               md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
               sm={{ col: 1, end: 5 }}
               l
+              r
               t
               b
               flush
+              className={rowEdge(i)}
             >
               <Link
                 href={`/lab/${l.slug}`}

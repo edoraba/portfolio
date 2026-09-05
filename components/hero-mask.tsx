@@ -20,15 +20,16 @@ const COMPRESS_OVER = 0.6
  * once inside an SVG mask that clips the fixed field canvas to the letterforms. When the field
  * is unavailable the visible text is filled with a static 2px dither instead.
  *
- * The letters are the only window onto the field. The strip above them carries the same dither
- * as a printed pattern: the canvas is fixed to the viewport, so anything else that shows it
- * would have the texture swimming under it while the page scrolls.
+ * The strip above the letters is a second window in the same mask. The pattern is pinned to the
+ * page and the flow holds still while the page moves (see field-canvas), so the window and the
+ * texture travel together instead of sliding over one another.
  */
-export function HeroMask() {
+export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> }) {
   const active = useField((s) => s.enabled && s.mounted)
   const wrapRef = useRef<HTMLDivElement>(null)
   const visibleRef = useRef<SVGSVGElement>(null)
   const maskGroupRef = useRef<SVGGElement>(null)
+  const bandRectRef = useRef<SVGRectElement>(null)
 
   // Everything the hero owns runs in one tick: the mask follows the visible headline, scroll
   // fades the field and narrows the words, the pointer widens the nearest one.
@@ -40,6 +41,7 @@ export function HeroMask() {
     const store = useField
     const reduced = prefersReducedMotion()
     let lastTransform = ''
+    let lastBand = ''
 
     // Visible words and their twins inside the mask, paired by index so both carry the same width.
     const words = WORDS.map((_, i) => ({
@@ -63,6 +65,28 @@ export function HeroMask() {
       if (transform !== lastTransform) {
         group.setAttribute('transform', transform)
         lastTransform = transform
+      }
+
+      // The strip is a second window in the same mask. Written only when it moves: writing the
+      // attributes every frame re-rasterises the mask for nothing.
+      const bandEl = band?.current
+      const bandRect = bandRectRef.current
+      if (bandEl && bandRect) {
+        const b = bandEl.getBoundingClientRect()
+        const next = [
+          Math.round(b.left),
+          Math.round(b.top),
+          Math.max(0, Math.round(b.width)),
+          Math.max(0, Math.round(b.height)),
+        ].join(' ')
+        if (next !== lastBand) {
+          lastBand = next
+          const [x, y, w, h] = next.split(' ')
+          bandRect.setAttribute('x', x)
+          bandRect.setAttribute('y', y)
+          bandRect.setAttribute('width', w)
+          bandRect.setAttribute('height', h)
+        }
       }
 
       // The hero holds the field while it is on screen and drops it on the way out. A higher
@@ -125,7 +149,7 @@ export function HeroMask() {
       window.removeEventListener('calibrated', onCalibrated)
       store.getState().release('hero')
     }
-  }, [])
+  }, [band])
 
   const fill = active ? 'none' : 'url(#hero-dither)'
 
@@ -146,6 +170,7 @@ export function HeroMask() {
           <g ref={maskGroupRef}>
             <Lines fill="#fff" mirror />
           </g>
+          <rect ref={bandRectRef} x="0" y="0" width="0" height="0" fill="#fff" />
         </mask>
       </svg>
     </div>

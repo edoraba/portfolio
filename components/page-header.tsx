@@ -32,7 +32,8 @@ export function PageHeader({
         md={{ col: 1, end: 7 }}
         sm={{ col: 1, end: 5 }}
         l
-        className="pt-8 pb-10 md:pt-12 md:pb-14"
+        r
+        className="pt-8 pb-10 md:pt-12 md:pb-14 lg:after:hidden"
       >
         <h1 className="display">{title}</h1>
         {lede ? <p className="mt-8 measure text-ink-muted">{lede}</p> : null}

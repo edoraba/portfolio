@@ -15,7 +15,15 @@ export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem
   return (
     <Plate id="notes" className="notes-plate" meta={<span>Smaller pieces and essays</span>}>
       <Rule />
-      <Cell col={1} end={7} md={{ col: 1, end: 4 }} sm={{ col: 1, end: 5 }} l className="py-8">
+      <Cell
+        col={1}
+        end={7}
+        md={{ col: 1, end: 4 }}
+        sm={{ col: 1, end: 5 }}
+        l
+        r
+        className="py-8 md:after:hidden"
+      >
         <h2 className="label text-ink-muted">Lab</h2>
         <ul className="mt-6 space-y-4">
           {labs.map((l) => (

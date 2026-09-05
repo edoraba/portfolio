@@ -26,6 +26,7 @@ export function Hero({ works }: { works: HeroWork[] }) {
   const bandRef = useRef<HTMLDivElement>(null)
   const reduced = useMotion((s) => s.reduced)
   const cell = useField((s) => s.cell)
+  const live = useField((s) => s.enabled && s.mounted)
 
   useGSAP(
     () => {
@@ -66,19 +67,29 @@ export function Hero({ works }: { works: HeroWork[] }) {
     >
       <Cell col={1} end={13} l r flush>
         <div ref={bandRef} className="hero-band" aria-hidden="true">
-          <svg className="hero-band__pattern" focusable="false">
-            <rect width="100%" height="100%" fill="url(#hero-dither)" />
-          </svg>
+          {live ? null : (
+            <svg className="hero-band__pattern" focusable="false">
+              <rect width="100%" height="100%" fill="url(#hero-dither)" />
+            </svg>
+          )}
         </div>
       </Cell>
 
       <Rule />
       <Cell col={1} end={13} l r flush className="pt-10 md:pt-16">
-        <HeroMask />
+        <HeroMask band={bandRef} />
       </Cell>
 
       <Rule />
-      <Cell col={1} end={7} md={{ col: 1, end: 5 }} sm={{ col: 1, end: 5 }} l className="py-8">
+      <Cell
+        col={1}
+        end={7}
+        md={{ col: 1, end: 5 }}
+        sm={{ col: 1, end: 5 }}
+        l
+        r
+        className="py-8 md:after:hidden"
+      >
         <p className="measure text-ink-muted">
           <span className="text-ink">{site.role}.</span> Whole products, from the interface to the
           database, shipped from {site.location}.

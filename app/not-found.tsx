@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { navItems } from '@/lib/site'
 import { PageTransition } from '@/components/page-transition'
 import { Cell } from '@/components/sheet/cell'
+import { rowEdge } from '@/components/sheet/edge'
 import { PlateNumber } from '@/components/sheet/plate-number'
 import { Rule } from '@/components/sheet/rule'
 import { Sheet } from '@/components/sheet/sheet'
@@ -25,7 +26,9 @@ export default function NotFound() {
             md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
             sm={{ col: 1, end: 5 }}
             l
+            r
             flush
+            className={rowEdge(i, 4)}
           >
             <Link href={n.href} className="console-link label text-ink-muted hover:text-ink">
               <span className="text-accent">{n.n}</span>
