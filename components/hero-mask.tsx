@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react'
 import Tempus from 'tempus'
 import { heroIntensity } from '@/lib/field/scroll'
+import { PRIORITY } from '@/lib/field/claims'
 import { useField } from '@/lib/field/store'
 import { prefersReducedMotion } from '@/lib/field/support'
 import { clamp01, lerp } from '@/lib/motion/scrub'
@@ -37,7 +38,6 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
     const store = useField
     const reduced = prefersReducedMotion()
     let lastTransform = ''
-    store.getState().request('hero')
 
     // Visible words and their twins inside the mask, paired by index so both carry the same width.
     const words = WORDS.map((_, i) => ({
@@ -76,14 +76,13 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
 
       const s = store.getState()
       if (!s.enabled) return
-      if (s.mode === 'calibrate') return
+      // The hero holds the field while it is on screen and drops it on the way out. A higher
+      // claim (the loader) simply outranks it; there is nothing to check here.
       const intensity = heroIntensity(window.scrollY, window.innerHeight)
       if (intensity > 0) {
-        if (s.mode !== 'hero') s.setMode('hero')
-        if (intensity !== s.intensity) s.setIntensity(intensity)
-      } else if (s.mode === 'hero') {
-        s.setMode('off')
-        s.setIntensity(0)
+        s.claim('hero', { mode: 'hero', intensity, priority: PRIORITY.hero })
+      } else {
+        s.release('hero')
       }
 
       if (reduced) return
@@ -133,12 +132,7 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       window.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('pointerleave', onLeave)
       window.removeEventListener('calibrated', onCalibrated)
-      const s = store.getState()
-      if (s.mode === 'hero') {
-        s.setMode('off')
-        s.setIntensity(0)
-      }
-      s.release('hero')
+      store.getState().release('hero')
     }
   }, [band])
 

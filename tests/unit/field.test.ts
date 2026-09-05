@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { DEFAULT_BAND, OFF, PRIORITY, resolveClaims } from '@/lib/field/claims'
+import { useField } from '@/lib/field/store'
 import { smoothPointer } from '@/lib/field/pointer'
 import { pickCell } from '@/lib/field/quality'
 import { heroIntensity } from '@/lib/field/scroll'
@@ -49,5 +51,84 @@ describe('heroIntensity', () => {
   })
   it('is 0 for a degenerate hero', () => {
     expect(heroIntensity(0, 0)).toBe(0)
+  })
+})
+
+describe('resolveClaims', () => {
+  const hero = { mode: 'hero' as const, intensity: 1, priority: PRIORITY.hero }
+  const footer = {
+    mode: 'band' as const,
+    intensity: 0.45,
+    band: [0.7, 0.8] as [number, number],
+    priority: PRIORITY.footer,
+  }
+  const loader = { mode: 'calibrate' as const, intensity: 1, priority: PRIORITY.loader }
+
+  it('turns the field off when nothing claims it', () => {
+    expect(resolveClaims({}, null)).toEqual(OFF)
+    expect(resolveClaims({}, 'hero')).toEqual(OFF)
+  })
+  it('hands the field to the highest priority claim, whatever the order', () => {
+    expect(resolveClaims({ hero, footer }, null).owner).toBe('hero')
+    expect(resolveClaims({ footer, hero }, null).owner).toBe('hero')
+    expect(resolveClaims({ hero, footer, loader }, null).owner).toBe('loader')
+  })
+  it('passes the winner settings through, with a default band', () => {
+    expect(resolveClaims({ footer }, null)).toEqual({
+      owner: 'footer',
+      mode: 'band',
+      intensity: 0.45,
+      band: [0.7, 0.8],
+    })
+    expect(resolveClaims({ hero }, null).band).toEqual(DEFAULT_BAND)
+  })
+  it('keeps the field with the current owner on a tie', () => {
+    const a = { mode: 'band' as const, intensity: 0.2, priority: PRIORITY.plate }
+    const b = { mode: 'band' as const, intensity: 0.3, priority: PRIORITY.plate }
+    expect(resolveClaims({ a, b }, 'b').owner).toBe('b')
+    expect(resolveClaims({ a, b }, null).owner).toBe('a')
+  })
+})
+
+describe('the field store never strands a band', () => {
+  beforeEach(() => {
+    useField.setState({ claims: {}, requested: false, owner: null, mode: 'off', intensity: 0 })
+  })
+
+  it('goes off again however the claims are released', () => {
+    const s = () => useField.getState()
+    s().claim('about', { mode: 'band', intensity: 0.2, priority: PRIORITY.plate })
+    s().claim('footer', { mode: 'band', intensity: 0.45, priority: PRIORITY.footer })
+    expect(s().owner).toBe('footer')
+    // Release out of order: the one that never owned the field goes first.
+    s().release('about')
+    expect(s().mode).toBe('band')
+    s().release('footer')
+    expect(s()).toMatchObject({ owner: null, mode: 'off', intensity: 0, requested: false })
+  })
+
+  it('ignores a lower claim while a higher one holds the field', () => {
+    const s = () => useField.getState()
+    s().claim('hero', { mode: 'hero', intensity: 1, priority: PRIORITY.hero })
+    s().claim('footer', { mode: 'band', intensity: 0.45, priority: PRIORITY.footer })
+    expect(s().mode).toBe('hero')
+    s().release('hero')
+    expect(s()).toMatchObject({ owner: 'footer', mode: 'band' })
+  })
+
+  it('releasing an id that never claimed changes nothing', () => {
+    const s = () => useField.getState()
+    s().claim('hero', { mode: 'hero', intensity: 1, priority: PRIORITY.hero })
+    s().release('nobody')
+    expect(s().owner).toBe('hero')
+  })
+
+  it('re-filing the same claim does not churn the state', () => {
+    const s = () => useField.getState()
+    const claim = { mode: 'band' as const, intensity: 0.45, priority: PRIORITY.footer }
+    s().claim('footer', claim)
+    const before = useField.getState().claims
+    s().claim('footer', { ...claim })
+    expect(useField.getState().claims).toBe(before)
   })
 })

@@ -1,16 +1,20 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import Tempus from 'tempus'
+import { PRIORITY } from '@/lib/field/claims'
 import { useField } from '@/lib/field/store'
 
+/** Height of the dither strip at the top of the footer, in CSS pixels. */
+const STRIP = 96
+const STRIP_SM = 64
+
 /**
- * Brings the field back at the end of every page: while the footer is on screen the canvas
- * runs in band mode behind it, the band tracking the footer's position each frame.
- * The hero keeps priority on the home page; the footer only takes the field when it is free.
+ * Brings the field back at the end of every page as a strip in the empty margin just above the
+ * footer. It is a strip above the text and not a wash behind it on purpose: in five of the six
+ * themes the lit dither cell is exactly the ink colour, so text over the field is unreadable.
+ * The field is texture, never a backdrop for reading (see DESIGN.md, Colour).
  */
 export function FooterField({ target }: { target: React.RefObject<HTMLElement | null> }) {
-  const owning = useRef(false)
-
   useEffect(() => {
     const el = target.current
     if (!el) return
@@ -20,18 +24,7 @@ export function FooterField({ target }: { target: React.RefObject<HTMLElement | 
     const io = new IntersectionObserver(
       (entries) => {
         visible = entries.some((e) => e.isIntersecting)
-        if (visible) store.getState().request('footer')
-        else {
-          if (owning.current) {
-            owning.current = false
-            const s = store.getState()
-            if (s.mode === 'band') {
-              s.setMode('off')
-              s.setIntensity(0)
-            }
-          }
-          store.getState().release('footer')
-        }
+        if (!visible) store.getState().release('footer')
       },
       { threshold: 0 },
     )
@@ -39,24 +32,24 @@ export function FooterField({ target }: { target: React.RefObject<HTMLElement | 
 
     const unsub = Tempus.add(
       () => {
-        if (!visible) return
         const s = store.getState()
-        if (!s.enabled || s.mode === 'hero') return
-        const r = el.getBoundingClientRect()
+        if (!visible || !s.enabled) return
         const h = window.innerHeight
-        const band: [number, number] = [
-          Math.max(0, Math.min(1, r.top / h)),
-          Math.max(0, Math.min(1, r.bottom / h)),
-        ]
-        if (band[1] <= band[0]) return
-        if (s.mode !== 'band') {
-          s.setMode('band')
-          s.setIntensity(0.45)
-          owning.current = true
+        const strip = window.innerWidth < 768 ? STRIP_SM : STRIP
+        const r = el.getBoundingClientRect()
+        // The strip lives in the gap above the footer, never over its first line of text.
+        const top = Math.max(0, Math.min(1, (r.top - strip) / h))
+        const bottom = Math.max(0, Math.min(1, r.top / h))
+        if (bottom <= top) {
+          store.getState().release('footer')
+          return
         }
-        if (Math.abs(band[0] - s.band[0]) > 0.002 || Math.abs(band[1] - s.band[1]) > 0.002) {
-          s.setBand(band)
-        }
+        s.claim('footer', {
+          mode: 'band',
+          intensity: 0.45,
+          band: [top, bottom],
+          priority: PRIORITY.footer,
+        })
       },
       { label: 'footer-field' },
     )
@@ -64,12 +57,7 @@ export function FooterField({ target }: { target: React.RefObject<HTMLElement | 
     return () => {
       io.disconnect()
       unsub?.()
-      const s = store.getState()
-      if (owning.current && s.mode === 'band') {
-        s.setMode('off')
-        s.setIntensity(0)
-      }
-      s.release('footer')
+      store.getState().release('footer')
     }
   }, [target])
 

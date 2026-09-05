@@ -2,7 +2,6 @@
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
 import { ABOUT_FACTS, ABOUT_SENTENCE } from '@/lib/about-facts'
-import { useField } from '@/lib/field/store'
 import { gsap, setupGsap } from '@/lib/motion/gsap'
 import { itemProgress } from '@/lib/motion/scrub'
 import { useMotion } from '@/lib/motion/store'
@@ -69,41 +68,6 @@ export function AboutBox() {
       return () => mm.revert()
     },
     { scope: sectionRef, dependencies: [reduced] },
-  )
-
-  // The field sits behind the box floor as a quiet band while the plate is on screen.
-  useGSAP(
-    () => {
-      const section = sectionRef.current
-      if (!section) return
-      const store = useField
-      const io = new IntersectionObserver(
-        ([entry]) => {
-          const s = store.getState()
-          if (entry.isIntersecting) {
-            s.request('about')
-            if (s.mode === 'off') {
-              s.setMode('band')
-              s.setBand([0.45, 1])
-              s.setIntensity(0.2)
-            }
-          } else {
-            s.release('about')
-            if (s.mode === 'band' && s.requests.length === 0) {
-              s.setMode('off')
-              s.setIntensity(0)
-            }
-          }
-        },
-        { threshold: 0.25 },
-      )
-      io.observe(section)
-      return () => {
-        io.disconnect()
-        useField.getState().release('about')
-      }
-    },
-    { scope: sectionRef },
   )
 
   return (

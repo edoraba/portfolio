@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
+import { PRIORITY } from '@/lib/field/claims'
 import { useField } from '@/lib/field/store'
 import { navItems } from '@/lib/site'
 import { useUi } from '@/lib/ui-store'
@@ -40,11 +41,12 @@ export function MobileMenu({ returnTo }: { returnTo: React.RefObject<HTMLButtonE
     wasOpen.current = true
     const root = ref.current
     if (!root) return
-    const field = useField.getState()
-    field.request('menu')
-    field.setMode('band')
-    field.setBand([0.55, 1])
-    field.setIntensity(0.4)
+    useField.getState().claim('menu', {
+      mode: 'band',
+      intensity: 0.4,
+      band: [0.55, 1],
+      priority: PRIORITY.menu,
+    })
     document.documentElement.style.overflow = 'hidden'
     const focusables = () =>
       Array.from(
@@ -69,12 +71,7 @@ export function MobileMenu({ returnTo }: { returnTo: React.RefObject<HTMLButtonE
     return () => {
       root.removeEventListener('keydown', trap)
       document.documentElement.style.overflow = ''
-      const s = useField.getState()
-      s.release('menu')
-      if (s.mode === 'band' && s.requests.length === 0) {
-        s.setMode('off')
-        s.setIntensity(0)
-      }
+      useField.getState().release('menu')
     }
   }, [open, returnTo])
 

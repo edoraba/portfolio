@@ -1,5 +1,6 @@
 'use client'
 import { create } from 'zustand'
+import { DEFAULT_BAND, resolveClaims, sameClaim, type Claim } from './claims'
 import type { Cell } from './quality'
 
 export type FieldMode = 'hero' | 'band' | 'off' | 'calibrate'
@@ -7,53 +8,60 @@ export type FieldMode = 'hero' | 'band' | 'off' | 'calibrate'
 type FieldState = {
   /** WebGL, CSS masks and motion are all available on this device. */
   enabled: boolean
-  /** Ids of the components on screen that want the field; the canvas loads while any exist. */
-  requests: string[]
-  requested: boolean
   /** The renderer exists and is drawing. */
   mounted: boolean
+  /** Every component currently asking for the field, by id. */
+  claims: Record<string, Claim>
+  /** True while anything wants the field; FieldMount loads the canvas on it. */
+  requested: boolean
+  /** The id holding the field, and the settings it asked for. Derived, never set directly. */
+  owner: string | null
   mode: FieldMode
-  /** 0 to 1, overall visibility. */
   intensity: number
-  /** Band range from the top of the viewport, 0..1, used in band mode. */
   band: [number, number]
   /** Pointer in viewport CSS pixels. */
   pointer: { x: number; y: number; active: boolean }
   cell: Cell
   setEnabled: (v: boolean) => void
-  request: (id: string) => void
-  release: (id: string) => void
   setMounted: (v: boolean) => void
-  setMode: (m: FieldMode) => void
-  setIntensity: (i: number) => void
-  setBand: (b: [number, number]) => void
+  /** File or update a claim. Cheap to call every frame: an identical claim changes nothing. */
+  claim: (id: string, claim: Claim) => void
+  release: (id: string) => void
   setPointer: (x: number, y: number, active: boolean) => void
   setCell: (c: Cell) => void
 }
 
 export const useField = create<FieldState>((set, get) => ({
   enabled: false,
-  requests: [],
-  requested: false,
   mounted: false,
+  claims: {},
+  requested: false,
+  owner: null,
   mode: 'off',
   intensity: 0,
-  band: [0.5, 1],
+  band: DEFAULT_BAND,
   pointer: { x: -1, y: -1, active: false },
   cell: 2,
   setEnabled: (enabled) => set({ enabled }),
-  request: (id) => {
-    const requests = Array.from(new Set([...get().requests, id]))
-    set({ requests, requested: requests.length > 0 })
+  setMounted: (mounted) => set({ mounted }),
+  claim: (id, claim) => {
+    const state = get()
+    if (sameClaim(state.claims[id], claim)) return
+    const claims = { ...state.claims, [id]: claim }
+    set({ claims, requested: true, ...resolveClaims(claims, state.owner) })
   },
   release: (id) => {
-    const requests = get().requests.filter((r) => r !== id)
-    set({ requests, requested: requests.length > 0 })
+    const state = get()
+    if (!(id in state.claims)) return
+    const claims = { ...state.claims }
+    delete claims[id]
+    const owner = state.owner === id ? null : state.owner
+    set({
+      claims,
+      requested: Object.keys(claims).length > 0,
+      ...resolveClaims(claims, owner),
+    })
   },
-  setMounted: (mounted) => set({ mounted }),
-  setMode: (mode) => set({ mode }),
-  setIntensity: (intensity) => set({ intensity }),
-  setBand: (band) => set({ band }),
   setPointer: (x, y, active) => set({ pointer: { x, y, active } }),
   setCell: (cell) => set({ cell }),
 }))

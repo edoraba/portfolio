@@ -58,6 +58,12 @@ export default function FieldCanvas() {
       canvas.style.maskImage = value
       canvas.style.setProperty('-webkit-mask-image', value)
     }
+    // Published so a test can check the band never covers text, and so the state is visible
+    // in the inspector without reaching into the store.
+    const publish = (mode: string, band: [number, number]) => {
+      canvas.dataset.mode = mode
+      canvas.dataset.band = mode === 'band' ? `${band[0].toFixed(3)},${band[1].toFixed(3)}` : ''
+    }
 
     window.addEventListener('pointermove', onMove, { passive: true })
     window.addEventListener('pointerdown', onMove, { passive: true })
@@ -72,8 +78,10 @@ export default function FieldCanvas() {
     })
 
     applyMask(store.getState().mode)
+    publish(store.getState().mode, store.getState().band)
     const unsubStore = store.subscribe((s, prev) => {
       if (s.mode !== prev.mode) applyMask(s.mode)
+      if (s.mode !== prev.mode || s.band !== prev.band) publish(s.mode, s.band)
       if (s.cell !== cell) {
         // Changed from outside (the palette's dither commands).
         cell = s.cell

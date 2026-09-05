@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { PRIORITY } from '@/lib/field/claims'
 import { useField } from '@/lib/field/store'
 import { canRenderField } from '@/lib/field/support'
 import { cellForProgress, createReadiness, shouldShowLoader, type LoaderStep } from '@/lib/loader'
@@ -40,9 +41,7 @@ export function Loader() {
   useEffect(() => {
     if (!show) return
     const field = useField.getState()
-    field.request('loader')
-    field.setMode('calibrate')
-    field.setIntensity(1)
+    field.claim('loader', { mode: 'calibrate', intensity: 1, priority: PRIORITY.loader })
     field.setCell(8)
 
     const r = createReadiness()
@@ -86,10 +85,6 @@ export function Loader() {
       const el = ref.current
       const s = useField.getState()
       s.release('loader')
-      if (s.mode === 'calibrate') {
-        s.setMode('off')
-        s.setIntensity(0)
-      }
       if (s.cell !== 2) s.setCell(2)
       window.dispatchEvent(new Event('calibrated'))
       if (el) {
