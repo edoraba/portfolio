@@ -194,6 +194,7 @@ field:
 ## Colour
 
 - The accent is ink, not fill: links, index numbers, focus rings, the lit part of the field. Never a button background larger than a label, never a section background.
+- Decoration takes no selection: the dither words, the letter field, the physics tags, the marks and the rules carry `user-select: none`. Everything a reader might quote stays selectable.
 - The field is texture, never a backdrop for reading. It renders only in bands that contain no text: the lit dither cell is drawn in `field-on`, which equals `ink` in five of the six themes, so any text over it is the same colour as the cells under it. A band is a strip of empty space.
 - No pure black or white, no shadows, no gradients except the dither itself.
 - Six complete themes (signal, field, paper, phosphor, cobalt, ash), signal is the default. On bold canvases (signal, cobalt, ash) the accent is the ink itself. The toggle transitions the field (a 2000ms wipe of field colours), not just the CSS variables.

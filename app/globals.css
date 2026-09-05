@@ -415,6 +415,36 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   border-top: 1px solid var(--hairline);
 }
 
+/* Decoration is not text. Anything that exists to be looked at, dragged or thrown does not take
+   a selection: the dither words (the headline is duplicated as a real h1 for reading and
+   copying), the letter field, the physics tags, the marks and the rules. Prose, titles,
+   captions, facts and the email stay selectable. */
+.hero-svg,
+.hero-text,
+.letters,
+.letters__glyph,
+.toolbox,
+.toolbox__tag,
+.monogram,
+.cover__panel,
+.tunnel__panel,
+.tunnel__rays,
+.cloth__grid,
+.guides,
+.console-line,
+.flip-text__strips,
+.notes-plate__dither,
+.loader,
+.timecode__pin,
+.timecode__marker {
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* A grabbed tag must never raise the long press menu on a phone. */
+.toolbox__tag {
+  -webkit-touch-callout: none;
+}
+
 /* Long-form text inside a cell keeps the measure. */
 .prose-cell {
   padding-block: var(--spacing-block);

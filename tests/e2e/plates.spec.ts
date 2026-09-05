@@ -96,3 +96,30 @@ test('no horizontal overflow anywhere down the page', async ({ page }) => {
     expect(overflow, `overflow at ${Math.round(y)}`).toBe(false)
   }
 })
+
+test('decoration cannot be selected, words can', async ({ page }) => {
+  await page.goto('/')
+  const none = [
+    '.hero-svg',
+    '.letters',
+    '.toolbox__tag',
+    '.monogram',
+    '.cloth__grid',
+    '.console-line',
+  ]
+  for (const sel of none) {
+    const value = await page
+      .locator(sel)
+      .first()
+      .evaluate((el) => getComputedStyle(el).userSelect)
+    expect(value, sel).toBe('none')
+  }
+  const selectable = ['h1.sr-only', '.cover__title', '.site-footer p']
+  for (const sel of selectable) {
+    const value = await page
+      .locator(sel)
+      .first()
+      .evaluate((el) => getComputedStyle(el).userSelect)
+    expect(value, sel).not.toBe('none')
+  }
+})
