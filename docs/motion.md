@@ -46,8 +46,10 @@ measured in pixels and the real fonts change every measurement.
   bottom of a pinned section, the pin is wrong.
 - **Function based start and end, plus `invalidateOnRefresh: true`.** Otherwise a resize keeps the
   pixel values measured at the old size.
-- **`refreshPriority` in document order** on the pinned plates (about 1, work 2, tunnel 3) so a
-  refresh recalculates them top to bottom and the pin spacers do not fight.
+- **`refreshPriority` counts down the page.** A higher number refreshes earlier, so the pinned
+  plates go work 2, tunnel 1: each measures a document that already contains the pin spacers of
+  everything above it. Getting this backwards is silent and total, the last plate simply never
+  pins because its distances were measured against a shorter page.
 - **One pin on screen at a time.** Two pinned sections whose spacers overlap will jump.
 - **`ignoreMobileResize: true`** in `setupGsap`, so the mobile browser chrome hiding does not fire
   a refresh storm mid-scroll.

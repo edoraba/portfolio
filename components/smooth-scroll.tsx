@@ -27,13 +27,19 @@ export function SmoothScroll() {
     instance = lenis
     lenis.on('scroll', ScrollTrigger.update)
     const unsub = Tempus.add(({ time }) => lenis.raf(time), { order: -5, label: 'lenis' })
-    // Pinned plates measure in pixels: remeasure once the real fonts are in and the layout settles.
+    // Pinned plates measure in pixels, and every pin they add changes the document height for
+    // the ones below it. Remeasure once the fonts are in and once everything has mounted,
+    // otherwise the last plate on the page keeps the distances of a shorter document.
     let cancelled = false
-    document.fonts.ready.then(() => {
+    const refresh = () => {
       if (!cancelled) ScrollTrigger.refresh()
-    })
+    }
+    document.fonts.ready.then(refresh)
+    if (document.readyState === 'complete') requestAnimationFrame(refresh)
+    else window.addEventListener('load', refresh, { once: true })
     return () => {
       cancelled = true
+      window.removeEventListener('load', refresh)
       unsub?.()
       instance = null
       lenis.destroy()

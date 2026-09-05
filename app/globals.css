@@ -539,17 +539,20 @@ html[data-motion='reduced'] .notes-plate__dither {
   cursor: grabbing;
 }
 
-/* P/06. Hairlines converge on a vanishing point and the frames fly out of it. */
+/* P/06. Hairlines converge on a vanishing point that leans towards the pointer, and the frames
+   fly out of it down their own lines. The title sits out of the flight path. */
 .tunnel {
   position: relative;
-  min-height: 70vh;
+  min-height: 68vh;
 }
 @media (min-width: 1024px) {
   .tunnel {
-    min-height: calc(100dvh - var(--header-h) - 60px);
+    min-height: calc(100dvh - var(--header-h) - 34px);
   }
 }
 .tunnel__stage {
+  --vx: 0%;
+  --vy: 0%;
   position: relative;
   display: grid;
   place-items: center;
@@ -560,19 +563,21 @@ html[data-motion='reduced'] .notes-plate__dither {
 }
 .tunnel__rays {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
   color: color-mix(in srgb, var(--ink) 20%, transparent);
+  transform: translate(var(--vx), var(--vy));
+  transition: transform 400ms linear;
 }
 .tunnel__title {
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  max-width: 18ch;
-  text-align: center;
-  transform: scale(var(--title-s, 1));
-  opacity: var(--title-o, 1);
+  position: absolute;
+  top: var(--cell-pad);
+  left: var(--cell-pad);
+  z-index: 3;
+  max-width: 16ch;
+  text-align: left;
+  color: var(--ink);
 }
 .tunnel__frames {
   position: absolute;
@@ -582,14 +587,19 @@ html[data-motion='reduced'] .notes-plate__dither {
   place-items: center;
   transform-style: preserve-3d;
   pointer-events: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 .tunnel__frame {
   grid-area: 1 / 1;
-  width: min(52ch, 76%);
-  transform: translateZ(var(--frame-z, 0px));
+  width: min(46ch, 62%);
+  transform: translate3d(var(--frame-x, 0%), var(--frame-y, 0%), var(--frame-z, 0px))
+    rotate(var(--frame-r, 0deg));
   opacity: var(--frame-o, 1);
 }
 .tunnel__figure {
+  position: relative;
   margin: 0;
   border: 1px solid var(--hairline);
   background-color: var(--surface);
@@ -597,9 +607,20 @@ html[data-motion='reduced'] .notes-plate__dither {
   display: grid;
   gap: 12px;
 }
+/* The year is the scale of the corridor: it grows with the frame that carries it. */
+.tunnel__year {
+  position: absolute;
+  top: calc(var(--cell-pad) * -1 - 0.5em);
+  right: var(--cell-pad);
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
 .tunnel__panel {
   display: block;
-  height: 140px;
+  height: 132px;
   background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
   background-size: 4px 4px;
   opacity: 0.3;
@@ -621,10 +642,16 @@ html[data-motion='reduced'] .notes-plate__dither {
   .tunnel__title {
     position: static;
     margin-bottom: 24px;
+    padding: var(--cell-pad) var(--cell-pad) 0;
+    max-width: none;
   }
   .tunnel__stage {
     display: block;
     padding-block: var(--spacing-block);
+  }
+  .tunnel__year {
+    position: static;
+    font-size: 1.5rem;
   }
 }
 html[data-motion='reduced'] .tunnel__frame {
@@ -635,6 +662,9 @@ html[data-motion='reduced'] .tunnel__frames {
   position: static;
   gap: 16px;
   padding: var(--cell-pad);
+}
+html[data-motion='reduced'] .tunnel__rays {
+  transition: none;
 }
 
 /* P/07. A ruled cloth that bulges away from the pointer, with the invitation at its centre. */
@@ -923,430 +953,6 @@ html[data-motion='reduced'] .porthole__letters {
   }
 }
 
-/* P/04. The lab column carries a dither plate that shifts on a slow cycle. */
-.notes-plate__dither {
-  margin-top: 24px;
-  height: 120px;
-  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
-  background-size: 4px 4px;
-  opacity: 0.25;
-  animation: notes-dither 9s steps(3) infinite;
-}
-@keyframes notes-dither {
-  0% {
-    background-position: 0 0;
-  }
-  33% {
-    background-position: 2px 0;
-  }
-  66% {
-    background-position: 2px 2px;
-  }
-  100% {
-    background-position: 0 0;
-  }
-}
-html[data-motion='reduced'] .notes-plate__dither {
-  animation: none;
-}
-
-/* P/05. Tags fall into a ruled container and stay there; the list is the source of truth, so
-   without physics it is a plain wrapped row. */
-.toolbox {
-  position: relative;
-  overflow: hidden;
-  min-height: 42vh;
-  touch-action: pan-y;
-}
-@media (min-width: 1024px) {
-  .toolbox {
-    min-height: 48vh;
-  }
-}
-.toolbox__list {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 12px;
-  margin: 0;
-  padding: var(--cell-pad);
-  list-style: none;
-}
-.toolbox__tag {
-  border: 1px solid var(--ink);
-  padding: 8px 12px;
-  color: var(--ink);
-  background-color: var(--canvas);
-  white-space: nowrap;
-}
-/* Once the engine owns them, the tags are placed by the simulation. */
-.toolbox__list[data-physics] {
-  display: block;
-  padding: 0;
-}
-.toolbox__list[data-physics] .toolbox__tag {
-  position: absolute;
-  top: 0;
-  left: 0;
-  will-change: transform;
-  cursor: grab;
-}
-.toolbox__list[data-physics] .toolbox__tag:active {
-  cursor: grabbing;
-}
-
-/* P/06. Hairlines converge on a vanishing point and the frames fly out of it. */
-.tunnel {
-  position: relative;
-  min-height: 70vh;
-}
-@media (min-width: 1024px) {
-  .tunnel {
-    min-height: calc(100dvh - var(--header-h) - 60px);
-  }
-}
-.tunnel__stage {
-  position: relative;
-  display: grid;
-  place-items: center;
-  height: 100%;
-  min-height: inherit;
-  perspective: 900px;
-  overflow: hidden;
-}
-.tunnel__rays {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  color: color-mix(in srgb, var(--ink) 20%, transparent);
-}
-.tunnel__title {
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  max-width: 18ch;
-  text-align: center;
-  transform: scale(var(--title-s, 1));
-  opacity: var(--title-o, 1);
-}
-.tunnel__frames {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-.tunnel__frame {
-  grid-area: 1 / 1;
-  width: min(52ch, 76%);
-  transform: translateZ(var(--frame-z, 0px));
-  opacity: var(--frame-o, 1);
-}
-.tunnel__figure {
-  margin: 0;
-  border: 1px solid var(--hairline);
-  background-color: var(--surface);
-  padding: var(--cell-pad);
-  display: grid;
-  gap: 12px;
-}
-.tunnel__panel {
-  display: block;
-  height: 140px;
-  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
-  background-size: 4px 4px;
-  opacity: 0.3;
-}
-/* Without the pin the frames are a plain stack in front of the rays. */
-@media (max-width: 1023.98px) {
-  .tunnel__frames {
-    position: static;
-    display: grid;
-    gap: 16px;
-    padding: var(--cell-pad);
-  }
-  .tunnel__frame {
-    grid-area: auto;
-    width: 100%;
-    transform: none;
-    opacity: 1;
-  }
-  .tunnel__title {
-    position: static;
-    margin-bottom: 24px;
-  }
-  .tunnel__stage {
-    display: block;
-    padding-block: var(--spacing-block);
-  }
-}
-html[data-motion='reduced'] .tunnel__frame {
-  transform: none;
-  opacity: 1;
-}
-html[data-motion='reduced'] .tunnel__frames {
-  position: static;
-  gap: 16px;
-  padding: var(--cell-pad);
-}
-
-/* P/07. A ruled cloth that bulges away from the pointer, with the invitation at its centre. */
-.cloth {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 70vh;
-  padding: var(--spacing-block) var(--cell-pad);
-}
-@media (min-width: 1024px) {
-  .cloth {
-    min-height: calc(100dvh - var(--header-h) - 120px);
-  }
-}
-.cloth__grid {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  fill: none;
-  stroke: var(--hairline);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
-.cloth__grid polyline {
-  vector-effect: non-scaling-stroke;
-}
-.cloth__centre {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  justify-items: center;
-  gap: 16px;
-  text-align: center;
-}
-.cloth__cta {
-  margin: 0;
-}
-.cloth__email {
-  font-family: var(--font-mono);
-}
-
-/* P/03. The word stands vertically beside a stage where the letter field slides in behind the
-   covers. Covers are the only cards on the site besides the lab tiles: a surface step, a
-   hairline, no radius and no shadow. */
-.work-plate {
-  perspective: 1200px;
-}
-/* Pinned, so the whole plate has to fit one screen: the two cover rows share what is left. */
-@media (min-width: 1024px) {
-  .work-plate {
-    min-height: calc(100dvh - var(--header-h));
-    grid-template-rows: auto minmax(0, 1fr) auto;
-  }
-}
-/* The stage clips the covers while they are still below their slot. */
-.work-stage {
-  overflow: hidden;
-}
-.work-stage__grid {
-  height: 100%;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
-}
-.work-word {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
-}
-.work-word__pill {
-  display: grid;
-  place-items: center;
-  flex: 1;
-  border: 1px solid var(--hairline);
-  padding: 16px 0;
-}
-.work-word__text {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  line-height: 0.9;
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-  font-variation-settings:
-    'opsz' 96,
-    'wdth' 100;
-}
-@media (min-width: 1024px) {
-  .work-word__text {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-  }
-}
-
-.letters-cell {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-  display: grid;
-  align-content: center;
-  min-height: 34vh;
-}
-@media (min-width: 1024px) {
-  .letters-cell {
-    min-height: 0;
-  }
-}
-.letters {
-  display: grid;
-}
-.letters__row {
-  display: flex;
-  justify-content: space-between;
-  transform: translateX(var(--letters-x, -110%));
-  opacity: var(--letters-o, 0);
-  will-change: transform;
-}
-.letters__glyph {
-  font-size: clamp(3rem, 8vw, 7rem);
-  line-height: 0.86;
-  font-weight: 500;
-  letter-spacing: -0.045em;
-  /* Ground, not foreground: the same weight in every theme, never louder than the covers. */
-  color: color-mix(in srgb, var(--ink) 26%, transparent);
-}
-@media (max-width: 1023.98px) {
-  .letters {
-    display: none;
-  }
-}
-html[data-motion='reduced'] .letters {
-  display: none;
-}
-
-/* Covers rise into their slot by uncovering from the bottom edge and tipping flat. They never
-   leave their cell, so nothing below the stage is ever overlapped. */
-.cover {
-  z-index: 1;
-  background-color: var(--surface);
-  transform-origin: 50% 100%;
-  transform: rotateX(calc((1 - var(--cover-in, 1)) * 6deg));
-  clip-path: inset(calc((1 - var(--cover-in, 1)) * 100%) 0 0 0);
-  opacity: calc(0.2 + 0.8 * var(--cover-in, 1));
-}
-.cover__link {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 12px;
-  height: 100%;
-  min-height: 18vh;
-  padding: var(--cell-pad);
-  transition:
-    transform 250ms var(--ease-out-expo),
-    background-color 250ms var(--ease-out-expo);
-}
-.cover__link:hover {
-  transform: translateY(-8px);
-  background: var(--surface-2);
-}
-.cover__head {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-.cover__panel {
-  display: block;
-  min-height: 56px;
-  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
-  background-size: 4px 4px;
-  opacity: 0.3;
-}
-.cover__body {
-  display: grid;
-  gap: 6px;
-}
-.cover__title {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-  font-size: clamp(1.05rem, 1.4vw, 1.4rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-.cover__link:hover .cover__title {
-  color: var(--accent);
-}
-
-.timecode {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.timecode__track {
-  position: relative;
-  flex: 1;
-  height: 24px;
-}
-.timecode__rule {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--hairline);
-}
-.timecode__pin {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--at) * 100%);
-  width: 24px;
-  transform: translateX(-50%);
-}
-.timecode__pin::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 4px;
-  bottom: 4px;
-  width: 1px;
-  background: var(--ink-muted);
-}
-.timecode__pin[aria-current]::before {
-  width: 2px;
-  background: var(--accent);
-}
-.timecode__marker {
-  position: absolute;
-  top: 50%;
-  left: calc(var(--at) * 100%);
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  transform: translate(-50%, -50%);
-  transition: left 300ms var(--ease-out-expo);
-}
-.timecode__step {
-  min-height: 24px;
-  padding-inline: 4px;
-  color: var(--ink);
-}
-.timecode__step:disabled {
-  color: var(--ink-muted);
-  cursor: default;
-}
-.timecode__read {
-  color: var(--ink-muted);
-  white-space: nowrap;
-}
-@media (max-width: 767.98px) {
-  .timecode__read {
-    display: none;
-  }
-}
-
 /* P/02. A column of text, a ruled table of facts, and one small drawer holding the mark. The
    drawer is the only object with depth; the text never sits inside it. */
 .about-plate__sentence {
@@ -1438,297 +1044,6 @@ html[data-motion='reduced'] .letters {
   right: 0;
   transform-origin: right;
   transform: rotateY(90deg);
-}
-
-/* P/03. The word stands vertically beside a stage where the letter field slides in behind the
-   covers. Covers are the only cards on the site besides the lab tiles: a surface step, a
-   hairline, no radius and no shadow. */
-.work-plate {
-  perspective: 1200px;
-}
-/* Pinned, so the whole plate has to fit one screen: the two cover rows share what is left. */
-@media (min-width: 1024px) {
-  .work-plate {
-    min-height: calc(100dvh - var(--header-h));
-    grid-template-rows: auto minmax(0, 1fr) auto;
-  }
-}
-/* The stage clips the covers while they are still below their slot. */
-.work-stage {
-  overflow: hidden;
-}
-.work-stage__grid {
-  height: 100%;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
-}
-.work-word {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
-}
-.work-word__pill {
-  display: grid;
-  place-items: center;
-  flex: 1;
-  border: 1px solid var(--hairline);
-  padding: 16px 0;
-}
-.work-word__text {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  line-height: 0.9;
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-  font-variation-settings:
-    'opsz' 96,
-    'wdth' 100;
-}
-@media (min-width: 1024px) {
-  .work-word__text {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-  }
-}
-
-.letters-cell {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-  display: grid;
-  align-content: center;
-  min-height: 34vh;
-}
-@media (min-width: 1024px) {
-  .letters-cell {
-    min-height: 0;
-  }
-}
-.letters {
-  display: grid;
-}
-.letters__row {
-  display: flex;
-  justify-content: space-between;
-  transform: translateX(var(--letters-x, -110%));
-  opacity: var(--letters-o, 0);
-  will-change: transform;
-}
-.letters__glyph {
-  font-size: clamp(3rem, 8vw, 7rem);
-  line-height: 0.86;
-  font-weight: 500;
-  letter-spacing: -0.045em;
-  /* Ground, not foreground: the same weight in every theme, never louder than the covers. */
-  color: color-mix(in srgb, var(--ink) 26%, transparent);
-}
-@media (max-width: 1023.98px) {
-  .letters {
-    display: none;
-  }
-}
-html[data-motion='reduced'] .letters {
-  display: none;
-}
-
-/* Covers rise into their slot by uncovering from the bottom edge and tipping flat. They never
-   leave their cell, so nothing below the stage is ever overlapped. */
-.cover {
-  z-index: 1;
-  background-color: var(--surface);
-  transform-origin: 50% 100%;
-  transform: rotateX(calc((1 - var(--cover-in, 1)) * 6deg));
-  clip-path: inset(calc((1 - var(--cover-in, 1)) * 100%) 0 0 0);
-  opacity: calc(0.2 + 0.8 * var(--cover-in, 1));
-}
-.cover__link {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 12px;
-  height: 100%;
-  min-height: 18vh;
-  padding: var(--cell-pad);
-  transition:
-    transform 250ms var(--ease-out-expo),
-    background-color 250ms var(--ease-out-expo);
-}
-.cover__link:hover {
-  transform: translateY(-8px);
-  background: var(--surface-2);
-}
-.cover__head {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-.cover__panel {
-  display: block;
-  min-height: 56px;
-  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
-  background-size: 4px 4px;
-  opacity: 0.3;
-}
-.cover__body {
-  display: grid;
-  gap: 6px;
-}
-.cover__title {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-  font-size: clamp(1.05rem, 1.4vw, 1.4rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-.cover__link:hover .cover__title {
-  color: var(--accent);
-}
-
-.timecode {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.timecode__track {
-  position: relative;
-  flex: 1;
-  height: 24px;
-}
-.timecode__rule {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--hairline);
-}
-.timecode__pin {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--at) * 100%);
-  width: 24px;
-  transform: translateX(-50%);
-}
-.timecode__pin::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 4px;
-  bottom: 4px;
-  width: 1px;
-  background: var(--ink-muted);
-}
-.timecode__pin[aria-current]::before {
-  width: 2px;
-  background: var(--accent);
-}
-.timecode__marker {
-  position: absolute;
-  top: 50%;
-  left: calc(var(--at) * 100%);
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  transform: translate(-50%, -50%);
-  transition: left 300ms var(--ease-out-expo);
-}
-.timecode__step {
-  min-height: 24px;
-  padding-inline: 4px;
-  color: var(--ink);
-}
-.timecode__step:disabled {
-  color: var(--ink-muted);
-  cursor: default;
-}
-.timecode__read {
-  color: var(--ink-muted);
-  white-space: nowrap;
-}
-@media (max-width: 767.98px) {
-  .timecode__read {
-    display: none;
-  }
-}
-
-/* P/02. A ruled box seen slightly from above: the front face carries the text, four ruled sides
-   give it depth, and the scroll flattens both the tilt and the depth to leave a plain table. */
-.about-stage {
-  perspective: 900px;
-  perspective-origin: 50% 32%;
-  display: grid;
-  align-content: center;
-  min-height: 74vh;
-  padding-block: var(--spacing-block);
-}
-.box3d {
-  --box-tilt: 0deg;
-  --box-depth: 0px;
-  position: relative;
-  transform-style: preserve-3d;
-  transform: rotateX(var(--box-tilt));
-  transform-origin: 50% 100%;
-}
-.box3d__face {
-  position: relative;
-  z-index: 1;
-}
-.box3d__facts {
-  margin: 0;
-}
-.box3d__side {
-  position: absolute;
-  pointer-events: none;
-  background-color: color-mix(in srgb, var(--ink) 5%, transparent);
-}
-.box3d__side--top,
-.box3d__side--bottom {
-  left: 0;
-  right: 0;
-  height: var(--box-depth);
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--hairline) 0 1px,
-    transparent 1px 24px
-  );
-}
-.box3d__side--left,
-.box3d__side--right {
-  top: 0;
-  bottom: 0;
-  width: var(--box-depth);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    var(--hairline) 0 1px,
-    transparent 1px 24px
-  );
-}
-.box3d__side--top {
-  top: 0;
-  transform-origin: top;
-  transform: rotateX(90deg);
-}
-.box3d__side--bottom {
-  bottom: 0;
-  transform-origin: bottom;
-  transform: rotateX(-90deg);
-}
-.box3d__side--left {
-  left: 0;
-  transform-origin: left;
-  transform: rotateY(-90deg);
-}
-.box3d__side--right {
-  right: 0;
-  transform-origin: right;
-  transform: rotateY(90deg);
-}
-/* Facts fade and rise as the box flattens; without JS they are simply there. */
-.fact {
-  opacity: calc(0.12 + 0.88 * var(--fact-in, 1));
-  transform: translateY(calc((1 - var(--fact-in, 1)) * 14px));
 }
 
 /* P/01. The band is the second window in the hero mask: an empty strip whose height the scroll
