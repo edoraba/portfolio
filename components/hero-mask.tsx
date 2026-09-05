@@ -81,10 +81,10 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
         }
       }
 
-      const s = store.getState()
-      if (!s.enabled) return
       // The hero holds the field while it is on screen and drops it on the way out. A higher
-      // claim (the loader) simply outranks it; there is nothing to check here.
+      // claim (the loader) simply outranks it. Never gate this on `enabled`: the canvas only
+      // mounts once something has claimed the field, so gating here deadlocks the whole thing.
+      const s = store.getState()
       const intensity = heroIntensity(window.scrollY, window.innerHeight)
       if (intensity > 0) {
         s.claim('hero', { mode: 'hero', intensity, priority: PRIORITY.hero })

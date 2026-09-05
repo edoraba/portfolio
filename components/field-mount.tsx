@@ -17,6 +17,10 @@ export function FieldMount() {
   const requested = useField((s) => s.requested)
 
   useEffect(() => {
+    document.documentElement.dataset.field = requested ? 'requested' : 'idle'
+  }, [requested])
+
+  useEffect(() => {
     if (load || !requested) return
     if (!canRenderField()) return
     useField.getState().setEnabled(true)

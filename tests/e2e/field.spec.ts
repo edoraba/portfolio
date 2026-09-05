@@ -46,3 +46,20 @@ test('home with the hero has no axe violations in both themes', async ({ page })
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([])
   }
 })
+
+// A claim is what brings the canvas in, so nothing may gate claiming on the field already being
+// enabled. That deadlock is invisible without hardware WebGL, but the request is not.
+test('the hero asks for the field, and the footer asks for it again', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => document.fonts.ready)
+  await expect(page.locator('html')).toHaveAttribute('data-field', 'requested')
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+  await page.waitForTimeout(1000)
+  await expect(page.locator('html')).toHaveAttribute('data-field', 'requested')
+})
+
+test('a page with no field never asks for it', async ({ page }) => {
+  await page.goto('/colophon')
+  await page.waitForTimeout(800)
+  await expect(page.locator('html')).toHaveAttribute('data-field', 'idle')
+})

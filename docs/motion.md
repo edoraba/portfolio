@@ -77,6 +77,11 @@ field on and off; they file a claim while they are on screen and drop it when th
 hero, menu, footer, plate. This exists because two components used to reset the field on their own
 and one of them left a band stranded on screen for the rest of the page.
 
+A claim is also what brings the canvas in: `FieldMount` loads the renderer once anything has
+claimed the field, and only then is `enabled` true. Never gate a claim on `enabled`, or nothing
+ever claims and the field never appears. `html[data-field]` says whether anything is asking, and
+an end to end test watches it.
+
 Two rules the field itself obeys:
 
 - It renders only in bands that contain no text. The lit dither cell is drawn in `field-on`, which

@@ -33,7 +33,8 @@ export function FooterField({ target }: { target: React.RefObject<HTMLElement | 
     const unsub = Tempus.add(
       () => {
         const s = store.getState()
-        if (!visible || !s.enabled) return
+        // Claim whether or not the canvas exists yet: claiming is what brings it in.
+        if (!visible) return
         const h = window.innerHeight
         const strip = window.innerWidth < 768 ? STRIP_SM : STRIP
         const r = el.getBoundingClientRect()
