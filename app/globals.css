@@ -429,9 +429,8 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
    captions, facts and the email stay selectable. */
 .hero-svg,
 .hero-text,
-.porthole__wall,
+.porthole__sphere,
 .porthole__dither,
-.porthole__word,
 .toolbox,
 .toolbox__tag,
 .monogram,
@@ -711,30 +710,65 @@ html[data-motion='reduced'] .tunnel__rays {
 
 /* P/03. A closed hatch that opens into a space. The aperture is an octagon cut with clip-path,
    so the site keeps its radius of zero; --ap drives it from a small hatch to the full plate. */
-.work-plate {
-  perspective: 1200px;
-}
 @media (min-width: 1024px) {
   .work-plate {
     min-height: calc(100dvh - var(--header-h));
-    /* Rule, header, the hole, the foot: the hole takes whatever is left. */
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    /* Rule, header, then the hole, which takes what is left. */
+    grid-template-rows: auto auto minmax(0, 1fr);
   }
 }
 .porthole {
-  --ap: 1;
-  --hw: calc(11% + 39% * var(--ap));
-  --hh: calc(24% + 26% * var(--ap));
-  --cx: calc(7% - 7% * var(--ap));
-  --cy: calc(12% - 12% * var(--ap));
   position: relative;
+  /* Below the pin breakpoint the stage and the foot stack inside the cell; a percentage height
+     on the stage would take the whole cell and push the foot out of it. */
+  display: flex;
+  flex-direction: column;
   min-height: 58vh;
   overflow: hidden;
 }
 @media (min-width: 1024px) {
   .porthole {
+    display: block;
     min-height: 0;
     height: 100%;
+    /* The stage leaves the cell to cover the screen, so nothing here may clip it. */
+    overflow: visible;
+  }
+  /* Before and after its run the stage is an ordinary block in the plate, showing the closed
+     octagon with the word inside it: the plate reads as a plate on the sheet, which is what the
+     reader comes back to. It only takes over the screen while the section is actually running. */
+  .porthole__stage {
+    position: absolute;
+    inset: 0;
+  }
+  .porthole__stage[data-on='1'] {
+    position: fixed;
+  }
+}
+
+/* The space behind the sheet. On a wide screen it is fixed and cut to an octagon that opens
+   until it is the whole viewport, so the reader really is inside it and not looking at a panel;
+   below that it is an ordinary block in the plate. */
+.porthole__stage {
+  --ap: 1;
+  position: relative;
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 0;
+}
+@media (min-width: 1024px) {
+  .porthole__stage {
+    --hw: calc(11% + 39% * var(--ap));
+    --hh: calc(20% + 30% * var(--ap));
+    --cx: calc(6% - 6% * var(--ap));
+    --cy: calc(10% - 10% * var(--ap));
+    z-index: 30;
+    height: auto;
+    /* The rail is longer than the screen; without this it would give the page a sideways scroll
+       whenever the stage is not the one clipping it. */
+    overflow: hidden;
+    perspective: 1000px;
     clip-path: polygon(
       calc(50% - var(--hw) + var(--cx)) calc(50% - var(--hh)),
       calc(50% + var(--hw) - var(--cx)) calc(50% - var(--hh)),
@@ -747,14 +781,11 @@ html[data-motion='reduced'] .tunnel__rays {
     );
   }
 }
-
-/* Behind the sheet. Everything in here reads on the dark half of the theme, so the palette is
-   inverted once, on the space itself, and every child follows without knowing. */
 .porthole__void {
   position: absolute;
   inset: 0;
+  z-index: 0;
   background-color: var(--void);
-  overflow: hidden;
 }
 /* The same dither cell as the field, printed, drifting. A live canvas cannot serve here: it
    paints its own ground in the page colour, and this ground is the opposite one. */
@@ -764,7 +795,7 @@ html[data-motion='reduced'] .tunnel__rays {
   background-image: radial-gradient(circle at 50% 50%, var(--void-ink) 0 1.1px, transparent 1.4px);
   background-size: 4px 4px;
   opacity: 0.5;
-  mask-image: radial-gradient(120% 90% at 50% 45%, #000 10%, #0002 75%);
+  mask-image: radial-gradient(120% 90% at 50% 45%, #000 10%, #0002 78%);
   animation: porthole-dither 24s linear infinite;
 }
 @keyframes porthole-dither {
@@ -772,47 +803,50 @@ html[data-motion='reduced'] .tunnel__rays {
     background-position: 160px 96px;
   }
 }
-/* The word repeated across the space, drifting against the rail. */
-.porthole__wall {
-  position: absolute;
-  inset: -14% -22%;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 1fr;
-  place-items: center;
-  color: var(--void-ink);
-  opacity: calc(0.22 * var(--wall-o, 1));
-  transform: translate3d(var(--wall-x, 0%), var(--wall-y, 0%), 0);
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 8.5rem);
-  font-weight: 700;
-  line-height: 0.82;
-  letter-spacing: -0.05em;
-}
 
-/* The word standing deep inside the hole. It grows a fraction of what the walls do while the
-   reader comes down onto it, then rushes over them. */
-.porthole__word {
+/* Every copy of every letter starts in the same place. `--open` turns each one out to its own
+   longitude and latitude on the shell, so the stacked word becomes the space around the reader
+   with one property write. */
+.porthole__sphere {
+  --open: 0;
+  --sphere-r: 1000px;
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 1;
   display: grid;
-  align-content: center;
-  justify-items: center;
-  margin: 0;
-  color: var(--void-ink);
-  opacity: var(--word-o, 0);
-  transform: scale(var(--word-s, 1));
+  place-items: center;
+  transform-style: preserve-3d;
   pointer-events: none;
+  color: var(--void-ink);
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 3.2vw, 3rem);
+  font-size: clamp(7rem, 13vw, 14rem);
   font-weight: 700;
-  line-height: 0.86;
-  letter-spacing: -0.04em;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+}
+.porthole__glyph {
+  grid-area: 1 / 1;
+  transform: rotateY(calc(var(--th) * var(--open)))
+    rotateX(calc(var(--ph0) * (1 - var(--open)) + var(--ph1) * var(--open)))
+    translateZ(calc(var(--sphere-r) * -1));
+  opacity: calc(0.82 + 0.18 * (1 - var(--open)));
 }
 @media (max-width: 1023.98px) {
-  .porthole__word {
+  /* No sphere without the room for it: the word stands in the space as a word. */
+  .porthole__sphere {
+    align-content: center;
+    font-size: clamp(2.5rem, 14vw, 5rem);
+    line-height: 0.9;
+  }
+  .porthole__glyph {
     display: none;
+  }
+  .porthole__glyph[data-first] {
+    display: block;
+    position: relative;
+    grid-area: auto;
+    transform: none;
+    opacity: 0.3;
   }
 }
 
@@ -823,24 +857,24 @@ html[data-motion='reduced'] .tunnel__rays {
   --ink-muted: color-mix(in srgb, var(--void-ink) 72%, transparent);
   --accent: var(--void-ink);
   --hairline: color-mix(in srgb, var(--void-ink) 38%, transparent);
-  /* Nearly the void, not the void: the card has to sit on the wall of letters rather than let
-     it through, or every line is read against a moving W. */
+  /* Nearly the void, not the void: the card has to sit on the letters rather than let them
+     through, or every line is read against a moving W. */
   --surface: color-mix(in srgb, var(--void) 88%, transparent);
   --surface-2: color-mix(in srgb, var(--void) 70%, var(--void-ink));
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: var(--gap);
-  height: 100%;
   margin: 0;
-  padding: 0 var(--cell-pad);
+  padding: var(--spacing-block) var(--cell-pad);
   color: var(--void-ink);
   list-style: none;
 }
 @media (min-width: 1024px) {
   .porthole__rail {
     width: max-content;
+    padding-block: 0;
     opacity: var(--rail-o, 1);
     transform: translate3d(var(--rail-x, 0px), 0, 0);
   }
@@ -854,7 +888,6 @@ html[data-motion='reduced'] .tunnel__rays {
   .porthole__rail {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    padding-block: var(--spacing-block);
     scrollbar-width: none;
   }
   .porthole__rail::-webkit-scrollbar {
@@ -864,6 +897,48 @@ html[data-motion='reduced'] .tunnel__rays {
     width: min(78vw, 340px);
     scroll-snap-align: center;
   }
+}
+/* The reader's place in the ride. It sits over the void rather than in it, so it is reachable
+   whatever the octagon is doing. */
+.porthole__foot {
+  position: relative;
+  z-index: 31;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: var(--cell-pad);
+  border-top: 1px solid var(--hairline);
+}
+@media (min-width: 1024px) {
+  .porthole__foot {
+    position: absolute;
+    inset: auto 0 0 0;
+  }
+}
+.porthole__foot .timecode {
+  flex: 1;
+}
+/* Over the void it is written in the void's ink. Below the pin breakpoint it is always over it,
+   so it always is. */
+@media (max-width: 1023.98px) {
+  /* No octagon to open down here, so the whole cell is the space and the foot sits on it. */
+  .porthole {
+    background-color: var(--void);
+  }
+  .porthole__foot {
+    --ink: var(--void-ink);
+    --ink-muted: color-mix(in srgb, var(--void-ink) 72%, transparent);
+    --accent: var(--void-ink);
+    --hairline: color-mix(in srgb, var(--void-ink) 38%, transparent);
+    color: var(--void-ink);
+  }
+}
+html[data-void='1'] .porthole__foot {
+  --ink: var(--void-ink);
+  --ink-muted: color-mix(in srgb, var(--void-ink) 72%, transparent);
+  --accent: var(--void-ink);
+  --hairline: color-mix(in srgb, var(--void-ink) 38%, transparent);
+  color: var(--void-ink);
 }
 
 /* Reduced motion gets the same rail the small screens get: no choreography, but every project
@@ -881,6 +956,18 @@ html[data-motion='reduced'] .porthole__slot {
 }
 html[data-motion='reduced'] .porthole__dither {
   animation: none;
+}
+
+/* While the reader is inside, the console is inside too. */
+html[data-void='1'] .site-header {
+  --ink: var(--void-ink);
+  --ink-muted: color-mix(in srgb, var(--void-ink) 70%, transparent);
+  --accent: var(--void-ink);
+  --hairline: color-mix(in srgb, var(--void-ink) 30%, transparent);
+  --surface: color-mix(in srgb, var(--void-ink) 14%, transparent);
+  --surface-2: color-mix(in srgb, var(--void-ink) 24%, transparent);
+  background: var(--void);
+  color: var(--void-ink);
 }
 
 /* A project plate. Its colours come from whatever it sits in. */
@@ -931,15 +1018,6 @@ html[data-motion='reduced'] .porthole__dither {
 }
 .cover__link:hover .cover__title {
   color: var(--accent);
-}
-
-.work-plate__foot {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-.work-plate__foot .timecode {
-  flex: 1;
 }
 
 .timecode {

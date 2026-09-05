@@ -102,7 +102,7 @@ test('decoration cannot be selected, words can', async ({ page }) => {
   await page.goto('/')
   const none = [
     '.hero-svg',
-    '.porthole__wall',
+    '.porthole__sphere',
     '.toolbox__tag',
     '.monogram',
     '.cloth__grid',
