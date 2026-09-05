@@ -431,6 +431,7 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 .hero-text,
 .porthole__sphere,
 .porthole__dither,
+.porthole__grid,
 .toolbox,
 .toolbox__tag,
 .monogram,
@@ -719,38 +720,32 @@ html[data-motion='reduced'] .tunnel__rays {
 }
 .porthole {
   position: relative;
-  /* Below the pin breakpoint the stage and the foot stack inside the cell; a percentage height
-     on the stage would take the whole cell and push the foot out of it. */
+  /* Below the pin breakpoint the stage and the foot stack inside the cell. */
   display: flex;
   flex-direction: column;
   min-height: 58vh;
   overflow: hidden;
+  background-color: var(--void);
 }
 @media (min-width: 1024px) {
   .porthole {
     display: block;
     min-height: 0;
     height: 100%;
+    background-color: transparent;
     /* The stage leaves the cell to cover the screen, so nothing here may clip it. */
     overflow: visible;
   }
-  /* Before and after its run the stage is an ordinary block in the plate, showing the closed
-     octagon with the word inside it: the plate reads as a plate on the sheet, which is what the
-     reader comes back to. It only takes over the screen while the section is actually running. */
-  .porthole__stage {
-    position: absolute;
-    inset: 0;
-  }
-  .porthole__stage[data-on='1'] {
-    position: fixed;
-  }
 }
 
-/* The space behind the sheet. On a wide screen it is fixed and cut to an octagon that opens
-   until it is the whole viewport, so the reader really is inside it and not looking at a panel;
-   below that it is an ordinary block in the plate. */
+/* Everything the hole shows is fixed to the screen; only the hole moves. That is what makes the
+   approach a parallax: the reader is looking past the page through a window the page carries. */
 .porthole__stage {
-  --ap: 1;
+  --z: 1;
+  --ox: 50vw;
+  --oy: 50vh;
+  --grid-zoom: 1;
+  --grid-near: 0;
   position: relative;
   display: grid;
   flex: 1;
@@ -759,28 +754,105 @@ html[data-motion='reduced'] .tunnel__rays {
 }
 @media (min-width: 1024px) {
   .porthole__stage {
-    --hw: calc(11% + 39% * var(--ap));
-    --hh: calc(20% + 30% * var(--ap));
-    --cx: calc(6% - 6% * var(--ap));
-    --cy: calc(10% - 10% * var(--ap));
+    /* Half of the octagon at rest, and the bite taken out of each corner. Everything scales
+       from these by one factor, so the shape never changes, only its size. */
+    --ow: calc(150px * var(--z));
+    --oh: calc(196px * var(--z));
+    --oc: calc(56px * var(--z));
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
     z-index: 30;
-    height: auto;
-    /* The rail is longer than the screen; without this it would give the page a sideways scroll
-       whenever the stage is not the one clipping it. */
+    display: block;
+    /* The cards ride in from beyond the right edge; without this they lengthen the page. */
     overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
     perspective: 1000px;
-    clip-path: polygon(
-      calc(50% - var(--hw) + var(--cx)) calc(50% - var(--hh)),
-      calc(50% + var(--hw) - var(--cx)) calc(50% - var(--hh)),
-      calc(50% + var(--hw)) calc(50% - var(--hh) + var(--cy)),
-      calc(50% + var(--hw)) calc(50% + var(--hh) - var(--cy)),
-      calc(50% + var(--hw) - var(--cx)) calc(50% + var(--hh)),
-      calc(50% - var(--hw) + var(--cx)) calc(50% + var(--hh)),
-      calc(50% - var(--hw)) calc(50% + var(--hh) - var(--cy)),
-      calc(50% - var(--hw)) calc(50% - var(--hh) + var(--cy))
-    );
+  }
+  .porthole__stage[data-on='1'] {
+    visibility: visible;
   }
 }
+
+/* The reference for the zoom: ruled squares on the sheet around the hole, anchored to its centre
+   and scaling with it. Without something outside that grows too, a hole opening reads as a shape
+   changing size rather than as the reader moving in. */
+.porthole__grid {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .porthole__grid {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--ink) 30%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--ink) 30%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: calc(74px * var(--z)) calc(74px * var(--z));
+    background-position: var(--ox) var(--oy);
+    opacity: calc(0.9 * var(--grid-zoom) * var(--grid-near));
+    mask-image: radial-gradient(46% 62% at var(--ox) var(--oy), #000 35%, #0000 100%);
+  }
+}
+
+/* Three cuts of the same octagon: the outer stroke, the sheet showing through as a gap, and the
+   hole itself. Stacked, they read as an aperture with a ring around it. */
+.porthole__oct {
+  position: absolute;
+  inset: 0;
+  --w: calc(var(--ow) * var(--s, 1));
+  --h: calc(var(--oh) * var(--s, 1));
+  --c: calc(var(--oc) * var(--s, 1));
+  clip-path: polygon(
+    calc(var(--ox) - var(--w) + var(--c)) calc(var(--oy) - var(--h)),
+    calc(var(--ox) + var(--w) - var(--c)) calc(var(--oy) - var(--h)),
+    calc(var(--ox) + var(--w)) calc(var(--oy) - var(--h) + var(--c)),
+    calc(var(--ox) + var(--w)) calc(var(--oy) + var(--h) - var(--c)),
+    calc(var(--ox) + var(--w) - var(--c)) calc(var(--oy) + var(--h)),
+    calc(var(--ox) - var(--w) + var(--c)) calc(var(--oy) + var(--h)),
+    calc(var(--ox) - var(--w)) calc(var(--oy) + var(--h) - var(--c)),
+    calc(var(--ox) - var(--w)) calc(var(--oy) - var(--h) + var(--c))
+  );
+}
+.porthole__ring {
+  --s: 1.075;
+  background-color: var(--void);
+}
+.porthole__gap {
+  --s: 1.055;
+  background-color: var(--canvas);
+}
+.porthole__hole {
+  --s: 1;
+}
+@media (max-width: 1023.98px) {
+  /* No octagon to open down here: the cell is the space. */
+  .porthole__oct {
+    position: relative;
+    clip-path: none;
+  }
+  .porthole__ring,
+  .porthole__gap {
+    display: none;
+  }
+  .porthole__hole {
+    display: grid;
+    place-items: center;
+    height: 100%;
+  }
+}
+
 .porthole__void {
   position: absolute;
   inset: 0;
@@ -806,15 +878,18 @@ html[data-motion='reduced'] .tunnel__rays {
 
 /* Every copy of every letter starts in the same place. `--open` turns each one out to its own
    longitude and latitude on the shell, so the stacked word becomes the space around the reader
-   with one property write. */
+   with one property write, and `--turn` keeps the whole shell moving after that. */
 .porthole__sphere {
   --open: 0;
+  --turn: 0deg;
+  --tilt: 0deg;
   --sphere-r: 1000px;
   position: absolute;
   inset: 0;
   z-index: 1;
   display: grid;
   place-items: center;
+  transform: rotateY(var(--turn)) rotateX(var(--tilt));
   transform-style: preserve-3d;
   pointer-events: none;
   color: var(--void-ink);
@@ -829,12 +904,15 @@ html[data-motion='reduced'] .tunnel__rays {
   transform: rotateY(calc(var(--th) * var(--open)))
     rotateX(calc(var(--ph0) * (1 - var(--open)) + var(--ph1) * var(--open)))
     translateZ(calc(var(--sphere-r) * -1));
-  opacity: calc(0.82 + 0.18 * (1 - var(--open)));
+  /* The second word is not there until the shell opens: closed, it hides behind the first. */
+  opacity: calc((0.82 + 0.18 * (1 - var(--open))) * (1 - var(--late, 0) * (1 - var(--open))));
 }
 @media (max-width: 1023.98px) {
-  /* No sphere without the room for it: the word stands in the space as a word. */
+  /* No shell without the room for it: the word stands in the space as a word. */
   .porthole__sphere {
+    position: relative;
     align-content: center;
+    transform: none;
     font-size: clamp(2.5rem, 14vw, 5rem);
     line-height: 0.9;
   }
@@ -848,56 +926,88 @@ html[data-motion='reduced'] .tunnel__rays {
     transform: none;
     opacity: 0.3;
   }
+  .porthole__glyph[data-first]:nth-child(n + 50) {
+    display: none;
+  }
 }
 
-/* The projects ride sideways through the space. The palette is inverted here, so the cards use
-   the ordinary tokens and come out drawn in the void's ink. */
-.porthole__rail {
+/* The projects cross the space scattered, each at its own height and depth. The palette is
+   inverted around them, so the cards use the ordinary tokens and come out in the void's ink. */
+.porthole__cards {
   --ink: var(--void-ink);
   --ink-muted: color-mix(in srgb, var(--void-ink) 72%, transparent);
   --accent: var(--void-ink);
   --hairline: color-mix(in srgb, var(--void-ink) 38%, transparent);
-  /* Nearly the void, not the void: the card has to sit on the letters rather than let them
+  /* Nearly the void, not the void: a card has to sit on the letters rather than let them
      through, or every line is read against a moving W. */
-  --surface: color-mix(in srgb, var(--void) 88%, transparent);
-  --surface-2: color-mix(in srgb, var(--void) 70%, var(--void-ink));
-  position: relative;
+  --surface: color-mix(in srgb, var(--void) 94%, transparent);
+  --surface-2: color-mix(in srgb, var(--void) 74%, var(--void-ink));
+  position: absolute;
+  inset: 0;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: var(--gap);
   margin: 0;
-  padding: var(--spacing-block) var(--cell-pad);
-  color: var(--void-ink);
+  padding: 0;
+  transform-style: preserve-3d;
   list-style: none;
+  color: var(--void-ink);
 }
-@media (min-width: 1024px) {
-  .porthole__rail {
-    width: max-content;
-    padding-block: 0;
-    opacity: var(--rail-o, 1);
-    transform: translate3d(var(--rail-x, 0px), 0, 0);
-  }
+.porthole__card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--w) * 1vw);
+  opacity: var(--o, 1);
+  transform: translate3d(calc(var(--x, 50) * 1vw - 50%), calc(var(--y) * 1vh - 50%), var(--cz));
+  pointer-events: auto;
 }
-.porthole__slot {
-  flex: none;
-  width: clamp(280px, 26vw, 420px);
-}
-/* Without the pin the rail is a row the reader swipes: the same gesture, no choreography. */
+/* Without the pin the projects are a row the reader swipes: the same gesture, no choreography. */
 @media (max-width: 1023.98px) {
-  .porthole__rail {
+  .porthole__cards {
+    position: relative;
+    inset: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--gap);
+    padding: var(--spacing-block) var(--cell-pad);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
   }
-  .porthole__rail::-webkit-scrollbar {
+  .porthole__cards::-webkit-scrollbar {
     display: none;
   }
-  .porthole__slot {
+  .porthole__card {
+    position: relative;
+    flex: none;
     width: min(78vw, 340px);
+    transform: none;
+    opacity: 1;
     scroll-snap-align: center;
   }
 }
+html[data-motion='reduced'] .porthole__cards {
+  position: relative;
+  inset: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  padding: var(--spacing-block) var(--cell-pad);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+html[data-motion='reduced'] .porthole__card {
+  position: relative;
+  flex: none;
+  width: min(30vw, 340px);
+  transform: none;
+  opacity: 1;
+  scroll-snap-align: center;
+}
+html[data-motion='reduced'] .porthole__dither {
+  animation: none;
+}
+
 /* The reader's place in the ride. It sits over the void rather than in it, so it is reachable
    whatever the octagon is doing. */
 .porthole__foot {
@@ -918,13 +1028,8 @@ html[data-motion='reduced'] .tunnel__rays {
 .porthole__foot .timecode {
   flex: 1;
 }
-/* Over the void it is written in the void's ink. Below the pin breakpoint it is always over it,
-   so it always is. */
+/* Over the void it is written in the void's ink. Below the pin breakpoint it always is. */
 @media (max-width: 1023.98px) {
-  /* No octagon to open down here, so the whole cell is the space and the foot sits on it. */
-  .porthole {
-    background-color: var(--void);
-  }
   .porthole__foot {
     --ink: var(--void-ink);
     --ink-muted: color-mix(in srgb, var(--void-ink) 72%, transparent);
@@ -938,36 +1043,14 @@ html[data-void='1'] .porthole__foot {
   --ink-muted: color-mix(in srgb, var(--void-ink) 72%, transparent);
   --accent: var(--void-ink);
   --hairline: color-mix(in srgb, var(--void-ink) 38%, transparent);
+  /* The letters run under it, so it needs a ground of its own to stay readable. */
+  background-color: color-mix(in srgb, var(--void) 88%, transparent);
   color: var(--void-ink);
 }
 
-/* Reduced motion gets the same rail the small screens get: no choreography, but every project
-   still reachable, which a clipped row would not be. */
-html[data-motion='reduced'] .porthole__rail {
-  width: auto;
-  overflow-x: auto;
-  transform: none;
-  opacity: 1;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-html[data-motion='reduced'] .porthole__slot {
-  scroll-snap-align: center;
-}
-html[data-motion='reduced'] .porthole__dither {
-  animation: none;
-}
-
-/* While the reader is inside, the console is inside too. */
+/* Inside the void the console is not there: the screen belongs to the space. */
 html[data-void='1'] .site-header {
-  --ink: var(--void-ink);
-  --ink-muted: color-mix(in srgb, var(--void-ink) 70%, transparent);
-  --accent: var(--void-ink);
-  --hairline: color-mix(in srgb, var(--void-ink) 30%, transparent);
-  --surface: color-mix(in srgb, var(--void-ink) 14%, transparent);
-  --surface-2: color-mix(in srgb, var(--void-ink) 24%, transparent);
-  background: var(--void);
-  color: var(--void-ink);
+  visibility: hidden;
 }
 
 /* A project plate. Its colours come from whatever it sits in. */
