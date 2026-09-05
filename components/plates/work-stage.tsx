@@ -3,46 +3,38 @@ import { useGSAP } from '@gsap/react'
 import Link from 'next/link'
 import { useRef, useState } from 'react'
 import { gsap, setupGsap } from '@/lib/motion/gsap'
-import { clamp01, itemProgress, lerp } from '@/lib/motion/scrub'
+import { clamp01, lerp } from '@/lib/motion/scrub'
 import { useMotion } from '@/lib/motion/store'
 import { headerHeight } from '@/lib/sheet'
 import { Cell } from '../sheet/cell'
-import { Sheet } from '../sheet/sheet'
 import { getLenis } from '../smooth-scroll'
 import { Plate } from './plate'
 import { Timecode } from './timecode'
 import { WorkCover, type CoverWork } from './work-cover'
 
-/** Where each cover rests once it has settled: three across, then two wider ones. */
-const SLOTS = [
-  { col: 1, end: 4, row: 1, md: { col: 1, end: 7 }, sm: { col: 1, end: 5 } },
-  { col: 5, end: 8, row: 1, md: { col: 1, end: 7 }, sm: { col: 1, end: 5 } },
-  { col: 9, end: 12, row: 1, md: { col: 1, end: 7 }, sm: { col: 1, end: 5 } },
-  { col: 2, end: 6, row: 2, md: { col: 1, end: 7 }, sm: { col: 1, end: 5 } },
-  { col: 7, end: 11, row: 2, md: { col: 1, end: 7 }, sm: { col: 1, end: 5 } },
-] as const
-
 const WORD = ['W', 'O', 'R', 'K'] as const
+/** The wall inside: the word repeated across and down, drifting behind the projects. */
+const WALL_COLS = 7
+const WALL_ROWS = 4
 
-/** Where the four letters hang in the space, in percent of the stage and in depth. */
-const LETTERS = [
-  { x: 8, y: 16, z: -1100 },
-  { x: 72, y: 10, z: -820 },
-  { x: 14, y: 66, z: -640 },
-  { x: 80, y: 70, z: -900 },
-] as const
-
-/** Aperture open, space revealed, covers arriving. */
-const OPEN_END = 0.34
-const REVEAL = [0.26, 0.46] as const
-const COVERS = [0.42, 0.92] as const
+/** Approach, entry, then the long ride through the rail. */
+const OPEN = 0.3
+const ENTER = [0.24, 0.42] as const
+const RIDE = [0.4, 1] as const
 
 /**
- * P/03. The reader arrives at a closed hatch with the word standing in it, the hatch opens, and
- * inside is a space where the four letters hang at different depths and the five projects come
- * out of the dark and settle onto the sheet. The aperture is an octagon cut with clip-path, so
- * the system keeps its radius of zero. Below 1024px and under reduced motion the hatch is simply
- * open and the covers land as they enter.
+ * P/03. The reader comes down onto a hole cut in the sheet with the word standing inside it,
+ * deeper than the hole itself so it holds still while the walls rush past. The hole opens until
+ * it is the whole plate, the word flies over the reader, and what is left is the space behind
+ * the sheet: the void, the word repeated across it as a wall, and the five projects riding
+ * sideways through it.
+ *
+ * The aperture is an octagon cut with clip-path, so the system keeps its radius of zero, and
+ * everything inside the space runs on `--void`, the dark half of whichever theme is on, so the
+ * hole is a hole in all six and not a bright patch in the two that are already dark.
+ *
+ * Below 1024px and under reduced motion the hole is simply open and the rail is a row the reader
+ * swipes, which is the same gesture without the pin.
  */
 export function WorkStage({ works }: { works: CoverWork[] }) {
   const sectionRef = useRef<HTMLElement>(null)
@@ -60,10 +52,23 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
       mm.add('(min-width: 1024px)', () => {
         const stage = section.querySelector<HTMLElement>('.porthole')
         const word = section.querySelector<HTMLElement>('.porthole__word')
-        const space = section.querySelector<HTMLElement>('.porthole__space')
-        const letters = Array.from(section.querySelectorAll<HTMLElement>('[data-letter]'))
+        const wall = section.querySelector<HTMLElement>('.porthole__wall')
+        const rail = section.querySelector<HTMLElement>('.porthole__rail')
         const covers = Array.from(section.querySelectorAll<HTMLElement>('[data-cover]'))
-        if (!stage || !word || !space) return
+        if (!stage || !word || !wall || !rail) return
+
+        // The ride is measured, not guessed: the rail is as long as its cards make it.
+        let from = 0
+        let to = 0
+        const measure = () => {
+          const room = stage.clientWidth
+          // In from just past the right edge, out until the last card is flush against it: the
+          // ride ends on a project, not on an empty room.
+          from = room * 0.98
+          to = room - rail.scrollWidth
+        }
+        measure()
+
         const state = { p: 0 }
         const tween = gsap.to(state, {
           p: 1,
@@ -71,38 +76,50 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
           scrollTrigger: {
             trigger: section,
             start: () => 'top top+=' + headerHeight(),
-            end: '+=200%',
+            end: '+=260%',
             pin: true,
             scrub: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             refreshPriority: 2,
+            onRefresh: measure,
           },
           onUpdate: () => {
             const p = state.p
-            // The hatch opens, the closed word fades, the space behind it comes up.
-            stage.style.setProperty('--ap', clamp01(p / OPEN_END).toFixed(3))
-            word.style.setProperty('--word-o', (1 - clamp01((p - 0.12) / 0.18)).toFixed(3))
-            const reveal = clamp01((p - REVEAL[0]) / (REVEAL[1] - REVEAL[0]))
-            space.style.setProperty('--space-o', reveal.toFixed(3))
-            // Inside, the letters come towards the reader and the covers rise out of the depth.
-            letters.forEach((el, i) => {
-              const local = itemProgress(clamp01((p - 0.2) / 0.8), i, letters.length, 0.75)
-              el.style.setProperty('--letter-z', Math.round(lerp(LETTERS[i].z, 120, local)) + 'px')
-            })
-            const at = (i: number) =>
-              itemProgress(
-                clamp01((p - COVERS[0]) / (COVERS[1] - COVERS[0])),
-                i,
-                covers.length,
-                0.5,
-              )
-            covers.forEach((cover, i) => {
-              const local = at(i)
-              cover.style.setProperty('--cover-in', local.toFixed(3))
-              cover.style.setProperty('--cover-z', Math.round(lerp(-520, 0, local)) + 'px')
-            })
-            setIndex(covers.reduce((acc, _, i) => (at(i) > 0.5 ? i : acc), 0))
+            const ap = clamp01(p / OPEN)
+            stage.style.setProperty('--ap', ap.toFixed(3))
+
+            // Parallax: the word is far inside the hole, so it grows a fraction of what the
+            // walls do, and only rushes past once the reader is through the opening.
+            const past = clamp01((p - ENTER[0]) / (ENTER[1] - ENTER[0]))
+            word.style.setProperty('--word-s', (lerp(1, 1.7, ap) * lerp(1, 4.2, past)).toFixed(3))
+            word.style.setProperty('--word-o', (1 - past).toFixed(3))
+
+            // The wall drifts the other way from the rail, which is what gives the space depth.
+            const inside = clamp01((p - ENTER[0]) / (1 - ENTER[0]))
+            wall.style.setProperty('--wall-x', (6 - 30 * inside).toFixed(2) + '%')
+            wall.style.setProperty('--wall-y', (-3 + 6 * inside).toFixed(2) + '%')
+            wall.style.setProperty('--wall-o', clamp01((p - ENTER[0]) / 0.12).toFixed(3))
+
+            const ride = clamp01((p - RIDE[0]) / (RIDE[1] - RIDE[0]))
+            rail.style.setProperty('--rail-x', Math.round(lerp(from, to, ride)) + 'px')
+            rail.style.setProperty('--rail-o', clamp01((p - RIDE[0]) / 0.06).toFixed(3))
+
+            // Whichever card is nearest the middle of the plate is the one the timecode names.
+            if (covers.length) {
+              const mid = stage.getBoundingClientRect().left + stage.clientWidth / 2
+              let best = 0
+              let bestD = Infinity
+              covers.forEach((el, i) => {
+                const r = el.getBoundingClientRect()
+                const d = Math.abs(r.left + r.width / 2 - mid)
+                if (d < bestD) {
+                  bestD = d
+                  best = i
+                }
+              })
+              setIndex(best)
+            }
             section.dataset.state = p > 0.98 ? 'done' : 'running'
           },
         })
@@ -114,42 +131,22 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
         }
       })
 
-      // Below the pin breakpoint the aperture is open and each cover lands as it enters.
-      mm.add('(max-width: 1023.98px)', () => {
-        const covers = Array.from(section.querySelectorAll<HTMLElement>('[data-cover]'))
-        const tweens = covers.map((cover) =>
-          gsap.fromTo(
-            cover,
-            { '--cover-in': 0 },
-            {
-              '--cover-in': 1,
-              duration: 0.8,
-              ease: 'editorial',
-              scrollTrigger: { trigger: cover, start: 'top 88%', once: true },
-            },
-          ),
-        )
-        section.dataset.state = 'done'
-        return () => tweens.forEach((t) => t.kill())
-      })
-
       return () => mm.revert()
     },
     { scope: sectionRef, dependencies: [reduced] },
   )
 
-  /** Scroll to the point in the pinned range where cover `i` has arrived. */
+  /** Scroll to the point in the pinned range where card `i` is in the middle of the plate. */
   const goTo = (i: number) => {
     const st = trigger.current
     if (!st) {
       document
         .querySelector('[data-cover="' + works[i]?.order + '"]')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
       return
     }
-    const span = COVERS[1] - COVERS[0]
-    const at =
-      COVERS[0] + span * 0.2 + (works.length > 1 ? (i / (works.length - 1)) * span * 0.8 : 0)
+    const span = RIDE[1] - RIDE[0]
+    const at = RIDE[0] + span * (works.length > 1 ? i / (works.length - 1) : 0.5)
     const top = st.start + (st.end - st.start) * clamp01(at)
     const lenis = getLenis()
     if (lenis) lenis.scrollTo(top, { duration: 0.9 })
@@ -164,29 +161,28 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
       meta={<span>{works.length} case studies, designed and built</span>}
     >
       <Cell col={1} end={13} row={3} l r flush className="porthole">
-        <div className="porthole__ground" aria-hidden="true" />
-        <div className="porthole__word" aria-hidden="true">
-          <span className="porthole__word-text">Work</span>
-        </div>
-        <div className="porthole__space">
-          <div className="porthole__letters" aria-hidden="true">
-            {WORD.map((letter, i) => (
-              <span
-                key={letter}
-                className="porthole__letter"
-                data-letter={i}
-                style={{ left: LETTERS[i].x + '%', top: LETTERS[i].y + '%' }}
-              >
-                {letter}
-              </span>
+        <div className="porthole__void" aria-hidden="true">
+          <div className="porthole__dither" />
+          <div className="porthole__wall">
+            {Array.from({ length: WALL_ROWS * WALL_COLS }, (_, i) => (
+              <span key={i}>{WORD[i % WORD.length]}</span>
             ))}
           </div>
-          <Sheet nested className="porthole__slots">
-            {works.map((w, i) => (
-              <WorkCover key={w.slug} work={w} span={SLOTS[Math.min(i, SLOTS.length - 1)]} />
-            ))}
-          </Sheet>
         </div>
+
+        <p className="porthole__word" aria-hidden="true">
+          {WORD.map((letter) => (
+            <span key={letter}>{letter}</span>
+          ))}
+        </p>
+
+        <ol className="porthole__rail">
+          {works.map((w) => (
+            <li key={w.slug} className="porthole__slot">
+              <WorkCover work={w} />
+            </li>
+          ))}
+        </ol>
       </Cell>
 
       <Cell col={1} end={13} row={4} l r>

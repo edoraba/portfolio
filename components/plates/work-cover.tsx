@@ -3,8 +3,6 @@ import Link from 'next/link'
 import { ViewTransition } from 'react'
 import { useConsole } from '@/lib/console-store'
 import { Decode } from '../decode'
-import { Cell } from '../sheet/cell'
-import type { SpanProps } from '../sheet/span'
 
 export type CoverWork = {
   slug: string
@@ -17,33 +15,18 @@ export type CoverWork = {
 }
 
 /**
- * A project cover as a typographic plate: the number, a ruled dither panel standing in for the
- * screenshot Edoardo has not shipped yet, then client, title and stack. Swapping in a real
- * image later means filling the panel, not rebuilding the plate. The title carries the shared
- * name that morphs into the case study heading.
+ * A project as a typographic plate: the number, a ruled dither panel standing in for the
+ * screenshot Edoardo has not shipped yet, then client, title and stack. Swapping in a real image
+ * later means filling the panel, not rebuilding the plate. The title carries the shared name
+ * that morphs into the case study heading.
+ *
+ * It takes its colours from whatever it is placed in: inside the void of P/03 the palette is
+ * inverted around it, and the card follows without knowing.
  */
-export function WorkCover({
-  work,
-  span,
-  className,
-}: {
-  work: CoverWork
-  span: SpanProps & { row?: number | string }
-  className?: string
-}) {
+export function WorkCover({ work, className }: { work: CoverWork; className?: string }) {
   const setHover = useConsole((s) => s.setHover)
   return (
-    <Cell
-      {...span}
-      as="article"
-      l
-      r
-      t
-      b
-      flush
-      className={['cover', className].filter(Boolean).join(' ')}
-      data-cover={work.order}
-    >
+    <article className={['cover', className].filter(Boolean).join(' ')} data-cover={work.order}>
       <Link
         href={`/work/${work.slug}`}
         transitionTypes={['nav-forward']}
@@ -71,6 +54,6 @@ export function WorkCover({
           </span>
         </span>
       </Link>
-    </Cell>
+    </article>
   )
 }

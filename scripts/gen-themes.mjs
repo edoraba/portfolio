@@ -7,6 +7,12 @@ import { DEFAULT_THEME, THEMES } from '../lib/themes.data.mjs'
 
 function block(selector, theme) {
   const lines = Object.entries(theme.tokens).map(([k, v]) => `  --${k}: ${v.toLowerCase()};`)
+  // The void is the dark half of the world, whichever half that is, and void-ink is what is
+  // legible on it. P/03 goes inside it, so it has to read as a hole in every theme and not as a
+  // bright patch in the two that are already dark.
+  const dark = theme.scheme === 'dark'
+  lines.push(`  --void: ${(dark ? theme.tokens.canvas : theme.tokens.ink).toLowerCase()};`)
+  lines.push(`  --void-ink: ${(dark ? theme.tokens.ink : theme.tokens.canvas).toLowerCase()};`)
   lines.push(`  color-scheme: ${theme.scheme};`)
   return `${selector} {\n${lines.join('\n')}\n}\n`
 }

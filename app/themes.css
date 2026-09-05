@@ -11,6 +11,8 @@
   --accent-ink: #f5401f;
   --field-on: #140e0c;
   --field-off: #f5401f;
+  --void: #140e0c;
+  --void-ink: #f5401f;
   color-scheme: light;
 }
 
@@ -25,6 +27,8 @@
   --accent-ink: #f5401f;
   --field-on: #140e0c;
   --field-off: #f5401f;
+  --void: #140e0c;
+  --void-ink: #f5401f;
   color-scheme: light;
 }
 
@@ -39,6 +43,8 @@
   --accent-ink: #0b0c0e;
   --field-on: #f2f2ef;
   --field-off: #0b0c0e;
+  --void: #0b0c0e;
+  --void-ink: #f2f2ef;
   color-scheme: dark;
 }
 
@@ -53,6 +59,8 @@
   --accent-ink: #f1ede4;
   --field-on: #141310;
   --field-off: #f1ede4;
+  --void: #141310;
+  --void-ink: #f1ede4;
   color-scheme: light;
 }
 
@@ -67,6 +75,8 @@
   --accent-ink: #0c0f0a;
   --field-on: #e9ff6a;
   --field-off: #0c0f0a;
+  --void: #0c0f0a;
+  --void-ink: #e9ff6a;
   color-scheme: dark;
 }
 
@@ -81,6 +91,8 @@
   --accent-ink: #1f3bff;
   --field-on: #f1ede4;
   --field-off: #1f3bff;
+  --void: #f1ede4;
+  --void-ink: #1f3bff;
   color-scheme: light;
 }
 
@@ -95,5 +107,7 @@
   --accent-ink: #9c9e97;
   --field-on: #f16d50;
   --field-off: #9c9e97;
+  --void: #1a1b18;
+  --void-ink: #9c9e97;
   color-scheme: light;
 }
