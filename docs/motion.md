@@ -82,6 +82,10 @@ claimed the field, and only then is `enabled` true. Never gate a claim on `enabl
 ever claims and the field never appears. `html[data-field]` says whether anything is asking, and
 an end to end test watches it.
 
+The letters are the only live window onto the field. The canvas is fixed to the viewport, so
+anything else that shows it has the texture swimming underneath while the page scrolls; the hero
+strip carries the same dither as a printed pattern instead, and scrolls with the page.
+
 Two rules the field itself obeys:
 
 - It renders only in bands that contain no text. The lit dither cell is drawn in `field-on`, which

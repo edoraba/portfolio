@@ -160,7 +160,7 @@ motion:
   rules-draw: 800ms editorial, stagger 60ms, on enter, once
   slice-flip: 4 strips, 500ms hop, 30ms stagger, alternating directions
   plates: rules draw on enter, pins scrub only transforms and clip-path, never filters (docs/motion.md)
-  loader: calibration entrance, real readiness only (fonts, shader, content, images), 600ms to 1200ms, hard cap 1500ms, once per session, never under reduced motion, no percentage
+  loader: calibration entrance, real readiness only (fonts, shader, content, images), 600ms to 1200ms, hard cap 1500ms, on every visit (it is what hides the field arriving), never under reduced motion, no percentage
 
 field:
   renderer: hand-written WebGL2, one fragment shader, full-screen triangle, parallel shader compile
@@ -179,6 +179,8 @@ field:
 
 - The home is one story in seven plates (P/01 hero, P/02 about, P/03 work, P/04 notes, P/05 toolbox, P/06 since, P/07 contact). Each plate is a sheet section with a mono number, its own scroll choreography, and a static layout under reduced motion and below 1024px.
 - Pins: at most 200vh on desktop, none below 1024px, one on screen at a time, always starting below the sticky console. A pinned plate fits one screen.
+- Rules are continuous. A horizontal hairline is a `Rule` spanning the whole sheet, never a border on each cell: per-cell edges break at every gutter. A vertical hairline is a cell's left line; a cell never draws a right line next to another cell's left line, because the pair reads as a double rule across the gutter. Only the last cell of a band closes it on the right.
+- The footer is the end of the page, not a box: no side lines, no line above it, only the rules that separate its own bands.
 - The sheet: every section is a `.sheet` (one full-bleed CSS grid with named column lines), every piece of text lives in a `.cell` whose hairlines sit on column lines. No padding wrappers, no container. The G overlay is the same grid, so it coincides with every hairline by construction. Rules draw on enter.
 - Desktop (1024px and up): the numbered index lives in the right margin on home and /work, and is the table of contents on case studies. Below 1024px it collapses into the flow above the content it indexes.
 - Sections are separated by space and one hairline, never by cards. Lab tiles and work covers are the only cards: surface step plus hairline, radius 0.
