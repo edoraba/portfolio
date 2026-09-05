@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Project rules
 
-- Start with `docs/superpowers/HANDOFF-2026-09-04.md`: state of the project, decisions, workflow, gotchas. The open work is `docs/superpowers/plans/2026-09-04-07-field-fixes-and-plate-rework.md`.
+- Start with `docs/superpowers/HANDOFF-2026-09-05.md`: what changed most recently, what is not done, and the gotchas that cost the most time. `HANDOFF-2026-09-04.md` still holds for Edoardo's standing decisions.
 - Motion and ScrollTrigger rules live in `docs/motion.md`. Read it before writing any GSAP.
 - Read `DESIGN.md`, `PRODUCT.md` and the specs in `docs/superpowers/specs/` (v2: `2026-09-04-v2-ruled-sheet-design.md`) before touching UI.
 - Theme tokens live in `lib/themes.data.mjs` (run `pnpm themes` to regenerate `app/themes.css`); sheet and type tokens in `app/globals.css`. Update `DESIGN.md` in the same commit. `tests/unit/themes.test.ts` and `tests/unit/sheet.test.ts` enforce parity and WCAG AA.
@@ -18,6 +18,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - No em-dash or en-dash anywhere (enforced by `tests/unit/dashes.test.ts`). Hyphens only.
 - Conventional commits, no co-author trailers.
 - Facts about Edoardo come only from `content/` and `PRODUCT.md`. Unknown facts are `TODO(edoardo)`. Never mention LoL Brain.
-- After any UI change, review screenshots at 1440x900 and 390x844 in at least signal, field and paper with the grid on (`node scripts/shots.mjs`, run from PowerShell) and check `node scripts/console-check.mjs` for console and hydration errors before reporting.
+- After any UI change, review screenshots at 1440x900 and 390x844 in at least signal, field and paper with the grid on (`node scripts/shots.mjs`, run from PowerShell) and check `node scripts/console-check.mjs` for console and hydration errors before reporting. Anything involving the field needs `GPU=1`: headless Chromium has no hardware WebGL, so the field falls back silently and every test passes with it broken.
+- Rules on the sheet: horizontal hairlines are continuous `Rule` elements, vertical ones are a cell's left line, and only the last cell of a band closes it on the right. `node scripts/borders.mjs` audits this on a running dev server and the same audit is an e2e test.
+- Do not wait on CI for small changes: verify locally and push. Kill anything on port 3100 before `pnpm test:e2e`, or Playwright reuses a stale server.
 - Everything is mobile responsive: design for 390px first, verify at 390x844, 768x1024 and 1440x900 in both themes. No horizontal overflow, touch targets at least 24px, hover states have a touch equivalent.
 - Before building a component, check `docs/research/05-components-to-borrow.md` for the reference implementation to follow; borrow only from permissively licensed sources and re-implement on our tokens.

@@ -1,7 +1,7 @@
 ---
 version: 1
 name: specimen-in-the-field
-description: "Design system of edoardo baravaglio's personal site. A typographic specimen fused with a dithered WebGL flow field: one variable grotesk (Bricolage Grotesque) set huge for display and small for text, Geist Mono for every label and number, a numbered index in the margin, and a single cobalt accent used as ink. Two complete themes behind one toggle: dark is the field (near-black #0B0C0E, off-white ink, dither in light), light is the paper (#F1EDE4, ink #141310, dither in ink). Radius 0, no shadows, elevation by surface step plus hairline. The headline is the window onto the shader."
+description: "Design system of edoardo baravaglio's personal site. A typographic specimen fused with a dithered WebGL flow field: Funnel Display set huge for the big type, Switzer for the reading text, Geist Mono for every label and number, a numbered index in the margin, and a single cobalt accent used as ink. Two complete themes behind one toggle: dark is the field (near-black #0B0C0E, off-white ink, dither in light), light is the paper (#F1EDE4, ink #141310, dither in ink). Radius 0, no shadows, elevation by surface step plus hairline. The headline is the window onto the shader."
 source_of_truth: app/globals.css (@theme). This file explains the tokens; the CSS defines them. Change both in the same commit.
 
 colors:
@@ -75,37 +75,34 @@ colors:
 
 typography:
   families:
-    display-and-text: 'Bricolage Grotesque, variable (opsz 12..96, wdth 75..100, wght 200..800), OFL, self-hosted'
+    display: 'Funnel Display, variable (wght 300..800), OFL, self-hosted through next/font/google. No italic and no width axis: emphasis is weight, and weight is the axis the headline animates.'
+    text: 'Switzer, variable (wght 100..900) with a true italic, ITF Free Font License. Self-hosted from files fetched at build time; see assets/fonts/README.md for why they are not in the repo.'
     mono: 'Geist Mono, variable (wght 100..900), OFL, self-hosted'
   display-xl:
-    fontFamily: Bricolage Grotesque
-    fontSize: clamp(4rem, 13vw, 14rem)
+    fontFamily: Funnel Display
+    fontSize: clamp(2.5rem, 15vw, 16rem)
     fontWeight: 500
     lineHeight: 0.86
     letterSpacing: -0.045em
-    fontVariationSettings: "'opsz' 96, 'wdth' 100"
-    note: home hero words only; width axis animates 78..100 near the pointer
+    note: home hero words only; weight animates 350..700 with the scroll and the pointer, and the emphasised word carries 100 more
   display:
-    fontFamily: Bricolage Grotesque
+    fontFamily: Funnel Display
     fontSize: clamp(2.5rem, 6.5vw, 6rem)
     fontWeight: 500
     lineHeight: 0.92
     letterSpacing: -0.04em
-    fontVariationSettings: "'opsz' 96, 'wdth' 100"
   headline:
-    fontFamily: Bricolage Grotesque
+    fontFamily: Funnel Display
     fontSize: clamp(1.5rem, 2.6vw, 2.25rem)
     fontWeight: 500
     lineHeight: 1.1
     letterSpacing: -0.02em
-    fontVariationSettings: "'opsz' 48, 'wdth' 100"
   body:
-    fontFamily: Bricolage Grotesque
+    fontFamily: Switzer
     fontSize: clamp(1rem, 0.95rem + 0.25vw, 1.125rem)
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: 0
-    fontVariationSettings: "'opsz' 14, 'wdth' 100"
     measure: 58ch to 65ch
   body-muted:
     inherits: body
@@ -189,9 +186,10 @@ field:
 
 ## Type
 
-- One family for display and text (Bricolage Grotesque), one mono (Geist Mono). Emphasis is italic or weight of the same family. No serif, no second sans.
+- Three faces and no more: Funnel Display for the big type, Switzer for the reading text, Geist Mono for every label and number. No serif, no fourth face.
+- Funnel Display has no italic and no width axis. Emphasis in the big type is weight, and the axis that moves is weight. Switzer has a true italic, so prose emphasis is italic as usual.
 - Big display, tiny mono, almost nothing in between. Headline size exists for case study section titles only.
-- The width axis moves on exactly one heading per page. Everywhere else width is 100.
+- The weight axis moves on exactly one heading per page: the home headline, where scroll thins every word and the pointer thickens the one it is near. Everywhere else weight is fixed.
 - `text-wrap: balance` on headings, `text-wrap: pretty` on body. Tabular numerals everywhere.
 
 ## Colour
@@ -199,6 +197,8 @@ field:
 - The accent is ink, not fill: links, index numbers, focus rings, the lit part of the field. Never a button background larger than a label, never a section background.
 - Decoration takes no selection: the dither words, the letter field, the physics tags, the marks and the rules carry `user-select: none`. Everything a reader might quote stays selectable.
 - The field is texture, never a backdrop for reading. It renders only in bands that contain no text: the lit dither cell is drawn in `field-on`, which equals `ink` in five of the six themes, so any text over it is the same colour as the cells under it. A band is a strip of empty space.
+- The field is cut to a shape rather than washed behind one. Four things claim it: the home headline and the strip above it, the mark of P/02, the lab plate of P/04, and the strip above the footer. Anything that cannot take the live field prints the same dither cell instead, so a window is never an empty rectangle.
+- Every theme also derives `void` and `void-ink`: the dark half of that world and what is legible on it. P/03 goes inside the void, so it has to read as a hole in all six themes and not as a bright patch in the two that are already dark. They are generated from the same registry, never written by hand.
 - No pure black or white, no shadows, no gradients except the dither itself.
 - Six complete themes (signal, field, paper, phosphor, cobalt, ash), signal is the default. On bold canvases (signal, cobalt, ash) the accent is the ink itself. The toggle transitions the field (a 2000ms wipe of field colours), not just the CSS variables.
 
@@ -218,7 +218,7 @@ field:
 
 ## Do not
 
-- No percentage counter or fake loader (the calibration entrance reports real readiness, lasts at most 1.2s, shows once per session and never under reduced motion), no custom cursor, no marquee, no magnetic buttons, no curved sticky footer, no image-follows-cursor lists, no greeting-word intro, no "rotate your device", no horizontal-only scroll, no bento grid, no 3D avatar, no skill bars, no logo wall, no testimonial carousel, no scroll cue, no decorative status dots, no version stamps, no locale and weather strips, no glassmorphism, no purple gradients.
+- No percentage counter or fake loader (the calibration entrance reports real readiness, lasts at most 1.2s, runs on every visit so the field is never seen arriving, and never under reduced motion), no custom cursor, no marquee, no magnetic buttons, no curved sticky footer, no image-follows-cursor lists, no greeting-word intro, no "rotate your device", no horizontal-only scroll, no bento grid, no 3D avatar, no skill bars, no logo wall, no testimonial carousel, no scroll cue, no decorative status dots, no version stamps, no locale and weather strips, no glassmorphism, no purple gradients.
 - No section-number eyebrows and at most one eyebrow per three sections. The numbering that exists (nav 1 to 4, project index 01 to 05, Fig. 01) encodes real order.
 - No second WebGL scene. The field is the only rendered surface. One physics plate (the Toolbox), tags only, gravity 1, restitution 0.25, and the list stays real text.
 - Never mention LoL Brain.
