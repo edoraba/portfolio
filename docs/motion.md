@@ -40,7 +40,7 @@ measured in pixels and the real fonts change every measurement.
   `mm.revert()`. A trigger created outside a scope survives navigation and fights the next page.
 - **Pins start below the console.** The header is sticky and 80px tall (96px below `lg`), so a pin
   that starts at `top top` hides its own first row behind it. Use
-  `start: () => \`top top+=${headerHeight()}\``from`lib/sheet.ts`.
+  `start: () => 'top top+=' + headerHeight()` from `lib/sheet.ts`.
 - **A pinned plate fits one screen.** `min-height: calc(100dvh - var(--header-h))` at the pin
   breakpoint, with the rows sized so nothing falls below the fold. If the reader cannot see the
   bottom of a pinned section, the pin is wrong.
