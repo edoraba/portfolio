@@ -126,6 +126,7 @@ typography:
 
 rounded:
   all: 0px
+  aperture: the work hatch (P/03) is an octagon cut with clip-path, not a radius. Nothing on the site is rounded.
 
 spacing:
   unit: 4px

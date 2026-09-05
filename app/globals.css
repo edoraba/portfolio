@@ -421,8 +421,9 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
    captions, facts and the email stay selectable. */
 .hero-svg,
 .hero-text,
-.letters,
-.letters__glyph,
+.porthole__letters,
+.porthole__letter,
+.porthole__word,
 .toolbox,
 .toolbox__tag,
 .monogram,
@@ -464,6 +465,462 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 /* The field paints through the mask, so nothing in the hero may sit on an opaque background. */
 .hero-sheet .hero-band {
   background: none;
+}
+
+/* P/04. The lab column carries a dither plate that shifts on a slow cycle. */
+.notes-plate__dither {
+  margin-top: 24px;
+  height: 120px;
+  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
+  background-size: 4px 4px;
+  opacity: 0.25;
+  animation: notes-dither 9s steps(3) infinite;
+}
+@keyframes notes-dither {
+  0% {
+    background-position: 0 0;
+  }
+  33% {
+    background-position: 2px 0;
+  }
+  66% {
+    background-position: 2px 2px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+html[data-motion='reduced'] .notes-plate__dither {
+  animation: none;
+}
+
+/* P/05. Tags fall into a ruled container and stay there; the list is the source of truth, so
+   without physics it is a plain wrapped row. */
+.toolbox {
+  position: relative;
+  overflow: hidden;
+  min-height: 42vh;
+  touch-action: pan-y;
+}
+@media (min-width: 1024px) {
+  .toolbox {
+    min-height: 48vh;
+  }
+}
+.toolbox__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: var(--cell-pad);
+  list-style: none;
+}
+.toolbox__tag {
+  border: 1px solid var(--ink);
+  padding: 8px 12px;
+  color: var(--ink);
+  background-color: var(--canvas);
+  white-space: nowrap;
+}
+/* Once the engine owns them, the tags are placed by the simulation. */
+.toolbox__list[data-physics] {
+  display: block;
+  padding: 0;
+}
+.toolbox__list[data-physics] .toolbox__tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  cursor: grab;
+}
+.toolbox__list[data-physics] .toolbox__tag:active {
+  cursor: grabbing;
+}
+
+/* P/06. Hairlines converge on a vanishing point and the frames fly out of it. */
+.tunnel {
+  position: relative;
+  min-height: 70vh;
+}
+@media (min-width: 1024px) {
+  .tunnel {
+    min-height: calc(100dvh - var(--header-h) - 60px);
+  }
+}
+.tunnel__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: inherit;
+  perspective: 900px;
+  overflow: hidden;
+}
+.tunnel__rays {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: color-mix(in srgb, var(--ink) 20%, transparent);
+}
+.tunnel__title {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  max-width: 18ch;
+  text-align: center;
+  transform: scale(var(--title-s, 1));
+  opacity: var(--title-o, 1);
+}
+.tunnel__frames {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.tunnel__frame {
+  grid-area: 1 / 1;
+  width: min(52ch, 76%);
+  transform: translateZ(var(--frame-z, 0px));
+  opacity: var(--frame-o, 1);
+}
+.tunnel__figure {
+  margin: 0;
+  border: 1px solid var(--hairline);
+  background-color: var(--surface);
+  padding: var(--cell-pad);
+  display: grid;
+  gap: 12px;
+}
+.tunnel__panel {
+  display: block;
+  height: 140px;
+  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
+  background-size: 4px 4px;
+  opacity: 0.3;
+}
+/* Without the pin the frames are a plain stack in front of the rays. */
+@media (max-width: 1023.98px) {
+  .tunnel__frames {
+    position: static;
+    display: grid;
+    gap: 16px;
+    padding: var(--cell-pad);
+  }
+  .tunnel__frame {
+    grid-area: auto;
+    width: 100%;
+    transform: none;
+    opacity: 1;
+  }
+  .tunnel__title {
+    position: static;
+    margin-bottom: 24px;
+  }
+  .tunnel__stage {
+    display: block;
+    padding-block: var(--spacing-block);
+  }
+}
+html[data-motion='reduced'] .tunnel__frame {
+  transform: none;
+  opacity: 1;
+}
+html[data-motion='reduced'] .tunnel__frames {
+  position: static;
+  gap: 16px;
+  padding: var(--cell-pad);
+}
+
+/* P/07. A ruled cloth that bulges away from the pointer, with the invitation at its centre. */
+.cloth {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 70vh;
+  padding: var(--spacing-block) var(--cell-pad);
+}
+@media (min-width: 1024px) {
+  .cloth {
+    min-height: calc(100dvh - var(--header-h) - 120px);
+  }
+}
+.cloth__grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--hairline);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.cloth__grid polyline {
+  vector-effect: non-scaling-stroke;
+}
+.cloth__centre {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.cloth__cta {
+  margin: 0;
+}
+.cloth__email {
+  font-family: var(--font-mono);
+}
+
+/* P/03. A closed hatch that opens into a space. The aperture is an octagon cut with clip-path,
+   so the site keeps its radius of zero; --ap drives it from a small hatch to the full plate. */
+.work-plate {
+  perspective: 1200px;
+}
+@media (min-width: 1024px) {
+  .work-plate {
+    min-height: calc(100dvh - var(--header-h));
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+}
+.porthole {
+  --ap: 1;
+  --hw: calc(13% + 37% * var(--ap));
+  --hh: calc(28% + 22% * var(--ap));
+  --cx: calc(7% - 7% * var(--ap));
+  --cy: calc(12% - 12% * var(--ap));
+  position: relative;
+  min-height: 58vh;
+  overflow: hidden;
+}
+@media (min-width: 1024px) {
+  .porthole {
+    min-height: 0;
+    height: 100%;
+    clip-path: polygon(
+      calc(50% - var(--hw) + var(--cx)) calc(50% - var(--hh)),
+      calc(50% + var(--hw) - var(--cx)) calc(50% - var(--hh)),
+      calc(50% + var(--hw)) calc(50% - var(--hh) + var(--cy)),
+      calc(50% + var(--hw)) calc(50% + var(--hh) - var(--cy)),
+      calc(50% + var(--hw) - var(--cx)) calc(50% + var(--hh)),
+      calc(50% - var(--hw) + var(--cx)) calc(50% + var(--hh)),
+      calc(50% - var(--hw)) calc(50% + var(--hh) - var(--cy)),
+      calc(50% - var(--hw)) calc(50% - var(--hh) + var(--cy))
+    );
+  }
+}
+/* The inside of the hatch is a darker room than the page. */
+.porthole__ground {
+  position: absolute;
+  inset: 0;
+  background-color: var(--surface-2);
+}
+/* The word standing in the closed hatch. */
+.porthole__word {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: var(--word-o, 0);
+  pointer-events: none;
+}
+.porthole__word-text {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 0.9;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  color: var(--ink);
+  font-variation-settings:
+    'opsz' 96,
+    'wdth' 100;
+}
+@media (max-width: 1023.98px) {
+  .porthole__word {
+    display: none;
+  }
+}
+/* The space behind the hatch: the letters hang at depth, the covers rest on the sheet. */
+.porthole__space {
+  position: relative;
+  height: 100%;
+  display: grid;
+  align-content: center;
+  transform-style: preserve-3d;
+  opacity: var(--space-o, 1);
+}
+.porthole__letters {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.porthole__letter {
+  position: absolute;
+  transform: translateZ(var(--letter-z, 0px));
+  font-size: clamp(4rem, 12vw, 11rem);
+  line-height: 0.8;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  color: color-mix(in srgb, var(--ink) 22%, transparent);
+}
+@media (max-width: 1023.98px) {
+  .porthole__letters {
+    display: none;
+  }
+}
+html[data-motion='reduced'] .porthole__letters {
+  display: none;
+}
+.porthole__slots {
+  position: relative;
+  z-index: 1;
+  transform-style: preserve-3d;
+  row-gap: var(--gap);
+  padding-block: var(--cell-pad);
+}
+@media (max-width: 1023.98px) {
+  /* Block padding only: side padding would shift the nested columns off the page grid. */
+  .porthole__slots {
+    padding-block: var(--cell-pad);
+  }
+}
+
+/* Covers arrive out of the depth and uncover from the bottom edge as they land. */
+.cover {
+  z-index: 1;
+  background-color: var(--surface);
+  transform-origin: 50% 100%;
+  transform: translateZ(var(--cover-z, 0px)) rotateX(calc((1 - var(--cover-in, 1)) * 6deg));
+  clip-path: inset(calc((1 - var(--cover-in, 1)) * 100%) 0 0 0);
+  opacity: calc(0.2 + 0.8 * var(--cover-in, 1));
+}
+.cover__link {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  height: 100%;
+  min-height: 18vh;
+  padding: var(--cell-pad);
+  transition:
+    transform 250ms var(--ease-out-expo),
+    background-color 250ms var(--ease-out-expo);
+}
+.cover__link:hover {
+  transform: translateY(-8px);
+  background: var(--surface-2);
+}
+.cover__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cover__panel {
+  display: block;
+  min-height: 56px;
+  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
+  background-size: 4px 4px;
+  opacity: 0.3;
+}
+.cover__body {
+  display: grid;
+  gap: 6px;
+}
+.cover__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: clamp(1.05rem, 1.4vw, 1.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.cover__link:hover .cover__title {
+  color: var(--accent);
+}
+
+.work-plate__foot {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.work-plate__foot .timecode {
+  flex: 1;
+}
+
+.timecode {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.timecode__track {
+  position: relative;
+  flex: 1;
+  height: 24px;
+}
+.timecode__rule {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--hairline);
+}
+.timecode__pin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--at) * 100%);
+  width: 24px;
+  transform: translateX(-50%);
+}
+.timecode__pin::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--ink-muted);
+}
+.timecode__pin[aria-current]::before {
+  width: 2px;
+  background: var(--accent);
+}
+.timecode__marker {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--at) * 100%);
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  transition: left 300ms var(--ease-out-expo);
+}
+.timecode__step {
+  min-height: 24px;
+  padding-inline: 4px;
+  color: var(--ink);
+}
+.timecode__step:disabled {
+  color: var(--ink-muted);
+  cursor: default;
+}
+.timecode__read {
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+@media (max-width: 767.98px) {
+  .timecode__read {
+    display: none;
+  }
 }
 
 /* P/04. The lab column carries a dither plate that shifts on a slow cycle. */
