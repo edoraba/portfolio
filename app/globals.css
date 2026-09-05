@@ -890,6 +890,312 @@ html[data-motion='reduced'] .letters {
   }
 }
 
+/* P/02. A column of text, a ruled table of facts, and one small drawer holding the mark. The
+   drawer is the only object with depth; the text never sits inside it. */
+.about-plate__sentence {
+  font-size: clamp(1.75rem, 3.1vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-variation-settings:
+    'opsz' 48,
+    'wdth' 100;
+  max-width: 22ch;
+}
+.about-facts {
+  margin: 0;
+}
+.about-fact {
+  padding-block: 20px;
+}
+.about-drawer {
+  perspective: 900px;
+  perspective-origin: 50% 30%;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: 220px;
+  padding: var(--spacing-block) var(--cell-pad);
+}
+.box3d {
+  --box-tilt: 0deg;
+  --box-depth: 0px;
+  position: relative;
+  width: min(240px, 100%);
+  transform-style: preserve-3d;
+  transform: rotateX(var(--box-tilt));
+  transform-origin: 50% 100%;
+}
+.box3d__face {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  border: 1px solid var(--hairline);
+  background-color: var(--surface);
+}
+.box3d__side {
+  position: absolute;
+  pointer-events: none;
+  background-color: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.box3d__side--top,
+.box3d__side--bottom {
+  left: 0;
+  right: 0;
+  height: var(--box-depth);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--hairline) 0 1px,
+    transparent 1px 16px
+  );
+}
+.box3d__side--left,
+.box3d__side--right {
+  top: 0;
+  bottom: 0;
+  width: var(--box-depth);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--hairline) 0 1px,
+    transparent 1px 16px
+  );
+}
+.box3d__side--top {
+  top: 0;
+  transform-origin: top;
+  transform: rotateX(90deg);
+}
+.box3d__side--bottom {
+  bottom: 0;
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+}
+.box3d__side--left {
+  left: 0;
+  transform-origin: left;
+  transform: rotateY(-90deg);
+}
+.box3d__side--right {
+  right: 0;
+  transform-origin: right;
+  transform: rotateY(90deg);
+}
+
+/* P/03. The word stands vertically beside a stage where the letter field slides in behind the
+   covers. Covers are the only cards on the site besides the lab tiles: a surface step, a
+   hairline, no radius and no shadow. */
+.work-plate {
+  perspective: 1200px;
+}
+/* Pinned, so the whole plate has to fit one screen: the two cover rows share what is left. */
+@media (min-width: 1024px) {
+  .work-plate {
+    min-height: calc(100dvh - var(--header-h));
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+}
+/* The stage clips the covers while they are still below their slot. */
+.work-stage {
+  overflow: hidden;
+}
+.work-stage__grid {
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
+.work-word {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+.work-word__pill {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  border: 1px solid var(--hairline);
+  padding: 16px 0;
+}
+.work-word__text {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 0.9;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  font-variation-settings:
+    'opsz' 96,
+    'wdth' 100;
+}
+@media (min-width: 1024px) {
+  .work-word__text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
+
+.letters-cell {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+  min-height: 34vh;
+}
+@media (min-width: 1024px) {
+  .letters-cell {
+    min-height: 0;
+  }
+}
+.letters {
+  display: grid;
+}
+.letters__row {
+  display: flex;
+  justify-content: space-between;
+  transform: translateX(var(--letters-x, -110%));
+  opacity: var(--letters-o, 0);
+  will-change: transform;
+}
+.letters__glyph {
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.86;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  /* Ground, not foreground: the same weight in every theme, never louder than the covers. */
+  color: color-mix(in srgb, var(--ink) 26%, transparent);
+}
+@media (max-width: 1023.98px) {
+  .letters {
+    display: none;
+  }
+}
+html[data-motion='reduced'] .letters {
+  display: none;
+}
+
+/* Covers rise into their slot by uncovering from the bottom edge and tipping flat. They never
+   leave their cell, so nothing below the stage is ever overlapped. */
+.cover {
+  z-index: 1;
+  background-color: var(--surface);
+  transform-origin: 50% 100%;
+  transform: rotateX(calc((1 - var(--cover-in, 1)) * 6deg));
+  clip-path: inset(calc((1 - var(--cover-in, 1)) * 100%) 0 0 0);
+  opacity: calc(0.2 + 0.8 * var(--cover-in, 1));
+}
+.cover__link {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  height: 100%;
+  min-height: 18vh;
+  padding: var(--cell-pad);
+  transition:
+    transform 250ms var(--ease-out-expo),
+    background-color 250ms var(--ease-out-expo);
+}
+.cover__link:hover {
+  transform: translateY(-8px);
+  background: var(--surface-2);
+}
+.cover__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cover__panel {
+  display: block;
+  min-height: 56px;
+  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
+  background-size: 4px 4px;
+  opacity: 0.3;
+}
+.cover__body {
+  display: grid;
+  gap: 6px;
+}
+.cover__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: clamp(1.05rem, 1.4vw, 1.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.cover__link:hover .cover__title {
+  color: var(--accent);
+}
+
+.timecode {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.timecode__track {
+  position: relative;
+  flex: 1;
+  height: 24px;
+}
+.timecode__rule {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--hairline);
+}
+.timecode__pin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--at) * 100%);
+  width: 24px;
+  transform: translateX(-50%);
+}
+.timecode__pin::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--ink-muted);
+}
+.timecode__pin[aria-current]::before {
+  width: 2px;
+  background: var(--accent);
+}
+.timecode__marker {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--at) * 100%);
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  transition: left 300ms var(--ease-out-expo);
+}
+.timecode__step {
+  min-height: 24px;
+  padding-inline: 4px;
+  color: var(--ink);
+}
+.timecode__step:disabled {
+  color: var(--ink-muted);
+  cursor: default;
+}
+.timecode__read {
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+@media (max-width: 767.98px) {
+  .timecode__read {
+    display: none;
+  }
+}
+
 /* P/02. A ruled box seen slightly from above: the front face carries the text, four ruled sides
    give it depth, and the scroll flattens both the tilt and the depth to leave a plain table. */
 .about-stage {

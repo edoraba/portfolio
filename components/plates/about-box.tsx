@@ -3,62 +3,52 @@ import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
 import { ABOUT_FACTS, ABOUT_SENTENCE } from '@/lib/about-facts'
 import { gsap, setupGsap } from '@/lib/motion/gsap'
-import { itemProgress } from '@/lib/motion/scrub'
+import { lerp } from '@/lib/motion/scrub'
 import { useMotion } from '@/lib/motion/store'
-import { headerHeight } from '@/lib/sheet'
 import { Monogram } from '../console/monogram'
 import { Decode } from '../decode'
+import { LineReveal } from '../line-reveal'
 import { Cell } from '../sheet/cell'
 import { Sheet } from '../sheet/sheet'
 import { spanStyle } from '../sheet/span'
 import { Plate } from './plate'
 
-const DEPTH = 240
-const TILT = 12
+const DEPTH = 180
+const TILT = 10
 
 /**
- * P/02. The bio and the facts sit on the front face of a ruled box seen slightly from above.
- * Scrolling flattens it: the tilt goes to zero, the depth collapses and the facts draw in one
- * by one, so the reader ends with a plain table. Below 1024px and under reduced motion the box
- * is flat from the start and the facts reveal with the normal rules.
+ * P/02. A column of text with a ruled table of facts under it, and one object beside it: a
+ * shallow drawer holding the mark, tipped towards the reader and flattening as the plate crosses
+ * the viewport. The text is never inside the three dimensional object, and nothing pins: the
+ * plate says who he is and gets out of the way.
  */
 export function AboutBox() {
   const sectionRef = useRef<HTMLElement>(null)
-  const boxRef = useRef<HTMLDivElement>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
   const reduced = useMotion((s) => s.reduced)
 
   useGSAP(
     () => {
       const section = sectionRef.current
-      const box = boxRef.current
-      if (!section || !box || reduced) return
+      const drawer = drawerRef.current
+      if (!section || !drawer || reduced) return
       setupGsap()
       const mm = gsap.matchMedia()
       mm.add('(min-width: 1024px)', () => {
-        const rows = Array.from(box.querySelectorAll<HTMLElement>('[data-fact]'))
         const state = { p: 0 }
         const tween = gsap.to(state, {
           p: 1,
           ease: 'none',
           scrollTrigger: {
             trigger: section,
-            start: () => `top top+=${headerHeight()}`,
-            end: '+=150%',
-            pin: true,
+            start: 'top bottom',
+            end: 'center center',
             scrub: true,
-            anticipatePin: 1,
             invalidateOnRefresh: true,
-            refreshPriority: 1,
           },
           onUpdate: () => {
-            const p = state.p
-            box.style.setProperty('--box-tilt', `${(TILT * (1 - p)).toFixed(2)}deg`)
-            box.style.setProperty('--box-depth', `${Math.round(DEPTH * (1 - p))}px`)
-            rows.forEach((row, i) => {
-              const local = itemProgress(p, i, rows.length, 0.45)
-              row.classList.toggle('is-drawn', local > 0.05)
-              row.style.setProperty('--fact-in', local.toFixed(3))
-            })
+            drawer.style.setProperty('--box-tilt', `${lerp(TILT, 0, state.p).toFixed(2)}deg`)
+            drawer.style.setProperty('--box-depth', `${Math.round(lerp(DEPTH, 0, state.p))}px`)
           },
         })
         return () => {
@@ -73,50 +63,76 @@ export function AboutBox() {
 
   return (
     <Plate id="about" sectionRef={sectionRef} className="about-plate" meta={<span>Who</span>}>
-      <Cell col={1} end={13} l r flush className="about-stage">
-        <div ref={boxRef} className="box3d">
-          <div className="box3d__side box3d__side--top" aria-hidden="true" />
-          <div className="box3d__side box3d__side--bottom" aria-hidden="true" />
-          <div className="box3d__side box3d__side--left" aria-hidden="true" />
-          <div className="box3d__side box3d__side--right" aria-hidden="true" />
-          <Sheet nested className="box3d__face">
-            <Cell col={1} end={9} md={{ col: 1, end: 7 }} sm={{ col: 1, end: 5 }} b>
-              <p className="headline text-ink">{ABOUT_SENTENCE}</p>
-            </Cell>
-            <Cell col={9} end={13} b className="hidden items-end justify-end lg:flex">
-              <Monogram size={88} className="text-ink" />
-            </Cell>
-            <Sheet
-              as="dl"
-              nested
-              className="box3d__facts on-sheet"
-              style={spanStyle({ col: 1, end: 13 })}
-            >
-              {ABOUT_FACTS.map((f, i) => {
-                const c = (i % 4) * 3 + 1
-                return (
-                  <Cell
-                    key={f.label}
-                    data-fact=""
-                    col={c}
-                    end={c + 3}
-                    md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
-                    sm={{ col: 1, end: 5 }}
-                    b
-                    r={i % 4 === 3}
-                    className="fact"
-                  >
-                    <dt className="label text-ink-muted">
-                      <Decode>{f.label}</Decode>
-                    </dt>
-                    <dd className="mt-2 text-ink">{f.value}</dd>
-                  </Cell>
-                )
-              })}
-            </Sheet>
-          </Sheet>
+      <Cell
+        col={1}
+        end={8}
+        row={2}
+        md={{ col: 1, end: 6 }}
+        sm={{ col: 1, end: 5 }}
+        l
+        t
+        className="py-10"
+      >
+        <LineReveal as="h2" className="about-plate__sentence">
+          {ABOUT_SENTENCE}
+        </LineReveal>
+      </Cell>
+
+      <Cell
+        col={8}
+        end={13}
+        row="2 / 4"
+        md={{ col: 6, end: 7 }}
+        sm={{ col: 1, end: 5 }}
+        l
+        r
+        t
+        b
+        flush
+      >
+        <div className="about-drawer">
+          <div ref={drawerRef} className="box3d">
+            <div className="box3d__side box3d__side--top" aria-hidden="true" />
+            <div className="box3d__side box3d__side--bottom" aria-hidden="true" />
+            <div className="box3d__side box3d__side--left" aria-hidden="true" />
+            <div className="box3d__side box3d__side--right" aria-hidden="true" />
+            <div className="box3d__face">
+              <Monogram size={96} className="text-ink" />
+            </div>
+          </div>
         </div>
       </Cell>
+
+      <Sheet
+        as="dl"
+        nested
+        className="about-facts on-sheet"
+        // A nested sheet only lines up with the page when it spans the full content width.
+        style={{ ...spanStyle({ col: 1, end: 13 }), gridRow: 3 }}
+      >
+        {ABOUT_FACTS.map((f, i) => {
+          const col = (i % 2) * 4 + 1
+          return (
+            <Cell
+              key={f.label}
+              col={col}
+              end={col + 4}
+              md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
+              sm={{ col: 1, end: 5 }}
+              l
+              r={i % 2 === 1}
+              t
+              b={i >= ABOUT_FACTS.length - 2}
+              className="about-fact"
+            >
+              <dt className="label text-ink-muted">
+                <Decode>{f.label}</Decode>
+              </dt>
+              <dd className="mt-2 text-ink">{f.value}</dd>
+            </Cell>
+          )
+        })}
+      </Sheet>
     </Plate>
   )
 }
