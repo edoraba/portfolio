@@ -108,7 +108,12 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       const s = store.getState()
       const intensity = heroIntensity(window.scrollY, window.innerHeight)
       if (intensity > 0) {
-        s.claim('hero', { mode: 'hero', intensity, priority: PRIORITY.hero })
+        s.claim('hero', {
+          mode: 'hero',
+          intensity,
+          mask: 'hero-mask',
+          priority: PRIORITY.hero,
+        })
       } else {
         s.release('hero')
       }

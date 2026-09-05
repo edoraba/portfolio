@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { FieldPlate } from '../field-plate'
 import { Cell } from '../sheet/cell'
 import { Rule } from '../sheet/rule'
 import { Plate } from './plate'
@@ -22,7 +23,7 @@ export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem
         sm={{ col: 1, end: 5 }}
         l
         r
-        className="py-8 md:after:hidden"
+        className="flex flex-col py-8 md:after:hidden"
       >
         <h2 className="label text-ink-muted">Lab</h2>
         <ul className="mt-6 space-y-4">
@@ -35,7 +36,9 @@ export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem
             </li>
           ))}
         </ul>
-        <div className="notes-plate__dither" aria-hidden="true" />
+        {/* The lab column is short, so the field itself fills the rest of it: the piece the
+            list points at is the field, and this is it running. */}
+        <FieldPlate id="notes-plate" className="mt-6 grow" />
       </Cell>
       <Cell
         col={7}

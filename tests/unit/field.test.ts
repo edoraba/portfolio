@@ -79,8 +79,19 @@ describe('resolveClaims', () => {
       mode: 'band',
       intensity: 0.45,
       band: [0.7, 0.8],
+      mask: null,
     })
     expect(resolveClaims({ hero }, null).band).toEqual(DEFAULT_BAND)
+  })
+  it('carries the winner mask, so the canvas is cut to the shape that asked for it', () => {
+    const marked = {
+      mode: 'hero' as const,
+      intensity: 1,
+      mask: 'about-mark',
+      priority: PRIORITY.hero,
+    }
+    expect(resolveClaims({ footer, marked }, null).mask).toBe('about-mark')
+    expect(resolveClaims({ footer }, null).mask).toBeNull()
   })
   it('keeps the field with the current owner on a tie', () => {
     const a = { mode: 'band' as const, intensity: 0.2, priority: PRIORITY.plate }

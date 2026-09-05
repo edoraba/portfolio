@@ -19,6 +19,8 @@ type FieldState = {
   mode: FieldMode
   intensity: number
   band: [number, number]
+  /** Id of the SVG mask the owner cuts the canvas to, if it asked for one. */
+  mask: string | null
   /** Pointer in viewport CSS pixels. */
   pointer: { x: number; y: number; active: boolean }
   cell: Cell
@@ -40,6 +42,7 @@ export const useField = create<FieldState>((set, get) => ({
   mode: 'off',
   intensity: 0,
   band: DEFAULT_BAND,
+  mask: null,
   pointer: { x: -1, y: -1, active: false },
   cell: 2,
   setEnabled: (enabled) => set({ enabled }),

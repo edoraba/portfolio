@@ -420,13 +420,12 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 .toolbox__tag,
 .monogram,
 .cover__panel,
-.tunnel__panel,
 .tunnel__rays,
 .cloth__grid,
 .guides,
 .console-line,
 .flip-text__strips,
-.notes-plate__dither,
+.field-plate,
 .loader,
 .timecode__pin,
 .timecode__marker {
@@ -459,33 +458,27 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   background: none;
 }
 
-/* P/04. The lab column carries a dither plate that shifts on a slow cycle. */
-.notes-plate__dither {
-  margin-top: 24px;
-  height: 120px;
-  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
+/* A window onto the field: the canvas is cut to this box while it is on screen. Without a
+   field it prints the same dither instead, so the box is never empty. */
+.field-plate {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+}
+.field-plate--printed {
+  background-image:
+    radial-gradient(circle at 50% 50%, var(--ink) 0 1.2px, transparent 1.3px),
+    linear-gradient(to bottom, transparent, #0000);
   background-size: 4px 4px;
-  opacity: 0.25;
-  animation: notes-dither 9s steps(3) infinite;
+  mask-image: linear-gradient(to bottom right, #000 10%, #0004 90%);
 }
-@keyframes notes-dither {
-  0% {
-    background-position: 0 0;
-  }
-  33% {
-    background-position: 2px 0;
-  }
-  66% {
-    background-position: 2px 2px;
-  }
-  100% {
-    background-position: 0 0;
-  }
+.field-plate__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
-html[data-motion='reduced'] .notes-plate__dither {
-  animation: none;
-}
-
 /* P/05. Tags fall into a ruled container and stay there; the list is the source of truth, so
    without physics it is a plain wrapped row. */
 .toolbox {
@@ -535,6 +528,7 @@ html[data-motion='reduced'] .notes-plate__dither {
    fly out of it down their own lines. The title sits out of the flight path. */
 .tunnel {
   position: relative;
+  overflow: hidden;
   min-height: 68vh;
 }
 @media (min-width: 1024px) {
@@ -585,38 +579,38 @@ html[data-motion='reduced'] .notes-plate__dither {
 }
 .tunnel__frame {
   grid-area: 1 / 1;
-  width: min(46ch, 62%);
+  width: min(72ch, 84%);
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 2.6vw, 44px);
+  padding-block: clamp(10px, 1.3vw, 22px);
+  /* Stronger than a sheet hairline: these rules are the edges of an object in the corridor,
+     and perspective thins them as it takes the band away. */
+  border-top: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
   transform: translate3d(var(--frame-x, 0%), var(--frame-y, 0%), var(--frame-z, 0px))
     rotate(var(--frame-r, 0deg));
   opacity: var(--frame-o, 1);
 }
-.tunnel__figure {
-  position: relative;
-  margin: 0;
-  border: 1px solid var(--hairline);
-  background-color: var(--surface);
-  padding: var(--cell-pad);
-  display: grid;
-  gap: 12px;
-}
-/* The year is the scale of the corridor: it grows with the frame that carries it. */
-.tunnel__year {
-  position: absolute;
-  top: calc(var(--cell-pad) * -1 - 0.5em);
-  right: var(--cell-pad);
+/* The year holds its column whether or not it is known yet, so every line starts on the same
+   axis as it comes down the corridor. */
+.tunnel__mark {
+  flex: none;
+  min-width: 5ch;
   font-family: var(--font-mono);
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.5rem, 3.4vw, 3rem);
   line-height: 1;
-  color: var(--accent);
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
-.tunnel__panel {
-  display: block;
-  height: 132px;
-  background-image: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%);
-  background-size: 4px 4px;
-  opacity: 0.3;
+.tunnel__line {
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  line-height: 1.25;
+  color: var(--ink);
+  text-wrap: balance;
 }
+
 /* Without the pin the frames are a plain stack in front of the rays. */
 @media (max-width: 1023.98px) {
   .tunnel__frames {
@@ -641,8 +635,7 @@ html[data-motion='reduced'] .notes-plate__dither {
     display: block;
     padding-block: var(--spacing-block);
   }
-  .tunnel__year {
-    position: static;
+  .tunnel__mark {
     font-size: 1.5rem;
   }
 }
@@ -959,84 +952,29 @@ html[data-motion='reduced'] .porthole__letters {
 .about-fact {
   padding-block: 20px;
 }
-.about-drawer {
-  perspective: 900px;
-  perspective-origin: 50% 30%;
-  display: grid;
-  place-items: center;
+/* P/02. The mark is an object, not an icon: a square of the sheet with the field running
+   inside its ten bars. The bars draw themselves in as the plate arrives (see about-mark). */
+.about-mark {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1;
+  margin: var(--spacing-block) auto;
+}
+.about-mark__svg {
+  display: block;
+  width: 100%;
   height: 100%;
-  min-height: 220px;
-  padding: var(--spacing-block) var(--cell-pad);
 }
-.box3d {
-  --box-tilt: 0deg;
-  --box-depth: 0px;
-  position: relative;
-  width: min(240px, 100%);
-  transform-style: preserve-3d;
-  transform: rotateX(var(--box-tilt));
-  transform-origin: 50% 100%;
-}
-.box3d__face > .monogram {
-  max-width: 100%;
-  height: auto;
-}
-.box3d__face {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  min-width: 0;
-  padding: clamp(12px, 4vw, 24px);
-  border: 1px solid var(--hairline);
-  background-color: var(--surface);
-}
-.box3d__side {
+.about-mark__defs {
   position: absolute;
-  pointer-events: none;
-  background-color: color-mix(in srgb, var(--ink) 5%, transparent);
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
-.box3d__side--top,
-.box3d__side--bottom {
-  left: 0;
-  right: 0;
-  height: var(--box-depth);
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--hairline) 0 1px,
-    transparent 1px 16px
-  );
-}
-.box3d__side--left,
-.box3d__side--right {
-  top: 0;
-  bottom: 0;
-  width: var(--box-depth);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    var(--hairline) 0 1px,
-    transparent 1px 16px
-  );
-}
-.box3d__side--top {
-  top: 0;
-  transform-origin: top;
-  transform: rotateX(90deg);
-}
-.box3d__side--bottom {
-  bottom: 0;
-  transform-origin: bottom;
-  transform: rotateX(-90deg);
-}
-.box3d__side--left {
-  left: 0;
-  transform-origin: left;
-  transform: rotateY(-90deg);
-}
-.box3d__side--right {
-  right: 0;
-  transform-origin: right;
-  transform: rotateY(90deg);
+@media (max-width: 1023.98px) {
+  .about-mark {
+    width: min(100%, 280px);
+  }
 }
 
 /* P/01. The band is the second window in the hero mask: an empty strip whose height the scroll

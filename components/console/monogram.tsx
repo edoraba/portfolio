@@ -10,6 +10,8 @@
 const U = 175.355 // bar
 const G = 236.967 // void
 const S = 1000
+/** The mark is drawn in a 1000 square; anything reusing the geometry needs its own viewBox. */
+export const MONOGRAM_SIZE = S
 /** Left edge of each of the five tracks: bar, void, bar, void, bar. */
 const C = [0, U, U + G, U + G + U, U + G + U + G] as const
 

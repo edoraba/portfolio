@@ -39,7 +39,9 @@ export function Plate({
       className={['plate', className].filter(Boolean).join(' ')}
       aria-label={plate?.title}
     >
-      <Rule />
+      {/* Rows one and two are named, not auto placed: a plate whose content sets its own rows
+          would otherwise push its own number and title to the bottom of the sheet. */}
+      <Rule row={1} />
       <PlateNumber
         n={plate?.n ?? 1}
         label={plate?.title}
@@ -47,12 +49,14 @@ export function Plate({
         end={4}
         md={{ col: 1, end: 4 }}
         sm={{ col: 1, end: 3 }}
+        row={2}
       />
       <Cell
         col={4}
         end={13}
         md={{ col: 4, end: 7 }}
         sm={{ col: 3, end: 5 }}
+        row={2}
         l
         r
         className="label text-ink-muted"

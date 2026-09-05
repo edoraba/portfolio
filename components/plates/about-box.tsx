@@ -1,75 +1,27 @@
 'use client'
-import { useGSAP } from '@gsap/react'
-import { useRef } from 'react'
 import { ABOUT_FACTS, ABOUT_SENTENCE } from '@/lib/about-facts'
-import { gsap, setupGsap } from '@/lib/motion/gsap'
-import { lerp } from '@/lib/motion/scrub'
-import { useMotion } from '@/lib/motion/store'
-import { Monogram } from '../console/monogram'
 import { Decode } from '../decode'
 import { LineReveal } from '../line-reveal'
 import { Cell } from '../sheet/cell'
 import { Rule } from '../sheet/rule'
 import { Sheet } from '../sheet/sheet'
 import { spanStyle } from '../sheet/span'
+import { AboutMark } from './about-mark'
 import { Plate } from './plate'
 
-const DEPTH = 180
-const TILT = 10
-
 /**
- * P/02. A column of text with a ruled table of facts under it, and one object beside it: a
- * shallow drawer holding the mark, tipped towards the reader and flattening as the plate crosses
- * the viewport. The text is never inside the three dimensional object, and nothing pins: the
- * plate says who he is and gets out of the way.
+ * P/02. A column of text with a ruled table of facts under it, and the mark beside them, cut
+ * out of the field and drawing itself as the plate arrives. The text is never inside the mark
+ * and nothing pins: the plate says who he is and gets out of the way.
  */
 export function AboutBox() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const drawerRef = useRef<HTMLDivElement>(null)
-  const reduced = useMotion((s) => s.reduced)
-
-  useGSAP(
-    () => {
-      const section = sectionRef.current
-      const drawer = drawerRef.current
-      if (!section || !drawer || reduced) return
-      setupGsap()
-      const mm = gsap.matchMedia()
-      mm.add('(min-width: 1024px)', () => {
-        const state = { p: 0 }
-        const tween = gsap.to(state, {
-          p: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top bottom',
-            end: 'center center',
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-          onUpdate: () => {
-            drawer.style.setProperty('--box-tilt', `${lerp(TILT, 0, state.p).toFixed(2)}deg`)
-            drawer.style.setProperty('--box-depth', `${Math.round(lerp(DEPTH, 0, state.p))}px`)
-          },
-        })
-        return () => {
-          tween.scrollTrigger?.kill()
-          tween.kill()
-        }
-      })
-      return () => mm.revert()
-    },
-    { scope: sectionRef, dependencies: [reduced] },
-  )
-
   return (
-    <Plate id="about" sectionRef={sectionRef} className="about-plate" meta={<span>Who</span>}>
-      {/* Below lg the drawer is no longer beside it, so the sentence takes the whole band and
-          closes it. */}
+    <Plate id="about" className="about-plate" meta={<span>Who</span>}>
+      {/* Below lg the mark is no longer beside it, so the sentence takes the whole band. */}
       <Cell
         col={1}
-        end={8}
-        row={2}
+        end={9}
+        row={3}
         md={{ col: 1, end: 7 }}
         sm={{ col: 1, end: 5 }}
         l
@@ -81,32 +33,21 @@ export function AboutBox() {
         </LineReveal>
       </Cell>
 
-      {/* Only wide enough for a column of its own on lg, where the drawer stands beside the
-          sentence and the facts. Below that it takes a band after them: half a sheet is less room
-          than the 96px mark inside it needs, and spanning the rows put the box over the text.
-          The row goes through classes because an inline grid-row could not answer to a
-          breakpoint. */}
+      {/* Column nine is where the facts end, so the mark starts there and nothing crosses it.
+          Below lg it takes a band of its own after the facts: half a sheet is not room for an
+          object this size. The row goes through classes because an inline grid-row could not
+          answer to a breakpoint. */}
       <Cell
-        col={8}
+        col={9}
         end={13}
         md={{ col: 1, end: 7 }}
         sm={{ col: 1, end: 5 }}
         l
         r
         flush
-        className="[grid-row:4] lg:[grid-row:2/4]"
+        className="[grid-row:5] lg:[grid-row:3/5]"
       >
-        <div className="about-drawer">
-          <div ref={drawerRef} className="box3d">
-            <div className="box3d__side box3d__side--top" aria-hidden="true" />
-            <div className="box3d__side box3d__side--bottom" aria-hidden="true" />
-            <div className="box3d__side box3d__side--left" aria-hidden="true" />
-            <div className="box3d__side box3d__side--right" aria-hidden="true" />
-            <div className="box3d__face">
-              <Monogram size={96} className="text-ink" />
-            </div>
-          </div>
-        </div>
+        <AboutMark />
       </Cell>
 
       <Sheet
@@ -114,7 +55,7 @@ export function AboutBox() {
         nested
         className="about-facts on-sheet"
         // A nested sheet only lines up with the page when it spans the full content width.
-        style={{ ...spanStyle({ col: 1, end: 13 }), gridRow: 3 }}
+        style={{ ...spanStyle({ col: 1, end: 13 }), gridRow: 4 }}
       >
         {ABOUT_FACTS.map((f, i) => {
           const col = (i % 2) * 4 + 1

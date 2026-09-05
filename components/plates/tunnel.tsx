@@ -14,20 +14,48 @@ import { Plate } from './plate'
 
 const RAYS = 24
 
-/** Each frame flies down its own line, so the corridor reads as depth and not as one pulse. */
+/**
+ * Each band flies down its own line, so the corridor reads as depth and not as one pulse. The
+ * lines are mostly vertical: a band is as wide as the corridor, so drifting it sideways only
+ * pushes it off the page, while height keeps two of them apart when their runs meet.
+ */
 const PATHS = [
-  { x: -22, y: -8, rot: -2.5 },
-  { x: 18, y: 10, rot: 1.8 },
-  { x: -14, y: 12, rot: 2.2 },
-  { x: 24, y: -12, rot: -1.6 },
+  { x: -6, y: -26, rot: -1.6 },
+  { x: 5, y: 16, rot: 1.2 },
+  { x: -5, y: -14, rot: 1.4 },
+  { x: 6, y: 24, rot: -1.1 },
   { x: 0, y: 0, rot: 0 },
 ] as const
 
 /**
+ * How much of the run one band gets. Wide enough to arrive and pass without hurrying, short
+ * enough that the one behind it is still far away while this one is close enough to read: text
+ * bands cannot cross each other the way the old panels could.
+ */
+const SPAN = 0.3
+
+/**
+ * The corridor's perspective, matching the CSS, and the apparent size a band is asked to have at
+ * each end of its run. Depth is solved from the size rather than eased on its own: at a constant
+ * speed in z a band crawls while it is far away and then leaps past in the last moment, which is
+ * exactly the part a reader needs it to hold still for. Solving z from a straight line in scale
+ * makes it grow at one steady rate the whole way down.
+ */
+const PERSPECTIVE = 900
+const SCALE_FAR = 0.32
+const SCALE_NEAR = 1.85
+
+function depth(local: number) {
+  return PERSPECTIVE * (1 - 1 / lerp(SCALE_FAR, SCALE_NEAR, local))
+}
+
+/**
  * P/06. Hairlines converge on a vanishing point that leans towards the reader's pointer, and the
- * five moments of the story fly out of it, each down its own line, with its year growing as it
- * arrives. The title stays out of the flight path so it is always readable. Below 1024px and
- * under reduced motion the frames are a plain stack in front of the static rays.
+ * five moments of the story fly out of it as ruled bands, each down its own line, the year in
+ * mono and the line beside it. No panels and no pictures: the corridor is made of the same rules
+ * the rest of the site is ruled with, and reading one is what makes it arrive. The title stays
+ * out of the flight path. Below 1024px and under reduced motion the bands are a plain stack in
+ * front of the static rays.
  */
 export function Tunnel() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -60,11 +88,11 @@ export function Tunnel() {
           onUpdate: () => {
             const p = state.p
             frames.forEach((frame, i) => {
-              const local = itemProgress(p, i, frames.length, 0.45)
+              const local = itemProgress(p, i, frames.length, SPAN)
               const path = PATHS[i % PATHS.length]
-              // Fade in as it arrives, out as it passes the reader.
-              const fade = Math.min(1, local / 0.12, clamp01((1 - local) / 0.14))
-              frame.style.setProperty('--frame-z', Math.round(lerp(-1500, 380, local)) + 'px')
+              // In while it is still small and far, out only as it leaves the corridor.
+              const fade = Math.min(clamp01((local - 0.04) / 0.16), clamp01((1 - local) / 0.12))
+              frame.style.setProperty('--frame-z', Math.round(depth(local)) + 'px')
               frame.style.setProperty('--frame-x', (path.x * local).toFixed(2) + '%')
               frame.style.setProperty('--frame-y', (path.y * local).toFixed(2) + '%')
               frame.style.setProperty('--frame-r', (path.rot * local).toFixed(2) + 'deg')
@@ -155,11 +183,8 @@ export function Tunnel() {
           <ol className="tunnel__frames">
             {SINCE_FRAMES.map((frame, i) => (
               <li key={frame.id} className="tunnel__frame" data-frame={i}>
-                <figure className="tunnel__figure">
-                  {frame.year ? <span className="tunnel__year">{frame.year}</span> : null}
-                  <span className="tunnel__panel" aria-hidden="true" />
-                  <figcaption className="label text-ink">{frame.caption}</figcaption>
-                </figure>
+                <span className="tunnel__mark">{frame.year ?? ''}</span>
+                <span className="tunnel__line">{frame.caption}</span>
               </li>
             ))}
           </ol>

@@ -26,14 +26,16 @@ test('pinned plates reach their end state after scrolling through', async ({ pag
   await scrollThrough(page)
   await expect(page.locator('#work')).toHaveAttribute('data-state', 'done')
   await expect(page.locator('#since')).toHaveAttribute('data-state', 'done')
+  // The mark of P/02 draws itself in bar by bar; by the end every bar is at full size.
   await expect
     .poll(() =>
       page.evaluate(() => {
-        const box = document.querySelector<HTMLElement>('.box3d')
-        return box?.style.getPropertyValue('--box-tilt')
+        const bars = document.querySelectorAll('.about-mark__svg rect')
+        const last = bars[bars.length - 1]
+        return last ? Number(last.getAttribute('width')) : -1
       }),
     )
-    .toBe('0.00deg')
+    .toBeGreaterThan(170)
 })
 
 test('nothing is pinned below the pin breakpoint', async ({ page, isMobile }) => {

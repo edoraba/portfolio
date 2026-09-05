@@ -163,7 +163,7 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
       className="work-plate"
       meta={<span>{works.length} case studies, designed and built</span>}
     >
-      <Cell col={1} end={13} row={2} l r flush className="porthole">
+      <Cell col={1} end={13} row={3} l r flush className="porthole">
         <div className="porthole__ground" aria-hidden="true" />
         <div className="porthole__word" aria-hidden="true">
           <span className="porthole__word-text">Work</span>
@@ -189,7 +189,7 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
         </div>
       </Cell>
 
-      <Cell col={1} end={13} row={3} l r>
+      <Cell col={1} end={13} row={4} l r>
         <div className="work-plate__foot">
           <Timecode labels={works.map((w) => w.client)} index={index} onSelect={goTo} />
           <Link href="/work" className="label text-accent">

@@ -111,8 +111,10 @@ void main() {
   d *= uIntensity;
 
   // Band mode: the dither thins out towards the top edge instead of starting with a hard line.
+  // The fade is a share of the band, not a fixed slice of the viewport: a fixed one washed out
+  // a short band completely.
   float yTop = 1.0 - vUv.y;
-  if (uMode == 1) d *= smoothstep(uBand.x, uBand.x + 0.25, yTop);
+  if (uMode == 1) d *= smoothstep(uBand.x, uBand.x + (uBand.y - uBand.x) * 0.55, yTop);
 
   int bx = int(mod(cell.x, 8.0));
   int by = int(mod(cell.y, 8.0));

@@ -57,8 +57,8 @@ export default function FieldCanvas() {
       target.active = false
     }
     const onResize = () => renderer.resize(cell)
-    const applyMask = (mode: string) => {
-      const value = mode === 'hero' ? 'url(#hero-mask)' : 'none'
+    const applyMask = (mask: string | null) => {
+      const value = mask ? `url(#${mask})` : 'none'
       canvas.style.maskImage = value
       canvas.style.setProperty('-webkit-mask-image', value)
     }
@@ -81,10 +81,10 @@ export default function FieldCanvas() {
       attributeFilter: ['data-theme'],
     })
 
-    applyMask(store.getState().mode)
+    applyMask(store.getState().mask)
     publish(store.getState().mode, store.getState().band)
     const unsubStore = store.subscribe((s, prev) => {
-      if (s.mode !== prev.mode) applyMask(s.mode)
+      if (s.mask !== prev.mask) applyMask(s.mask)
       if (s.mode !== prev.mode || s.band !== prev.band) publish(s.mode, s.band)
       if (s.cell !== cell) {
         // Changed from outside (the palette's dither commands).

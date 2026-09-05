@@ -5,8 +5,8 @@ import { PRIORITY } from '@/lib/field/claims'
 import { useField } from '@/lib/field/store'
 
 /** Height of the dither strip at the top of the footer, in CSS pixels. */
-const STRIP = 96
-const STRIP_SM = 64
+const STRIP = 220
+const STRIP_SM = 132
 
 /**
  * Brings the field back at the end of every page as a strip in the empty margin just above the
@@ -47,7 +47,7 @@ export function FooterField({ target }: { target: React.RefObject<HTMLElement | 
         }
         s.claim('footer', {
           mode: 'band',
-          intensity: 0.45,
+          intensity: 0.8,
           band: [top, bottom],
           priority: PRIORITY.footer,
         })

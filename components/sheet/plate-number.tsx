@@ -12,8 +12,15 @@ export function PlateNumber({
   end = 2,
   md,
   sm = { col: 1, end: 2 },
+  row,
   className,
-}: { n: number | string; label?: string; className?: string } & SpanProps) {
+}: {
+  n: number | string
+  label?: string
+  /** Explicit grid row, for a sheet whose other children name their own. */
+  row?: number | string
+  className?: string
+} & SpanProps) {
   const text = typeof n === 'number' ? `P/${String(n).padStart(2, '0')}` : n
   return (
     <Cell
@@ -21,6 +28,7 @@ export function PlateNumber({
       end={end}
       md={md}
       sm={sm}
+      row={row}
       l
       className={['label text-ink-muted', className].filter(Boolean).join(' ')}
     >

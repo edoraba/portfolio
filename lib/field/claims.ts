@@ -12,6 +12,11 @@ export type Claim = {
   intensity: number
   /** Band range from the top of the viewport, 0 to 1. Band mode only. */
   band?: [number, number]
+  /**
+   * Id of an SVG mask to cut the canvas to, so the field is only seen through a shape the
+   * claimant draws: the headline's letters, a monogram, a plate. Without one it fills its band.
+   */
+  mask?: string
   priority: number
 }
 
@@ -35,9 +40,16 @@ export type Resolved = {
   mode: FieldMode
   intensity: number
   band: [number, number]
+  mask: string | null
 }
 
-export const OFF: Resolved = { owner: null, mode: 'off', intensity: 0, band: DEFAULT_BAND }
+export const OFF: Resolved = {
+  owner: null,
+  mode: 'off',
+  intensity: 0,
+  band: DEFAULT_BAND,
+  mask: null,
+}
 
 /**
  * The winner is the highest priority claim. On a tie the current owner keeps the field, so a
@@ -63,6 +75,7 @@ export function resolveClaims(claims: Record<string, Claim>, current: string | n
     mode: best.mode,
     intensity: best.intensity,
     band: best.band ?? DEFAULT_BAND,
+    mask: best.mask ?? null,
   }
 }
 
@@ -72,6 +85,7 @@ export function sameClaim(a: Claim | undefined, b: Claim): boolean {
     a.mode === b.mode &&
     a.intensity === b.intensity &&
     a.priority === b.priority &&
+    (a.mask ?? '') === (b.mask ?? '') &&
     (a.band?.[0] ?? -1) === (b.band?.[0] ?? -1) &&
     (a.band?.[1] ?? -1) === (b.band?.[1] ?? -1)
   )
