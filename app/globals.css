@@ -15,13 +15,14 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
 
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-martian), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  --text-display-xl: clamp(4rem, 13vw, 14rem);
+  --text-display-xl: clamp(2.5rem, 12.6vw, 14rem);
   --text-display-xl--line-height: 0.86;
   --text-display-xl--letter-spacing: -0.045em;
-  --text-display: clamp(2.5rem, 6.5vw, 6rem);
+  --text-display: clamp(2.25rem, 5.7vw, 5.5rem);
   --text-display--line-height: 0.92;
   --text-display--letter-spacing: -0.04em;
   --text-headline: clamp(1.5rem, 2.6vw, 2.25rem);
@@ -56,9 +57,6 @@
     background: var(--canvas);
     color: var(--ink);
     font-family: var(--font-sans);
-    font-variation-settings:
-      'opsz' 14,
-      'wdth' 100;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-variant-numeric: tabular-nums;
@@ -121,30 +119,27 @@
 }
 
 @utility display-xl {
+  font-family: var(--font-display);
   font-size: var(--text-display-xl);
   line-height: var(--text-display-xl--line-height);
   letter-spacing: var(--text-display-xl--letter-spacing);
-  font-variation-settings:
-    'opsz' 96,
-    'wdth' 100;
+  font-variation-settings: 'wdth' 100;
   font-weight: 500;
 }
 @utility display {
+  font-family: var(--font-display);
   font-size: var(--text-display);
   line-height: var(--text-display--line-height);
   letter-spacing: var(--text-display--letter-spacing);
-  font-variation-settings:
-    'opsz' 96,
-    'wdth' 100;
+  font-variation-settings: 'wdth' 100;
   font-weight: 500;
 }
 @utility headline {
+  font-family: var(--font-display);
   font-size: var(--text-headline);
   line-height: var(--text-headline--line-height);
   letter-spacing: var(--text-headline--letter-spacing);
-  font-variation-settings:
-    'opsz' 48,
-    'wdth' 100;
+  font-variation-settings: 'wdth' 100;
   font-weight: 500;
 }
 @utility label {
@@ -768,9 +763,8 @@ html[data-motion='reduced'] .tunnel__rays {
   text-transform: uppercase;
   writing-mode: vertical-rl;
   color: var(--ink);
-  font-variation-settings:
-    'opsz' 96,
-    'wdth' 100;
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 100;
 }
 @media (max-width: 1023.98px) {
   .porthole__word {
@@ -959,10 +953,9 @@ html[data-motion='reduced'] .porthole__letters {
   font-size: clamp(1.75rem, 3.1vw, 2.75rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
+  font-family: var(--font-display);
   font-weight: 500;
-  font-variation-settings:
-    'opsz' 48,
-    'wdth' 100;
+  font-variation-settings: 'wdth' 100;
   max-width: 22ch;
 }
 .about-facts {
@@ -1163,7 +1156,7 @@ html[data-motion='reduced'] .flip-text__strips {
 .hero-svg {
   display: block;
   width: 100%;
-  height: calc(var(--text-display-xl) * 1.9);
+  height: calc(var(--text-display-xl) * 2.15);
   overflow: visible;
 }
 .hero-mask-defs {
@@ -1173,19 +1166,17 @@ html[data-motion='reduced'] .flip-text__strips {
   overflow: hidden;
 }
 .hero-text {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: var(--text-display-xl);
   font-weight: 500;
   letter-spacing: var(--text-display-xl--letter-spacing);
-  font-variation-settings:
-    'opsz' 96,
-    'wdth' 100;
+  font-variation-settings: 'wdth' 100;
 }
 .hero-text tspan {
   transition: font-variation-settings 500ms var(--ease-out-expo);
 }
-.hero-italic {
-  font-style: italic;
+.hero-emph {
+  font-weight: 700;
 }
 .hero-dither-cell {
   fill: var(--field-on);

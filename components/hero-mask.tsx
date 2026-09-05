@@ -11,6 +11,11 @@ const WORDS = ['Design,', 'then', 'build.'] as const
 const HEADLINE = 'Design, then build.'
 const WIDTH_MIN = 78
 const WIDTH_MAX = 100
+/** Where the second line sits. Tight, but clear of the comma hanging off the first one. */
+const LINE_2 = '1.02em'
+/** The last word is the emphasis. Martian has no italic, so it carries extra width instead. */
+const EMPH = 2
+const EMPH_WIDTH = 14
 /** The headline compresses to the narrow width over the first 60 percent of a viewport. */
 const COMPRESS_OVER = 0.6
 
@@ -47,6 +52,7 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
     const words = WORDS.map((_, i) => ({
       visible: wrap.querySelector<SVGTSpanElement>(`[data-word="${i}"]`),
       mirror: wrap.querySelector<SVGTSpanElement>(`[data-mirror="${i}"]`),
+      bonus: i === EMPH ? EMPH_WIDTH : 0,
       last: '',
     }))
 
@@ -107,6 +113,8 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       const reach = window.innerWidth * 0.35
       for (const word of words) {
         if (!word.visible) continue
+        // The emphasis keeps its extra width through the whole range, so it reads as the same
+        // word getting louder rather than a second style dropped into the line.
         // At rest every word sits at the scroll width; a pointer narrows the ones far from it.
         let w = base
         if (pointer.active) {
@@ -114,7 +122,7 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
           const near = Math.max(0, 1 - Math.abs(pointer.x - (r.left + r.width / 2)) / reach)
           w = WIDTH_MIN + (base - WIDTH_MIN) * near
         }
-        const value = `'opsz' 96, 'wdth' ${w.toFixed(1)}`
+        const value = `'wdth' ${(w + word.bonus).toFixed(1)}`
         if (value !== word.last) {
           word.last = value
           word.visible.style.fontVariationSettings = value
@@ -133,8 +141,8 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       words.forEach((word, i) => {
         word.visible?.animate(
           [
-            { fontVariationSettings: `'opsz' 96, 'wdth' ${WIDTH_MIN}` },
-            { fontVariationSettings: `'opsz' 96, 'wdth' ${WIDTH_MAX}` },
+            { fontVariationSettings: `'wdth' ${WIDTH_MIN + word.bonus}` },
+            { fontVariationSettings: `'wdth' ${WIDTH_MAX + word.bonus}` },
           ],
           { duration: 800, delay: i * 80, easing: 'cubic-bezier(0.625, 0.05, 0, 1)' },
         )
@@ -192,8 +200,8 @@ function Lines({ fill, mirror }: { fill: string; mirror: boolean }) {
       <text className="hero-text" x="0" y="0" dominantBaseline="text-before-edge" fill={fill}>
         {word(0)}
       </text>
-      <text className="hero-text" x="0" y="0.86em" dominantBaseline="text-before-edge" fill={fill}>
-        {word(1)} {word(2, 'hero-italic')}
+      <text className="hero-text" x="0" y={LINE_2} dominantBaseline="text-before-edge" fill={fill}>
+        {word(1)} {word(2, 'hero-emph')}
       </text>
     </>
   )

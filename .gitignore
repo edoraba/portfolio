@@ -42,3 +42,7 @@ Thumbs.db
 playwright-report
 test-results
 .lighthouseci
+
+# Switzer is free to use and to self-host, but its licence forbids making the files
+# available through a public repository. scripts/fonts.mjs fetches them at build time.
+assets/fonts/Switzer-*.woff2

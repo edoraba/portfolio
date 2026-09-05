@@ -75,7 +75,9 @@ Rules: the accent is used as ink (links, index numbers, the lit part of the fiel
 
 ### 4.2 Typography
 
-- Display and text: **Bricolage Grotesque** (OFL, variable: opsz 12 to 96, wdth 75 to 100, wght 200 to 800), self-hosted woff2 via `next/font/local`, one file with all axes. Display at weight 500, tracking -0.045em, line-height 0.86 to 0.95, `text-wrap: balance`. Text at optical size 12 to 14, weight 400, line-height 1.5, measure 58 to 65ch, `text-wrap: pretty`. Emphasis is italic or weight of the same family. No second sans, no serif.
+- Display: **Martian Grotesk** (OFL, variable: wght 100 to 1000, wdth 75 to 200), self-hosted woff2 via `next/font/local`. Weight 500, tracking -0.045em, line-height 0.86 to 0.95, `text-wrap: balance`. It has no italic: emphasis is width and weight of the same family, which is the axis language the headline already animates.
+- Text: **Switzer** (ITF Free Font License, variable: wght 100 to 900, with a true italic), self-hosted unmodified. Weight 400, line-height 1.5, measure 58 to 65ch, `text-wrap: pretty`. Its licence forbids subsetting and publishing the files in a public repository, so they are fetched at build time by `scripts/fonts.mjs`; see `assets/fonts/README.md`.
+- No third sans, no serif. Geist Mono stays the console face.
 - Mono: **Geist Mono** (OFL), self-hosted, for nav, index numbers, dates, stack tags, captions, labels. 11 to 13px, uppercase with +0.06em tracking for labels, tabular numerals always.
 - Scale (fluid, clamp): display-xl clamp(4rem, 13vw, 14rem); display clamp(2.5rem, 6.5vw, 6rem); headline clamp(1.5rem, 2.6vw, 2.25rem); body 1rem to 1.125rem; label 0.6875rem to 0.8125rem. Almost nothing between headline and display: big type, tiny mono, little in between.
 - Kinetic axis: the width axis is animated on exactly one heading per page (home hero words; case study title on entry). Everywhere else width is static at 100.
