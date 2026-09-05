@@ -3,6 +3,7 @@ import { useRef, type ReactNode, type RefObject } from 'react'
 import { PLATES, usePlate, type PlateId } from '@/lib/plates'
 import { Cell } from '../sheet/cell'
 import { PlateNumber } from '../sheet/plate-number'
+import { Rule } from '../sheet/rule'
 import { Sheet } from '../sheet/sheet'
 
 /**
@@ -38,6 +39,7 @@ export function Plate({
       className={['plate', className].filter(Boolean).join(' ')}
       aria-label={plate?.title}
     >
+      <Rule />
       <PlateNumber
         n={plate?.n ?? 1}
         label={plate?.title}
@@ -53,7 +55,6 @@ export function Plate({
         sm={{ col: 3, end: 5 }}
         l
         r
-        t
         className="label text-ink-muted"
       >
         {meta}

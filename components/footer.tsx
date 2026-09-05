@@ -8,6 +8,7 @@ import { FooterField } from './footer-field'
 import { LocalTime } from './local-time'
 import { MotionToggle } from './motion-toggle'
 import { Cell } from './sheet/cell'
+import { Rule } from './sheet/rule'
 import { Sheet } from './sheet/sheet'
 
 const linkClass = 'inline-flex items-center py-2 transition-colors hover:text-ink'
@@ -29,7 +30,7 @@ export function Footer() {
     <footer ref={ref} className="site-footer relative mt-section">
       <FooterField target={ref} />
       <Sheet>
-        <Cell col={1} end={8} md={{ col: 1, end: 7 }} l r t b className="py-10 md:py-14">
+        <Cell col={1} end={8} md={{ col: 1, end: 7 }} className="py-10 md:py-14">
           <p className="label text-ink-muted">
             <Decode>Write to me</Decode>
           </p>
@@ -45,9 +46,6 @@ export function Footer() {
           col={8}
           end={13}
           md={{ col: 1, end: 7 }}
-          r
-          t
-          b
           className="py-10 md:py-14"
         >
           <ol className="grid grid-cols-2 gap-x-6 label text-ink-muted">
@@ -63,14 +61,15 @@ export function Footer() {
         </Cell>
       </Sheet>
 
+      <Sheet>
+        <Rule />
+      </Sheet>
       <Sheet as="dl">
         <Cell
           col={1}
           end={4}
           md={{ col: 1, end: 4 }}
           sm={{ col: 1, end: 3 }}
-          l
-          b
           className="label text-ink-muted"
         >
           <dt>
@@ -84,8 +83,6 @@ export function Footer() {
           md={{ col: 4, end: 7 }}
           sm={{ col: 3, end: 5 }}
           l
-          r
-          b
           className="label text-ink-muted"
         >
           <dt>
@@ -101,7 +98,6 @@ export function Footer() {
           md={{ col: 1, end: 4 }}
           sm={{ col: 1, end: 3 }}
           l
-          b
           className="label text-ink-muted"
         >
           <dt>
@@ -125,8 +121,6 @@ export function Footer() {
           md={{ col: 4, end: 7 }}
           sm={{ col: 3, end: 5 }}
           l
-          r
-          b
           className="label text-ink-muted"
         >
           <dt>
@@ -138,7 +132,8 @@ export function Footer() {
         </Cell>
       </Sheet>
       <Sheet>
-        <Cell col={1} end={13} l r b className="label text-ink-muted">
+        <Rule />
+        <Cell col={1} end={13} className="label text-ink-muted">
           <p>
             Designed and built by me in {site.location}. Press G for the grid, T for the theme, Cmd
             K for the palette. MMXXVI.

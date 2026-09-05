@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/page-header'
 import { writings } from '@/lib/content'
 import { PageTransition } from '@/components/page-transition'
 import { Cell } from '@/components/sheet/cell'
+import { Rule } from '@/components/sheet/rule'
 import { Sheet } from '@/components/sheet/sheet'
 
 export const metadata: Metadata = { title: 'Writing' }
@@ -30,18 +31,11 @@ export default function WritingPage() {
           {writings.map((w, i) => (
             <li key={w.slug}>
               <Link href={`/writing/${w.slug}`} className="sheet group">
-                <Cell as="span" col={1} end={2} md={{ col: 1, end: 2 }} sm={{ col: 1, end: 2 }} l t>
+                <Rule />
+                <Cell as="span" col={1} end={2} md={{ col: 1, end: 2 }} sm={{ col: 1, end: 2 }} l>
                   <span className="label text-accent">{String(i + 1).padStart(2, '0')}</span>
                 </Cell>
-                <Cell
-                  as="span"
-                  col={2}
-                  end={11}
-                  md={{ col: 2, end: 6 }}
-                  sm={{ col: 2, end: 5 }}
-                  l
-                  t
-                >
+                <Cell as="span" col={2} end={11} md={{ col: 2, end: 6 }} sm={{ col: 2, end: 5 }} l>
                   <span className="block headline transition-colors group-hover:text-accent">
                     {w.title}
                   </span>
@@ -55,7 +49,6 @@ export default function WritingPage() {
                   sm={{ col: 1, end: 5 }}
                   l
                   r
-                  t
                   className="label text-ink-muted"
                 >
                   {w.date}

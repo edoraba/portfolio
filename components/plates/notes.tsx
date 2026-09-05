@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { Cell } from '../sheet/cell'
+import { Rule } from '../sheet/rule'
 import { Plate } from './plate'
 
 export type NoteItem = { slug: string; title: string; date: string; href: string }
@@ -13,7 +14,8 @@ export type NoteItem = { slug: string; title: string; date: string; href: string
 export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem[] }) {
   return (
     <Plate id="notes" className="notes-plate" meta={<span>Smaller pieces and essays</span>}>
-      <Cell col={1} end={7} md={{ col: 1, end: 4 }} sm={{ col: 1, end: 5 }} l t b className="py-8">
+      <Rule />
+      <Cell col={1} end={7} md={{ col: 1, end: 4 }} sm={{ col: 1, end: 5 }} l className="py-8">
         <h2 className="label text-ink-muted">Lab</h2>
         <ul className="mt-6 space-y-4">
           {labs.map((l) => (
@@ -34,8 +36,6 @@ export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem
         sm={{ col: 1, end: 5 }}
         l
         r
-        t
-        b
         className="py-8"
         hidden={writings.length === 0}
       >
@@ -51,6 +51,7 @@ export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem
           ))}
         </ul>
       </Cell>
+      <Rule />
     </Plate>
   )
 }

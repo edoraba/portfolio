@@ -21,7 +21,6 @@ export function NavCells() {
           end={10 + i}
           row={1}
           l
-          b
           r={i === navItems.length - 1}
           flush
           className="hidden lg:block"

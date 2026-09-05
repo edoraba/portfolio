@@ -22,7 +22,6 @@ export function PlateNumber({
       md={md}
       sm={sm}
       l
-      t
       className={['label text-ink-muted', className].filter(Boolean).join(' ')}
     >
       <Decode className="text-ink">{text}</Decode>

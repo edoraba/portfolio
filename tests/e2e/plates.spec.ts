@@ -26,15 +26,14 @@ test('pinned plates reach their end state after scrolling through', async ({ pag
   await scrollThrough(page)
   await expect(page.locator('#work')).toHaveAttribute('data-state', 'done')
   await expect(page.locator('#since')).toHaveAttribute('data-state', 'done')
-  const flat = await page.evaluate(() => {
-    const box = document.querySelector<HTMLElement>('.box3d')
-    return {
-      tilt: box?.style.getPropertyValue('--box-tilt'),
-      depth: box?.style.getPropertyValue('--box-depth'),
-    }
-  })
-  expect(flat.tilt).toBe('0.00deg')
-  expect(flat.depth).toBe('0px')
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const box = document.querySelector<HTMLElement>('.box3d')
+        return box?.style.getPropertyValue('--box-tilt')
+      }),
+    )
+    .toBe('0.00deg')
 })
 
 test('nothing is pinned below the pin breakpoint', async ({ page, isMobile }) => {

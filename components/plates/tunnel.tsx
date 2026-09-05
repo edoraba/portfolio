@@ -9,6 +9,7 @@ import { useMotion } from '@/lib/motion/store'
 import { headerHeight } from '@/lib/sheet'
 import { SINCE_FRAMES } from '@/lib/since-frames'
 import { Cell } from '../sheet/cell'
+import { Rule } from '../sheet/rule'
 import { Plate } from './plate'
 
 const RAYS = 24
@@ -123,7 +124,8 @@ export function Tunnel() {
       className="tunnel-plate"
       meta={<span>How the two halves met</span>}
     >
-      <Cell col={1} end={13} l r b flush className="tunnel">
+      <Rule />
+      <Cell col={1} end={13} l r flush className="tunnel">
         <div ref={stageRef} className="tunnel__stage">
           <svg
             className="tunnel__rays"
@@ -163,6 +165,7 @@ export function Tunnel() {
           </ol>
         </div>
       </Cell>
+      <Rule />
     </Plate>
   )
 }

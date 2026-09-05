@@ -1,5 +1,6 @@
 'use client'
 import { Cell } from '../sheet/cell'
+import { Rule } from '../sheet/rule'
 import { Plate } from './plate'
 import { ToolboxStage } from './toolbox-stage'
 
@@ -15,9 +16,11 @@ export function Toolbox({ tags }: { tags: string[] }) {
       className="toolbox-plate"
       meta={<span>Everything I ship with. Drag them, throw them</span>}
     >
-      <Cell col={1} end={13} l r b flush>
+      <Rule />
+      <Cell col={1} end={13} l r flush>
         <ToolboxStage tags={tags} />
       </Cell>
+      <Rule />
     </Plate>
   )
 }

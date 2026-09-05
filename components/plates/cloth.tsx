@@ -8,6 +8,7 @@ import { site } from '@/lib/site'
 import { CopyEmail } from '../copy-email'
 import { FlipText } from '../flip-text'
 import { Cell } from '../sheet/cell'
+import { Rule } from '../sheet/rule'
 import { Plate } from './plate'
 
 const COLS = 12
@@ -91,7 +92,8 @@ export function Cloth() {
 
   return (
     <Plate id="contact" className="cloth-plate" meta={<span>{site.coordinates}</span>}>
-      <Cell col={1} end={13} l r b flush>
+      <Rule />
+      <Cell col={1} end={13} l r flush>
         <div ref={wrapRef} className="cloth">
           <svg
             ref={svgRef}
@@ -124,6 +126,7 @@ export function Cloth() {
           </div>
         </div>
       </Cell>
+      <Rule />
     </Plate>
   )
 }

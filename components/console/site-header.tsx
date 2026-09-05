@@ -7,6 +7,7 @@ import { useUi } from '@/lib/ui-store'
 import { CopyEmail } from '../copy-email'
 import { FlipText } from '../flip-text'
 import { Cell } from '../sheet/cell'
+import { Rule } from '../sheet/rule'
 import { Sheet } from '../sheet/sheet'
 import { ConsoleLine } from './console-line'
 import { MobileMenu } from './mobile-menu'
@@ -47,13 +48,16 @@ export function SiteHeader() {
         className="site-header"
         style={{ viewTransitionName: 'site-header' } as React.CSSProperties}
       >
+        <Rule row={1} />
+        <Rule row={2} />
+
         {/* Row 1 */}
-        <Cell col={1} end={3} md={{ col: 1, end: 3 }} sm={{ col: 1, end: 2 }} row={1} l b flush>
+        <Cell col={1} end={3} md={{ col: 1, end: 3 }} sm={{ col: 1, end: 2 }} row={1} l flush>
           <Link href="/" aria-label={site.name} className="console-link" {...echo(site.name)}>
             <Monogram size={20} className="text-ink" />
           </Link>
         </Cell>
-        <Cell col={3} end={9} row={1} l b className="hidden lg:block">
+        <Cell col={3} end={9} row={1} l className="hidden lg:block">
           <p className="truncate label text-ink-muted">{site.status1}</p>
         </Cell>
         <NavCells />
@@ -66,7 +70,6 @@ export function SiteHeader() {
           sm={{ col: 2, end: 3 }}
           row={1}
           l
-          b
           flush
           className="lg:hidden"
         >
@@ -86,7 +89,6 @@ export function SiteHeader() {
           row={1}
           l
           r
-          b
           flush
           className="lg:hidden"
         >
@@ -103,19 +105,19 @@ export function SiteHeader() {
         </Cell>
 
         {/* Row 2 */}
-        <Cell col={1} end={3} md={{ col: 1, end: 4 }} sm={{ col: 1, end: 5 }} row={2} l b r>
+        <Cell col={1} end={3} md={{ col: 1, end: 4 }} sm={{ col: 1, end: 5 }} row={2} l r>
           <ConsoleLine />
         </Cell>
-        <Cell col={3} end={9} md={{ col: 4, end: 7 }} row={2} l b className="hidden md:block">
+        <Cell col={3} end={9} md={{ col: 4, end: 7 }} row={2} l className="hidden md:block">
           <p className="truncate label text-ink-muted">
             <span className="hidden lg:inline">{site.status2} </span>
             <CopyEmail className="label" />
           </p>
         </Cell>
-        <Cell col={9} end={11} row={2} l b flush className="hidden lg:flex lg:items-center">
+        <Cell col={9} end={11} row={2} l flush className="hidden lg:flex lg:items-center">
           <ThemeSwatches className="px-[6px]" />
         </Cell>
-        <Cell col={11} end={12} row={2} l b flush className="hidden lg:block">
+        <Cell col={11} end={12} row={2} l flush className="hidden lg:block">
           <button
             type="button"
             className="console-link flip label"
@@ -126,7 +128,7 @@ export function SiteHeader() {
             <FlipText alt="Palette">Cmd K</FlipText>
           </button>
         </Cell>
-        <Cell col={12} end={13} row={2} l r b flush className="hidden lg:block">
+        <Cell col={12} end={13} row={2} l r flush className="hidden lg:block">
           <button
             type="button"
             className="console-link flip label"

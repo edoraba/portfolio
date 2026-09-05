@@ -189,7 +189,7 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
         </div>
       </Cell>
 
-      <Cell col={1} end={13} row={3} l r b>
+      <Cell col={1} end={13} row={3} l r>
         <div className="work-plate__foot">
           <Timecode labels={works.map((w) => w.client)} index={index} onSelect={goTo} />
           <Link href="/work" className="label text-accent">

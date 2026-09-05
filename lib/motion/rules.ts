@@ -16,7 +16,7 @@ export function drawRules(root: ParentNode = document): () => void {
   if (targets.length === 0) return () => {}
   const timers: number[] = []
   const triggers = ScrollTrigger.batch(targets, {
-    start: 'top 92%',
+    start: 'top bottom',
     once: true,
     onEnter: (batch) => {
       batch.forEach((el, i) => {

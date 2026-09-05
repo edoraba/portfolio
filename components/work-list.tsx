@@ -4,6 +4,7 @@ import { ViewTransition } from 'react'
 import { Decode } from './decode'
 import { LineReveal } from './line-reveal'
 import { Cell } from './sheet/cell'
+import { Rule } from './sheet/rule'
 
 /**
  * The case study index as rows of cells on the sheet: number, title and summary, year.
@@ -19,10 +20,11 @@ export function WorkList({ works }: { works: Work[] }) {
             transitionTypes={['nav-forward']}
             className="work-row sheet group"
           >
-            <Cell as="span" col={1} end={2} md={{ col: 1, end: 2 }} sm={{ col: 1, end: 2 }} l t>
+            <Rule />
+            <Cell as="span" col={1} end={2} md={{ col: 1, end: 2 }} sm={{ col: 1, end: 2 }} l>
               <Decode className="label text-accent">{`P/${String(w.order).padStart(2, '0')}`}</Decode>
             </Cell>
-            <Cell as="span" col={2} end={11} md={{ col: 2, end: 6 }} sm={{ col: 2, end: 5 }} l t>
+            <Cell as="span" col={2} end={11} md={{ col: 2, end: 6 }} sm={{ col: 2, end: 5 }} l>
               <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
                 <LineReveal
                   as="span"
@@ -41,7 +43,6 @@ export function WorkList({ works }: { works: Work[] }) {
               sm={{ col: 1, end: 5 }}
               l
               r
-              t
               className="label text-ink-muted"
             >
               {w.year}

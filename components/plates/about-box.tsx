@@ -9,6 +9,7 @@ import { Monogram } from '../console/monogram'
 import { Decode } from '../decode'
 import { LineReveal } from '../line-reveal'
 import { Cell } from '../sheet/cell'
+import { Rule } from '../sheet/rule'
 import { Sheet } from '../sheet/sheet'
 import { spanStyle } from '../sheet/span'
 import { Plate } from './plate'
@@ -70,7 +71,6 @@ export function AboutBox() {
         md={{ col: 1, end: 6 }}
         sm={{ col: 1, end: 5 }}
         l
-        t
         className="py-10"
       >
         <LineReveal as="h2" className="about-plate__sentence">
@@ -78,18 +78,7 @@ export function AboutBox() {
         </LineReveal>
       </Cell>
 
-      <Cell
-        col={8}
-        end={13}
-        row="2 / 4"
-        md={{ col: 6, end: 7 }}
-        sm={{ col: 1, end: 5 }}
-        l
-        r
-        t
-        b
-        flush
-      >
+      <Cell col={8} end={13} row="2 / 4" md={{ col: 6, end: 7 }} sm={{ col: 1, end: 5 }} l r flush>
         <div className="about-drawer">
           <div ref={drawerRef} className="box3d">
             <div className="box3d__side box3d__side--top" aria-hidden="true" />
@@ -121,8 +110,6 @@ export function AboutBox() {
               sm={{ col: 1, end: 5 }}
               l
               r={i % 2 === 1}
-              t
-              b={i >= ABOUT_FACTS.length - 2}
               className="about-fact"
             >
               <dt className="label text-ink-muted">
@@ -133,6 +120,7 @@ export function AboutBox() {
           )
         })}
       </Sheet>
+      <Rule />
     </Plate>
   )
 }

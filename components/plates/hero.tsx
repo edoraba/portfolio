@@ -11,6 +11,7 @@ import { Decode } from '../decode'
 import { HeroMask } from '../hero-mask'
 import { LocalTime } from '../local-time'
 import { Cell } from '../sheet/cell'
+import { Rule } from '../sheet/rule'
 import { Plate } from './plate'
 
 export type HeroWork = { slug: string; order: number; client: string; year: string }
@@ -65,17 +66,19 @@ export function Hero({ works }: { works: HeroWork[] }) {
     >
       <Cell col={1} end={13} l r flush>
         <div ref={bandRef} className="hero-band" aria-hidden="true">
-          <svg className="hero-band__fallback" focusable="false">
+          <svg className="hero-band__pattern" focusable="false">
             <rect width="100%" height="100%" fill="url(#hero-dither)" />
           </svg>
         </div>
       </Cell>
 
-      <Cell col={1} end={13} l r t flush className="pt-10 md:pt-16">
-        <HeroMask band={bandRef} />
+      <Rule />
+      <Cell col={1} end={13} l r flush className="pt-10 md:pt-16">
+        <HeroMask />
       </Cell>
 
-      <Cell col={1} end={7} md={{ col: 1, end: 5 }} sm={{ col: 1, end: 5 }} l t b className="py-8">
+      <Rule />
+      <Cell col={1} end={7} md={{ col: 1, end: 5 }} sm={{ col: 1, end: 5 }} l className="py-8">
         <p className="measure text-ink-muted">
           <span className="text-ink">{site.role}.</span> Whole products, from the interface to the
           database, shipped from {site.location}.
@@ -92,8 +95,6 @@ export function Hero({ works }: { works: HeroWork[] }) {
         sm={{ col: 1, end: 5 }}
         l
         r
-        t
-        b
         className="py-8 label"
       >
         <ol className="space-y-3">
@@ -111,6 +112,7 @@ export function Hero({ works }: { works: HeroWork[] }) {
           ))}
         </ol>
       </Cell>
+      <Rule />
     </Plate>
   )
 }

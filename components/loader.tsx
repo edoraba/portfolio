@@ -9,7 +9,6 @@ import { useMounted } from '@/lib/use-mounted'
 import { Monogram } from './console/monogram'
 
 const HOP = 'cubic-bezier(0.56, 0, 0.35, 0.98)'
-const KEY = 'calibrated'
 
 /**
  * The calibration entrance. Renders nothing on the server and nothing at all unless the field
@@ -25,17 +24,12 @@ export function Loader() {
   const [cell, setCell] = useState<8 | 4 | 2>(8)
   const ref = useRef<HTMLDivElement>(null)
 
-  // Decided once, on the client: the sessionStorage flag we set on exit must not hide the wipe.
+  // Every visit, not once per session: without it the field arrives after the first paint and
+  // the hero visibly jumps when the shader takes over from the printed dither.
   const show = useMemo(() => {
     if (!mounted) return false
-    let calibrated = false
-    try {
-      calibrated = sessionStorage.getItem(KEY) === '1'
-    } catch {
-      calibrated = false
-    }
     const reduced = useMotion.getState().reduced
-    return shouldShowLoader({ canRender: canRenderField(), reduced, calibrated })
+    return shouldShowLoader({ canRender: canRenderField(), reduced, calibrated: false })
   }, [mounted])
 
   useEffect(() => {
@@ -75,11 +69,6 @@ export function Loader() {
     let cancelled = false
     r.done.then(async () => {
       if (cancelled) return
-      try {
-        sessionStorage.setItem(KEY, '1')
-      } catch {
-        // session only
-      }
       setMarked([...r.marked(), 'ready'])
       setPhase('out')
       const el = ref.current

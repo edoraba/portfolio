@@ -1,6 +1,7 @@
 import { ConsolePlate } from './console/console-plate'
 import { Cell } from './sheet/cell'
 import { PlateNumber } from './sheet/plate-number'
+import { Rule } from './sheet/rule'
 import { Sheet } from './sheet/sheet'
 
 /**
@@ -21,22 +22,23 @@ export function PageHeader({
   return (
     <Sheet as="header" className="page-header">
       <ConsolePlate label={title} />
+      <Rule />
       <PlateNumber n={n ?? 'P/'} label={eyebrow} col={1} end={3} md={{ col: 1, end: 3 }} />
-      <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r t />
+      <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r />
+      <Rule />
       <Cell
         col={1}
         end={9}
         md={{ col: 1, end: 7 }}
         sm={{ col: 1, end: 5 }}
         l
-        t
-        b
         className="pt-8 pb-10 md:pt-12 md:pb-14"
       >
         <h1 className="display">{title}</h1>
         {lede ? <p className="mt-8 measure text-ink-muted">{lede}</p> : null}
       </Cell>
-      <Cell col={9} end={13} l r t b className="hidden lg:block" />
+      <Cell col={9} end={13} l r className="hidden lg:block" />
+      <Rule />
     </Sheet>
   )
 }

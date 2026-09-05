@@ -3,7 +3,6 @@ import { DEFAULT_BAND, OFF, PRIORITY, resolveClaims } from '@/lib/field/claims'
 import { useField } from '@/lib/field/store'
 import { smoothPointer } from '@/lib/field/pointer'
 import { pickCell } from '@/lib/field/quality'
-import { sameRect, snapRect } from '@/lib/field/snap'
 import { heroIntensity } from '@/lib/field/scroll'
 
 describe('smoothPointer', () => {
@@ -131,24 +130,5 @@ describe('the field store never strands a band', () => {
     const before = useField.getState().claims
     s().claim('footer', { ...claim })
     expect(useField.getState().claims).toBe(before)
-  })
-})
-
-describe('snapRect', () => {
-  const r = (x: number, y: number, width: number, height: number) =>
-    ({ x, y, width, height }) as DOMRectReadOnly
-
-  it('puts every edge on a cell boundary', () => {
-    expect(snapRect(r(81.6, 120.4, 1276.8, 197.3), 2)).toEqual({ x: 82, y: 120, w: 1276, h: 198 })
-    expect(snapRect(r(81.6, 120.4, 1276.8, 197.3), 4)).toEqual({ x: 80, y: 120, w: 1276, h: 196 })
-  })
-  it('never returns a negative size', () => {
-    expect(snapRect(r(0, 0, -3, -1), 2)).toMatchObject({ w: 0, h: 0 })
-  })
-  it('compares snapped rectangles so unchanged frames write nothing', () => {
-    const a = snapRect(r(10, 10, 100, 20), 2)
-    expect(sameRect(a, snapRect(r(10.4, 10.4, 100.4, 20.4), 2))).toBe(true)
-    expect(sameRect(a, snapRect(r(14, 10, 100, 20), 2))).toBe(false)
-    expect(sameRect(null, a)).toBe(false)
   })
 })

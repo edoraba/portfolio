@@ -6,6 +6,7 @@ import { writingBySlug, writingsIncludingDrafts } from '@/lib/content'
 import { PageTransition } from '@/components/page-transition'
 import { Cell } from '@/components/sheet/cell'
 import { PlateNumber } from '@/components/sheet/plate-number'
+import { Rule } from '@/components/sheet/rule'
 import { Sheet } from '@/components/sheet/sheet'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -29,13 +30,15 @@ export default async function Essay({ params }: Props) {
       <article className="pb-16">
         <ConsolePlate label={`Writing ${w.title}`} />
         <Sheet as="header">
+          <Rule />
           <PlateNumber n="Essay" label={w.date} col={1} end={3} md={{ col: 1, end: 3 }} />
-          <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r t />
-          <Cell col={1} end={9} md={{ col: 1, end: 7 }} l t b className="pt-8 pb-10 md:pt-12">
+          <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r />
+          <Rule />
+          <Cell col={1} end={9} md={{ col: 1, end: 7 }} l className="pt-8 pb-10 md:pt-12">
             <h1 className="display">{w.title}</h1>
             <p className="mt-8 measure text-ink-muted">{w.description}</p>
           </Cell>
-          <Cell col={9} end={13} l r t b className="hidden lg:block" />
+          <Cell col={9} end={13} l r className="hidden lg:block" />
         </Sheet>
         <Sheet className="mt-8">
           <Cell col={1} end={9} md={{ col: 1, end: 7 }} l r className="prose-cell">

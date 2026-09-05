@@ -24,7 +24,6 @@ export default function LabPage() {
               md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
               sm={{ col: 1, end: 5 }}
               l
-              r={i % 3 === 2}
               t
               b
               flush

@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react'
 import Tempus from 'tempus'
 import { heroIntensity } from '@/lib/field/scroll'
 import { PRIORITY } from '@/lib/field/claims'
-import { sameRect, snapRect, type SnappedRect } from '@/lib/field/snap'
 import { useField } from '@/lib/field/store'
 import { prefersReducedMotion } from '@/lib/field/support'
 import { clamp01, lerp } from '@/lib/motion/scrub'
@@ -18,19 +17,21 @@ const COMPRESS_OVER = 0.6
 /**
  * The home headline. Screen readers get a plain h1. Sighted visitors get the words as
  * SVG text drawn twice: once in the page (transparent, so the canvas shows through) and
- * once inside an SVG mask that clips the fixed field canvas to the letterforms. The mask also
- * carries the hero band rectangle, so one canvas lights two windows: the words and the strip.
- * When the field is unavailable the visible text is filled with a static 2px dither instead.
+ * once inside an SVG mask that clips the fixed field canvas to the letterforms. When the field
+ * is unavailable the visible text is filled with a static 2px dither instead.
+ *
+ * The letters are the only window onto the field. The strip above them carries the same dither
+ * as a printed pattern: the canvas is fixed to the viewport, so anything else that shows it
+ * would have the texture swimming under it while the page scrolls.
  */
-export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> }) {
+export function HeroMask() {
   const active = useField((s) => s.enabled && s.mounted)
   const wrapRef = useRef<HTMLDivElement>(null)
   const visibleRef = useRef<SVGSVGElement>(null)
   const maskGroupRef = useRef<SVGGElement>(null)
-  const bandRectRef = useRef<SVGRectElement>(null)
 
-  // Everything the hero owns runs in one tick: the mask follows the visible headline and the
-  // band cell, scroll fades the field and narrows the words, the pointer widens the nearest one.
+  // Everything the hero owns runs in one tick: the mask follows the visible headline, scroll
+  // fades the field and narrows the words, the pointer widens the nearest one.
   useEffect(() => {
     const wrap = wrapRef.current
     const visible = visibleRef.current
@@ -39,7 +40,6 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
     const store = useField
     const reduced = prefersReducedMotion()
     let lastTransform = ''
-    let lastBand: SnappedRect | null = null
 
     // Visible words and their twins inside the mask, paired by index so both carry the same width.
     const words = WORDS.map((_, i) => ({
@@ -63,22 +63,6 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       if (transform !== lastTransform) {
         group.setAttribute('transform', transform)
         lastTransform = transform
-      }
-
-      // The band is a second window in the same mask: a rectangle over the empty band cell.
-      // Snapped to whole dither cells and written only when it actually moves. Writing the
-      // attributes every frame re-rasterises the mask and makes the strip shimmer and drag.
-      const bandEl = band?.current
-      const bandRect = bandRectRef.current
-      if (bandEl && bandRect) {
-        const snapped = snapRect(bandEl.getBoundingClientRect(), store.getState().cell)
-        if (!sameRect(lastBand, snapped)) {
-          lastBand = snapped
-          bandRect.setAttribute('x', String(snapped.x))
-          bandRect.setAttribute('y', String(snapped.y))
-          bandRect.setAttribute('width', String(snapped.w))
-          bandRect.setAttribute('height', String(snapped.h))
-        }
       }
 
       // The hero holds the field while it is on screen and drops it on the way out. A higher
@@ -141,7 +125,7 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       window.removeEventListener('calibrated', onCalibrated)
       store.getState().release('hero')
     }
-  }, [band])
+  }, [])
 
   const fill = active ? 'none' : 'url(#hero-dither)'
 
@@ -162,7 +146,6 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
           <g ref={maskGroupRef}>
             <Lines fill="#fff" mirror />
           </g>
-          <rect ref={bandRectRef} x="0" y="0" width="0" height="0" fill="#fff" />
         </mask>
       </svg>
     </div>

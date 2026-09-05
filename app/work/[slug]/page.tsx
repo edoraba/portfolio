@@ -8,6 +8,7 @@ import { Mdx } from '@/components/mdx-components'
 import { PageTransition } from '@/components/page-transition'
 import { Cell } from '@/components/sheet/cell'
 import { PlateNumber } from '@/components/sheet/plate-number'
+import { Rule } from '@/components/sheet/rule'
 import { Sheet } from '@/components/sheet/sheet'
 import { Toc } from '@/components/toc'
 import { workBySlug, works } from '@/lib/content'
@@ -43,8 +44,9 @@ export default async function WorkDetail({ params }: Props) {
       <article className="pb-16">
         <ConsolePlate label={`P/${String(w.order).padStart(2, '0')} ${w.client}`} />
         <Sheet as="header">
+          <Rule />
           <PlateNumber n={w.order} col={1} end={3} md={{ col: 1, end: 3 }} />
-          <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r t>
+          <Cell col={3} end={13} md={{ col: 3, end: 7 }} sm={{ col: 2, end: 5 }} l r>
             <Link
               href="/work"
               transitionTypes={['nav-back']}
@@ -53,16 +55,18 @@ export default async function WorkDetail({ params }: Props) {
               Back to work
             </Link>
           </Cell>
-          <Cell col={1} end={10} md={{ col: 1, end: 7 }} l t b className="pt-8 pb-10 md:pt-12">
+          <Rule />
+          <Cell col={1} end={10} md={{ col: 1, end: 7 }} l className="pt-8 pb-10 md:pt-12">
             <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
               <h1 className="display">{w.title}</h1>
             </ViewTransition>
             <p className="mt-8 measure text-ink-muted">{w.summary}</p>
           </Cell>
-          <Cell col={10} end={13} l r t b className="hidden lg:block" />
+          <Cell col={10} end={13} l r className="hidden lg:block" />
         </Sheet>
 
         <Sheet as="dl" className="case-meta">
+          <Rule />
           {meta.map(([k, v], i) => {
             const c = (i % 3) * 4 + 1
             return (
@@ -73,8 +77,6 @@ export default async function WorkDetail({ params }: Props) {
                 md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
                 sm={{ col: 1, end: 5 }}
                 l
-                r={i % 3 === 2}
-                b
               >
                 <dt className="label text-ink-muted">
                   <Decode>{k}</Decode>
@@ -91,6 +93,7 @@ export default async function WorkDetail({ params }: Props) {
               </Cell>
             )
           })}
+          <Rule />
         </Sheet>
 
         <Sheet className="mt-8">
