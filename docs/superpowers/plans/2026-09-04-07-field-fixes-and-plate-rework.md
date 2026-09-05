@@ -4,7 +4,13 @@
 
 **Goal:** Fix the defects Edoardo found after Plan 05, rebuild the two plates he rejected (P/02 about, P/03 work) on a better reference, and put the GSAP work on a correct footing.
 
-**Written 2026-09-04 by the session that built Plan 05, from Edoardo's review. Nothing here was implemented; every task is open.** Root causes below were traced in the code, not guessed; file and line numbers are from commit `9b28e99`. Appendix A says how to see each defect, Appendix B holds first hand notes on the reference site, Appendix C maps the files.
+**Status: executed 2026-09-05.** All nine tasks are done and on `main` with CI green. What was
+found while doing it, beyond the brief: the stylesheet had accumulated duplicate plate blocks, so
+older rules were overriding newer ones (that is why the tunnel title ignored its own CSS); and
+`refreshPriority` counts the opposite way round to what Task 5 first claimed, which had silently
+stopped the tunnel from pinning at all. Both are fixed and written into `docs/motion.md`.
+
+**Written 2026-09-04 by the session that built Plan 05, from Edoardo's review.** Root causes below were traced in the code, not guessed; file and line numbers are from commit `9b28e99`. Appendix A says how to see each defect, Appendix B holds first hand notes on the reference site, Appendix C maps the files.
 
 **Edoardo's words, so the intent does not get lost in translation:**
 
