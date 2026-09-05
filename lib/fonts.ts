@@ -1,18 +1,16 @@
 import localFont from 'next/font/local'
-import { Geist_Mono } from 'next/font/google'
+import { Funnel_Display, Geist_Mono } from 'next/font/google'
 
-// The two sans families are self-hosted from assets/fonts (see the README there for how each
-// one gets on disk and why they are handled differently). Both are variable: Martian carries
-// the width axis the headline animates, Switzer the weight range the text needs.
-export const martian = localFont({
-  src: './../assets/fonts/MartianGrotesk[wdth,wght].woff2',
-  weight: '100 1000',
-  style: 'normal',
+// Funnel Display carries the big type. It is variable on one axis, weight 300 to 800, which is
+// the axis the headline animates; it has no italic, so emphasis is weight.
+export const funnel = Funnel_Display({
+  subsets: ['latin', 'latin-ext'],
   display: 'swap',
-  variable: '--font-martian',
-  fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+  variable: '--font-funnel',
 })
 
+// Switzer reads the text. It is self-hosted from assets/fonts; see the README there for why its
+// files are fetched at build time instead of living in the repo.
 export const switzer = localFont({
   src: [
     { path: './../assets/fonts/Switzer-Variable.woff2', weight: '100 900', style: 'normal' },
@@ -29,4 +27,4 @@ export const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 })
 
-export const fontClassNames = `${martian.variable} ${switzer.variable} ${geistMono.variable}`
+export const fontClassNames = `${funnel.variable} ${switzer.variable} ${geistMono.variable}`

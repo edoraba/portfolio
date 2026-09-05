@@ -64,21 +64,38 @@ export function AboutBox() {
 
   return (
     <Plate id="about" sectionRef={sectionRef} className="about-plate" meta={<span>Who</span>}>
+      {/* Below lg the drawer is no longer beside it, so the sentence takes the whole band and
+          closes it. */}
       <Cell
         col={1}
         end={8}
         row={2}
-        md={{ col: 1, end: 6 }}
+        md={{ col: 1, end: 7 }}
         sm={{ col: 1, end: 5 }}
         l
-        className="py-10"
+        r
+        className="py-10 lg:after:hidden"
       >
         <LineReveal as="h2" className="about-plate__sentence">
           {ABOUT_SENTENCE}
         </LineReveal>
       </Cell>
 
-      <Cell col={8} end={13} row="2 / 4" md={{ col: 6, end: 7 }} sm={{ col: 1, end: 5 }} l r flush>
+      {/* Only wide enough for a column of its own on lg, where the drawer stands beside the
+          sentence and the facts. Below that it takes a band after them: half a sheet is less room
+          than the 96px mark inside it needs, and spanning the rows put the box over the text.
+          The row goes through classes because an inline grid-row could not answer to a
+          breakpoint. */}
+      <Cell
+        col={8}
+        end={13}
+        md={{ col: 1, end: 7 }}
+        sm={{ col: 1, end: 5 }}
+        l
+        r
+        flush
+        className="[grid-row:4] lg:[grid-row:2/4]"
+      >
         <div className="about-drawer">
           <div ref={drawerRef} className="box3d">
             <div className="box3d__side box3d__side--top" aria-hidden="true" />

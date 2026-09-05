@@ -9,15 +9,22 @@ import { clamp01, lerp } from '@/lib/motion/scrub'
 
 const WORDS = ['Design,', 'then', 'build.'] as const
 const HEADLINE = 'Design, then build.'
-const WIDTH_MIN = 78
-const WIDTH_MAX = 100
+/** Funnel Display varies on weight alone, so weight is what the headline plays. */
+const WEIGHT_MIN = 350
+const WEIGHT_MAX = 700
 /** Where the second line sits. Tight, but clear of the comma hanging off the first one. */
-const LINE_2 = '1.02em'
-/** The last word is the emphasis. Martian has no italic, so it carries extra width instead. */
+const LINE_2 = '0.88em'
+/** The last word is the emphasis. The family has no italic, so it carries extra weight. */
 const EMPH = 2
-const EMPH_WIDTH = 14
-/** The headline compresses to the narrow width over the first 60 percent of a viewport. */
+const EMPH_WEIGHT = 100
+/** The headline thins out over the first 60 percent of a viewport. */
 const COMPRESS_OVER = 0.6
+/**
+ * How far towards the thin end the pointer may take the words it is not near. The width axis it
+ * replaced spanned 78 to 100, a change small enough to spend whole; weight spans 350 to 700, and
+ * spending all of that collapses half the headline the moment the pointer enters the page.
+ */
+const POINTER_REACH = 0.55
 
 /**
  * The home headline. Screen readers get a plain h1. Sighted visitors get the words as
@@ -52,7 +59,7 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
     const words = WORDS.map((_, i) => ({
       visible: wrap.querySelector<SVGTSpanElement>(`[data-word="${i}"]`),
       mirror: wrap.querySelector<SVGTSpanElement>(`[data-mirror="${i}"]`),
-      bonus: i === EMPH ? EMPH_WIDTH : 0,
+      bonus: i === EMPH ? EMPH_WEIGHT : 0,
       last: '',
     }))
 
@@ -107,22 +114,23 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       }
 
       if (reduced) return
-      // Width has two inputs: scroll compresses every word, the pointer widens the nearest.
+      // Weight has two inputs: scroll thins every word, the pointer thickens the nearest.
       const scrolled = clamp01(window.scrollY / (window.innerHeight * COMPRESS_OVER))
-      const base = lerp(WIDTH_MAX, WIDTH_MIN, scrolled)
+      const base = lerp(WEIGHT_MAX, WEIGHT_MIN, scrolled)
       const reach = window.innerWidth * 0.35
       for (const word of words) {
         if (!word.visible) continue
         // The emphasis keeps its extra width through the whole range, so it reads as the same
         // word getting louder rather than a second style dropped into the line.
-        // At rest every word sits at the scroll width; a pointer narrows the ones far from it.
+        // At rest every word sits at the scroll weight; a pointer thins the ones far from it.
         let w = base
         if (pointer.active) {
           const r = word.visible.getBoundingClientRect()
           const near = Math.max(0, 1 - Math.abs(pointer.x - (r.left + r.width / 2)) / reach)
-          w = WIDTH_MIN + (base - WIDTH_MIN) * near
+          w = base - (base - WEIGHT_MIN) * (1 - near) * POINTER_REACH
         }
-        const value = `'wdth' ${(w + word.bonus).toFixed(1)}`
+        // 800 is the top of the axis: past it the browser clamps and the word stops reacting.
+        const value = `'wght' ${Math.min(800, w + word.bonus).toFixed(0)}`
         if (value !== word.last) {
           word.last = value
           word.visible.style.fontVariationSettings = value
@@ -135,14 +143,14 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
     window.addEventListener('pointermove', onMove, { passive: true })
     document.documentElement.addEventListener('pointerleave', onLeave)
 
-    // After the calibration loader: the words open from the narrow width to full.
+    // After the calibration loader: the words thicken into place.
     const onCalibrated = () => {
       if (reduced) return
       words.forEach((word, i) => {
         word.visible?.animate(
           [
-            { fontVariationSettings: `'wdth' ${WIDTH_MIN + word.bonus}` },
-            { fontVariationSettings: `'wdth' ${WIDTH_MAX + word.bonus}` },
+            { fontVariationSettings: `'wght' ${WEIGHT_MIN + word.bonus}` },
+            { fontVariationSettings: `'wght' ${Math.min(800, WEIGHT_MAX + word.bonus)}` },
           ],
           { duration: 800, delay: i * 80, easing: 'cubic-bezier(0.625, 0.05, 0, 1)' },
         )

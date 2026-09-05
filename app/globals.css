@@ -15,14 +15,14 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
 
-  --font-display: var(--font-martian), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-funnel), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  --text-display-xl: clamp(2.5rem, 12.6vw, 14rem);
+  --text-display-xl: clamp(2.5rem, 15vw, 16rem);
   --text-display-xl--line-height: 0.86;
   --text-display-xl--letter-spacing: -0.045em;
-  --text-display: clamp(2.25rem, 5.7vw, 5.5rem);
+  --text-display: clamp(2.5rem, 6.5vw, 6rem);
   --text-display--line-height: 0.92;
   --text-display--letter-spacing: -0.04em;
   --text-headline: clamp(1.5rem, 2.6vw, 2.25rem);
@@ -123,7 +123,6 @@
   font-size: var(--text-display-xl);
   line-height: var(--text-display-xl--line-height);
   letter-spacing: var(--text-display-xl--letter-spacing);
-  font-variation-settings: 'wdth' 100;
   font-weight: 500;
 }
 @utility display {
@@ -131,7 +130,6 @@
   font-size: var(--text-display);
   line-height: var(--text-display--line-height);
   letter-spacing: var(--text-display--letter-spacing);
-  font-variation-settings: 'wdth' 100;
   font-weight: 500;
 }
 @utility headline {
@@ -139,7 +137,6 @@
   font-size: var(--text-headline);
   line-height: var(--text-headline--line-height);
   letter-spacing: var(--text-headline--letter-spacing);
-  font-variation-settings: 'wdth' 100;
   font-weight: 500;
 }
 @utility label {
@@ -764,7 +761,6 @@ html[data-motion='reduced'] .tunnel__rays {
   writing-mode: vertical-rl;
   color: var(--ink);
   font-family: var(--font-display);
-  font-variation-settings: 'wdth' 100;
 }
 @media (max-width: 1023.98px) {
   .porthole__word {
@@ -955,7 +951,6 @@ html[data-motion='reduced'] .porthole__letters {
   letter-spacing: -0.03em;
   font-family: var(--font-display);
   font-weight: 500;
-  font-variation-settings: 'wdth' 100;
   max-width: 22ch;
 }
 .about-facts {
@@ -982,12 +977,17 @@ html[data-motion='reduced'] .porthole__letters {
   transform: rotateX(var(--box-tilt));
   transform-origin: 50% 100%;
 }
+.box3d__face > .monogram {
+  max-width: 100%;
+  height: auto;
+}
 .box3d__face {
   position: relative;
   z-index: 1;
   display: grid;
   place-items: center;
-  padding: 24px;
+  min-width: 0;
+  padding: clamp(12px, 4vw, 24px);
   border: 1px solid var(--hairline);
   background-color: var(--surface);
 }
@@ -1156,7 +1156,7 @@ html[data-motion='reduced'] .flip-text__strips {
 .hero-svg {
   display: block;
   width: 100%;
-  height: calc(var(--text-display-xl) * 2.15);
+  height: calc(var(--text-display-xl) * 2.05);
   overflow: visible;
 }
 .hero-mask-defs {
@@ -1170,7 +1170,6 @@ html[data-motion='reduced'] .flip-text__strips {
   font-size: var(--text-display-xl);
   font-weight: 500;
   letter-spacing: var(--text-display-xl--letter-spacing);
-  font-variation-settings: 'wdth' 100;
 }
 .hero-text tspan {
   transition: font-variation-settings 500ms var(--ease-out-expo);

@@ -1,13 +1,13 @@
 # Fonts
 
-Two families, two licences, two ways of getting here. `pnpm fonts` (also run by `prebuild`)
-puts all four files in place.
+Two families, two ways of getting here.
 
-## Martian Grotesk, display
+## Funnel Display, display
 
-[evilmartians/grotesk](https://github.com/evilmartians/grotesk), SIL Open Font License 1.1,
-no reserved font name. The variable file carries the weight and width axes the headline
-animates. OFL permits redistribution, so the file and `MartianGrotesk-OFL.txt` are committed.
+[Google Fonts](https://fonts.google.com/specimen/Funnel+Display), SIL Open Font License 1.1,
+loaded through `next/font/google`, which downloads it at build time and serves it from this
+site's own origin. Variable on one axis, weight 300 to 800, which is the axis the headline
+animates. It has no italic, so emphasis is weight.
 
 ## Switzer, text
 
@@ -21,5 +21,6 @@ shape how it is handled here:
   is public, so `Switzer-*.woff2` is gitignored and fetched at build time instead. The deployed
   site self-hosts the files, which is what the licence permits.
 
-Anyone building this repo gets them from Fontshare through `scripts/fonts.mjs`, which is the
-same thing as downloading them yourself: each person is independently bound by the licence.
+`pnpm fonts`, also run by `prebuild`, puts them in place. Anyone building this repo gets them
+from Fontshare the same way they would by downloading them: each person is independently bound
+by the licence.

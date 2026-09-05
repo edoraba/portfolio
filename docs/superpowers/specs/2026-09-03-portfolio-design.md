@@ -75,7 +75,7 @@ Rules: the accent is used as ink (links, index numbers, the lit part of the fiel
 
 ### 4.2 Typography
 
-- Display: **Martian Grotesk** (OFL, variable: wght 100 to 1000, wdth 75 to 200), self-hosted woff2 via `next/font/local`. Weight 500, tracking -0.045em, line-height 0.86 to 0.95, `text-wrap: balance`. It has no italic: emphasis is width and weight of the same family, which is the axis language the headline already animates.
+- Display: **Funnel Display** (OFL, variable on one axis: wght 300 to 800) through `next/font/google`, which self-hosts it at build time. Weight 500, tracking -0.045em, line-height 0.86 to 0.95, `text-wrap: balance`. It has no italic and no width axis, so weight is both the animated axis of the headline and the way emphasis is set.
 - Text: **Switzer** (ITF Free Font License, variable: wght 100 to 900, with a true italic), self-hosted unmodified. Weight 400, line-height 1.5, measure 58 to 65ch, `text-wrap: pretty`. Its licence forbids subsetting and publishing the files in a public repository, so they are fetched at build time by `scripts/fonts.mjs`; see `assets/fonts/README.md`.
 - No third sans, no serif. Geist Mono stays the console face.
 - Mono: **Geist Mono** (OFL), self-hosted, for nav, index numbers, dates, stack tags, captions, labels. 11 to 13px, uppercase with +0.06em tracking for labels, tabular numerals always.
