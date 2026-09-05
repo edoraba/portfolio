@@ -942,12 +942,16 @@ html[data-motion='reduced'] .letters {
    closes. Without a live field it carries the same static dither as the headline. */
 .hero-band {
   --band-scale: 1;
-  height: calc(14vh * var(--band-scale));
+  height: 14vh;
   overflow: hidden;
+  /* Scale, never height: a scrubbed height runs layout on every frame, and the mask reads the
+     rect in the same frame, which is what made the strip stutter at the fine dither. */
+  transform: scaleY(var(--band-scale));
+  transform-origin: top;
 }
 @media (min-width: 768px) {
   .hero-band {
-    height: calc(22vh * var(--band-scale));
+    height: 22vh;
   }
 }
 .hero-band__fallback {

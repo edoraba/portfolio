@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import Tempus from 'tempus'
 import { heroIntensity } from '@/lib/field/scroll'
 import { PRIORITY } from '@/lib/field/claims'
+import { sameRect, snapRect, type SnappedRect } from '@/lib/field/snap'
 import { useField } from '@/lib/field/store'
 import { prefersReducedMotion } from '@/lib/field/support'
 import { clamp01, lerp } from '@/lib/motion/scrub'
@@ -38,6 +39,7 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
     const store = useField
     const reduced = prefersReducedMotion()
     let lastTransform = ''
+    let lastBand: SnappedRect | null = null
 
     // Visible words and their twins inside the mask, paired by index so both carry the same width.
     const words = WORDS.map((_, i) => ({
@@ -64,14 +66,19 @@ export function HeroMask({ band }: { band?: React.RefObject<HTMLElement | null> 
       }
 
       // The band is a second window in the same mask: a rectangle over the empty band cell.
+      // Snapped to whole dither cells and written only when it actually moves. Writing the
+      // attributes every frame re-rasterises the mask and makes the strip shimmer and drag.
       const bandEl = band?.current
       const bandRect = bandRectRef.current
       if (bandEl && bandRect) {
-        const b = bandEl.getBoundingClientRect()
-        bandRect.setAttribute('x', b.left.toFixed(1))
-        bandRect.setAttribute('y', b.top.toFixed(1))
-        bandRect.setAttribute('width', Math.max(0, b.width).toFixed(1))
-        bandRect.setAttribute('height', Math.max(0, b.height).toFixed(1))
+        const snapped = snapRect(bandEl.getBoundingClientRect(), store.getState().cell)
+        if (!sameRect(lastBand, snapped)) {
+          lastBand = snapped
+          bandRect.setAttribute('x', String(snapped.x))
+          bandRect.setAttribute('y', String(snapped.y))
+          bandRect.setAttribute('width', String(snapped.w))
+          bandRect.setAttribute('height', String(snapped.h))
+        }
       }
 
       const s = store.getState()

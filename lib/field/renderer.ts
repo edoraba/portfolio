@@ -65,13 +65,21 @@ export class FieldRenderer {
     this.field.setUniform('uAccent', read('--accent', '#7d93ff'))
   }
 
-  /** Canvas pixels are cells: the dither stays crisp because CSS scales the canvas with pixelated rendering. */
+  /**
+   * Canvas pixels are cells: the dither stays crisp because CSS scales the canvas with pixelated
+   * rendering. The CSS size is the buffer times the cell, never the raw viewport: on a viewport
+   * that is not a multiple of the cell the upscale would be fractional and every cell would
+   * resample differently, which reads as a shimmer whenever anything moves. The few extra pixels
+   * hang off the right and bottom edges of a fixed, pointer-transparent canvas.
+   */
   resize(cell: Cell) {
     this.cell = cell
     this.width = Math.max(1, Math.ceil(window.innerWidth / cell))
     this.height = Math.max(1, Math.ceil(window.innerHeight / cell))
     this.canvas.width = this.width
     this.canvas.height = this.height
+    this.canvas.style.width = `${this.width * cell}px`
+    this.canvas.style.height = `${this.height * cell}px`
     this.field.setUniform('uCells', [this.width, this.height])
     this.field.setUniform('uAspect', this.width / this.height)
   }
