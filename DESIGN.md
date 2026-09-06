@@ -157,7 +157,7 @@ motion:
   rules-draw: 800ms editorial, stagger 60ms, on enter, once
   slice-flip: 4 strips, 500ms hop, 30ms stagger, alternating directions
   plates: rules draw on enter, pins scrub only transforms and clip-path, never filters (docs/motion.md)
-  loader: calibration entrance, a grid of ink tiles with four holes in it and a marker that hops from hole to hole as fonts, the shader, the content and the above-the-fold images report ready, counting 25, 50, 75 and landing on the EB mark before every tile drops out of its own top edge. Real readiness only, about 2s end to end, on every visit (it is what hides the field arriving), never under reduced motion, no percentage that is not a real one
+  loader: calibration entrance, a grid of ink tiles with four holes in it and the EB mark hopping from hole to hole as fonts, the shader, the content and the above-the-fold images report ready. The page is covered from the first paint and never half seen: the screen lifts as one plate at the end and that is the only reveal. Real readiness only, about 2s end to end, on every visit (it is what hides the field arriving), never under reduced motion, no counter
 
 field:
   renderer: hand-written WebGL2, one fragment shader, full-screen triangle, parallel shader compile

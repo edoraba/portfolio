@@ -1333,14 +1333,39 @@ html[data-motion='reduced'] .flip-text__strips {
 }
 
 /* Calibration loader */
-/* The entrance. A grid of tiles in the theme's ink with four holes in it, a marker that hops from
-   hole to hole as real resources report ready, and then every tile dropping out of its own top
-   edge in no order at all. Nothing here fades: the page appears through the holes. */
+/* The entrance. A grid of tiles in the theme's ink with four holes in it, and the mark hopping
+   from hole to hole as real resources report ready. It covers the page completely for as long as
+   it is there: the ground stays under the tiles the whole time, so nothing of the page is seen
+   until the screen lifts, and the lift is the reveal. */
+/* Set before the first paint by theme.js and taken down by the loader: the ground of the entrance,
+   under it and the same colour, so there is no frame in which the page has been seen. */
+html[data-entrance]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 79;
+  background-color: var(--canvas);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 260ms var(--ease-out-expo);
+}
+/* Taken down rather than switched off: on a machine that cannot run the field there is no
+   entrance to hide behind, and a cut from the ground to the page is the thing this whole
+   sequence exists to avoid. */
+html[data-entrance='0']::after {
+  opacity: 0;
+}
 .loader {
   position: fixed;
   inset: 0;
   z-index: 80;
   overflow: hidden;
+  clip-path: inset(0% 0% 0% 0%);
+}
+.loader__plane {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
 }
 .loader__bg {
   position: absolute;
@@ -1369,7 +1394,7 @@ html[data-motion='reduced'] .flip-text__strips {
   background-color: var(--canvas);
   outline-color: var(--canvas);
 }
-/* The marker is a hole the size of one tile, carrying the count and then the mark. */
+/* The marker is a hole the size of one tile, carrying the mark from the first frame. */
 .loader__marker {
   position: absolute;
   top: 0;
@@ -1381,27 +1406,9 @@ html[data-motion='reduced'] .flip-text__strips {
   color: var(--ink);
   will-change: transform;
 }
-.loader__count,
 .loader__mono {
-  grid-area: 1 / 1;
-  transition: opacity 200ms linear;
-}
-.loader__count {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-}
-.loader__mono {
-  width: 52%;
-  height: 52%;
-  opacity: 0;
-}
-.loader__marker[data-at='mark'] .loader__count {
-  opacity: 0;
-}
-.loader__marker[data-at='mark'] .loader__mono {
-  opacity: 1;
+  width: 70%;
+  height: 70%;
 }
 
 /* The field: one fixed canvas behind everything, pixels are dither cells. */

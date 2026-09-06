@@ -25,6 +25,16 @@
     reduced = false
   }
   h.setAttribute('data-motion', reduced ? 'reduced' : 'full')
+  // The entrance covers the page from the first paint, not from hydration: the loader is a client
+  // component and the page would otherwise be seen for a frame before it arrives. The loader takes
+  // the cover down as soon as it is drawing, or straight away if it is not going to run. The
+  // timeout is the safety net: a bundle that never boots must not leave a blank screen.
+  if (!reduced) {
+    h.setAttribute('data-entrance', '1')
+    setTimeout(function () {
+      h.removeAttribute('data-entrance')
+    }, 4000)
+  }
   h.classList.add('js', 'no-transitions')
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {

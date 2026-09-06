@@ -19,12 +19,12 @@ const PATIENCE = 450
  * The calibration entrance. Renders nothing on the server and nothing at all unless the field can
  * run and motion is full.
  *
- * The screen is a grid of tiles in the theme's ink with a few holes in it, and a marker that hops
- * from hole to hole as real resources become ready: fonts, then the shader, then the content, then
- * the images above the fold. It counts 25, 50, 75 and lands on the mark. Then the grid drops away
- * tile by tile in a random order and the page is underneath, with the field already warm, which is
- * the whole point of holding it: without this the hero visibly changes when the shader takes over
- * from the printed dither.
+ * The screen is a grid of tiles in the theme's ink with a few holes in it, and the mark itself
+ * hopping from hole to hole as real resources become ready: fonts, then the shader, then the
+ * content, then the images above the fold. Nothing of the page shows while it does. When the mark
+ * is home the whole screen lifts in one movement, and that is the only time the page is revealed,
+ * with the field already warm, which is the whole point of holding it: without this the hero
+ * visibly changes when the shader takes over from the printed dither.
  */
 export function Loader() {
   const mounted = useMounted()
@@ -32,7 +32,7 @@ export function Loader() {
   const rootRef = useRef<HTMLDivElement>(null)
   const gridRef = useRef<HTMLDivElement>(null)
   const markerRef = useRef<HTMLDivElement>(null)
-  const countRef = useRef<HTMLParagraphElement>(null)
+  const planeRef = useRef<HTMLDivElement>(null)
 
   // Every visit, not once per session: without it the field arrives after the first paint.
   const show = useMemo(() => {
@@ -41,13 +41,24 @@ export function Loader() {
     return shouldShowLoader({ canRender: canRenderField(), reduced, calibrated: false })
   }, [mounted])
 
+  // The cover theme.js put up before the first paint comes down as soon as this is drawing over
+  // it, or straight away when there is nothing to draw.
+  useEffect(() => {
+    if (!mounted || show) return
+    const root = document.documentElement
+    if (!root.hasAttribute('data-entrance')) return
+    root.dataset.entrance = '0'
+    const timer = setTimeout(() => root.removeAttribute('data-entrance'), 320)
+    return () => clearTimeout(timer)
+  }, [mounted, show])
+
   useEffect(() => {
     if (!show) return
     const root = rootRef.current
     const grid = gridRef.current
     const marker = markerRef.current
-    const count = countRef.current
-    if (!root || !grid || !marker || !count) return
+    const plane = planeRef.current
+    if (!root || !grid || !marker || !plane) return
     setupGsap()
 
     const field = useField.getState()
@@ -68,6 +79,8 @@ export function Loader() {
       grid.appendChild(tile)
       tiles.push(tile)
     }
+    // Nothing sees this one: the grid is already over it.
+    document.documentElement.removeAttribute('data-entrance')
 
     const middle = Math.floor(plan.rows / 2)
     const stops = stopColumns(plan.columns, plan.wide).map((c) => tiles[middle * plan.columns + c])
@@ -112,15 +125,12 @@ export function Loader() {
         ease: 'power2.inOut',
       })
       if (at >= stops.length - 1) {
-        marker.dataset.at = 'mark'
         land()
-        // The holes the marker walked through fill back in behind it, one after another, so the
-        // grid is whole again by the time it drops.
+        // The holes it walked through fill back in behind it, one after another, so the grid is
+        // whole again by the time it lifts.
         stops.slice(0, -1).forEach((stop, i) => {
           timers.push(setTimeout(() => delete stop.dataset.stop, 220 + i * 110))
         })
-      } else {
-        count.textContent = String((at + 1) * 25)
       }
       const cell = cellForProgress((at + 1) / stops.length)
       if (useField.getState().cell !== cell) useField.getState().setCell(cell)
@@ -185,17 +195,17 @@ export function Loader() {
           if (!cancelled) setPhase('done')
         },
       })
-      // The grid does not lift or fade: every tile drops out of its own top edge, in no order, so
-      // the page appears through the holes before the screen is gone.
-      out.to(tiles, {
-        scaleY: 0,
-        transformOrigin: 'top',
-        duration: 0.55,
-        ease: 'power3.out',
-        stagger: { amount: 0.4, from: 'random' },
+      // One movement, and the only one that shows the page: the screen closes towards its own top
+      // edge while everything on it rises a little faster, so it reads as a plate being lifted
+      // rather than as a layer being switched off. Nothing is revealed before this and nothing
+      // snaps after it, because the element is already gone when React drops it.
+      out.to(root, {
+        clipPath: 'inset(0% 0% 100% 0%)',
+        duration: 0.9,
+        ease: 'power4.inOut',
       })
-      out.to(marker, { scaleY: 0, transformOrigin: 'top', duration: 0.55, ease: 'power3.out' }, 0)
-      out.add(() => window.dispatchEvent(new Event('calibrated')), 0.35)
+      out.to(plane, { yPercent: -14, duration: 0.9, ease: 'power4.inOut' }, 0)
+      out.add(() => window.dispatchEvent(new Event('calibrated')), 0.12)
     })
 
     return () => {
@@ -210,13 +220,12 @@ export function Loader() {
   if (!show || phase === 'done') return null
   return (
     <div ref={rootRef} className="loader" data-loader={phase} aria-hidden="true">
-      <div className="loader__bg" />
-      <div ref={gridRef} className="loader__grid">
-        <div ref={markerRef} className="loader__marker">
-          <p ref={countRef} className="loader__count">
-            25
-          </p>
-          <Monogram className="loader__mono" size={24} />
+      <div ref={planeRef} className="loader__plane">
+        <div className="loader__bg" />
+        <div ref={gridRef} className="loader__grid">
+          <div ref={markerRef} className="loader__marker">
+            <Monogram className="loader__mono" size={24} />
+          </div>
         </div>
       </div>
     </div>

@@ -155,8 +155,8 @@ no physics, no cloth deformation, and the loader never appears.
 The entrance is a grid of tiles in the theme's ink covering the screen, with four holes in it on
 the middle row and a marker the size of one tile that hops from hole to hole. It hops when
 something has actually become ready, in this order: fonts, the shader, the content, the images
-above the fold, counting 25, 50 and 75 and landing on the EB mark. Then every tile drops out of
-its own top edge in a random order and the page is underneath.
+above the fold, carrying the EB mark from the first frame. Then the whole screen lifts in one movement,
+and that is the only time any of the page is seen.
 
 Three rules hold it together:
 
@@ -164,6 +164,15 @@ Three rules hold it together:
   a stop is held for 260ms before the next can be taken; and a resource that never reports would
   stall the count, so each stop is taken anyway after 450ms of waiting. The entrance is a door,
   not a gate.
+- **The page is never half seen.** The ground stays under the tiles for the whole entrance and the
+  screen lifts as one plate: the mask closes towards its own top edge while everything on it rises
+  a little faster, so it reads as a plate being lifted. The first version dropped the tiles one by
+  one over a ground that outlived them, which meant a flat colour and then a cut to the page.
+- **It covers from the first paint, not from hydration.** The loader is a client component, so
+  `public/theme.js` puts an opaque ground up before anything is drawn and the loader takes it down
+  as soon as it is drawing over it. On a machine that cannot run the field there is no entrance to
+  hide behind, so the ground fades rather than being switched off, and a safety timeout in the
+  script removes it whatever happens: a bundle that never boots must not leave a blank screen.
 - **It may not leave in the middle of its own count.** The screen drops when readiness is done
   _and_ the mark has landed, plus a beat to see it. Gating on readiness alone let the grid fall
   while the marker was still at 50, which reads as a flicker rather than an entrance.
