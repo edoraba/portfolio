@@ -157,7 +157,7 @@ motion:
   rules-draw: 800ms editorial, stagger 60ms, on enter, once
   slice-flip: 4 strips, 500ms hop, 30ms stagger, alternating directions
   plates: rules draw on enter, pins scrub only transforms and clip-path, never filters (docs/motion.md)
-  loader: calibration entrance, real readiness only (fonts, shader, content, images), 600ms to 1200ms, hard cap 1500ms, on every visit (it is what hides the field arriving), never under reduced motion, no percentage
+  loader: calibration entrance, a grid of ink tiles with four holes in it and a marker that hops from hole to hole as fonts, the shader, the content and the above-the-fold images report ready, counting 25, 50, 75 and landing on the EB mark before every tile drops out of its own top edge. Real readiness only, about 2s end to end, on every visit (it is what hides the field arriving), never under reduced motion, no percentage that is not a real one
 
 field:
   renderer: hand-written WebGL2, one fragment shader, full-screen triangle, parallel shader compile
@@ -206,7 +206,7 @@ field:
 
 - Content fast, field slow: text 600ms out (power4.in) and 800ms in (expo.out, 200ms delay); field 2000ms (expo.inOut); in parallel.
 - Reveals are masked line reveals. Decode only on mono labels, once, 40ms ticks. Hover states are CSS transitions on transform, opacity and font-variation-settings.
-- Page transitions: field persists, DOM swaps with a clip-path wipe on the hop ease; shared-element morph of the project number and cover from /work to a case study; back and forward crossfade in 200ms.
+- Page transitions: field persists, and a typed navigation is a clip mask, 1000ms on cubic-bezier(0.75, 0, 0.1, 1): the page being left keeps moving the way the reader was going and thins to nothing, the one arriving is cut in over it from the edge it came from and carries its own ground. Shared-element morph of the project number and cover from /work to a case study; back and forward crossfade in 200ms.
 - Smooth scroll (Lenis, lerp 0.08) only on home and /work.
 - Reduced motion is a parallel design, listed in the frontmatter, never a kill switch.
 
@@ -218,7 +218,7 @@ field:
 
 ## Do not
 
-- No percentage counter or fake loader (the calibration entrance reports real readiness, lasts at most 1.2s, runs on every visit so the field is never seen arriving, and never under reduced motion), no custom cursor, no marquee, no magnetic buttons, no curved sticky footer, no image-follows-cursor lists, no greeting-word intro, no "rotate your device", no horizontal-only scroll, no bento grid, no 3D avatar, no skill bars, no logo wall, no testimonial carousel, no scroll cue, no decorative status dots, no version stamps, no locale and weather strips, no glassmorphism, no purple gradients.
+- No percentage counter or fake loader (the calibration entrance reports real readiness, about 2s, runs on every visit so the field is never seen arriving, and never under reduced motion), no custom cursor, no marquee, no magnetic buttons, no curved sticky footer, no image-follows-cursor lists, no greeting-word intro, no "rotate your device", no horizontal-only scroll, no bento grid, no 3D avatar, no skill bars, no logo wall, no testimonial carousel, no scroll cue, no decorative status dots, no version stamps, no locale and weather strips, no glassmorphism, no purple gradients.
 - No section-number eyebrows and at most one eyebrow per three sections. The numbering that exists (nav 1 to 4, project index 01 to 05, Fig. 01) encodes real order.
 - No second WebGL scene. The field is the only rendered surface. One physics plate (the Toolbox), tags only, gravity 1, restitution 0.25, and the list stays real text.
 - Never mention LoL Brain.

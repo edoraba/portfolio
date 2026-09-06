@@ -41,6 +41,7 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-hop: cubic-bezier(0.56, 0, 0.35, 0.98);
   --ease-inout-power3: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-mask: cubic-bezier(0.75, 0, 0.1, 1);
 
   --radius-*: initial;
   --radius-none: 0px;
@@ -1332,23 +1333,75 @@ html[data-motion='reduced'] .flip-text__strips {
 }
 
 /* Calibration loader */
+/* The entrance. A grid of tiles in the theme's ink with four holes in it, a marker that hops from
+   hole to hole as real resources report ready, and then every tile dropping out of its own top
+   edge in no order at all. Nothing here fades: the page appears through the holes. */
 .loader {
   position: fixed;
   inset: 0;
   z-index: 80;
+  overflow: hidden;
+}
+.loader__bg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--canvas);
+}
+.loader__grid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  transform: translate(-50%, -50%);
+}
+.loader__tile {
+  background-color: var(--ink);
+  transition:
+    background-color 160ms linear,
+    outline-color 160ms linear;
+  /* Sub pixel tile edges leave seams of canvas between them at some zoom levels; the outline
+     covers the crack without changing the layout. */
+  outline: 0.05px solid var(--ink);
+  will-change: transform, opacity;
+}
+.loader__tile[data-stop] {
+  background-color: var(--canvas);
+  outline-color: var(--canvas);
+}
+/* The marker is a hole the size of one tile, carrying the count and then the mark. */
+.loader__marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
   display: grid;
   place-items: center;
-  background: color-mix(in srgb, var(--canvas) 78%, transparent);
+  background-color: var(--canvas);
   color: var(--ink);
+  will-change: transform;
 }
-.loader__mark {
-  display: grid;
-  justify-items: center;
-  gap: 16px;
+.loader__count,
+.loader__mono {
+  grid-area: 1 / 1;
+  transition: opacity 200ms linear;
 }
-.loader__line {
-  color: var(--ink-muted);
+.loader__count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.loader__mono {
+  width: 52%;
+  height: 52%;
+  opacity: 0;
+}
+.loader__marker[data-at='mark'] .loader__count {
+  opacity: 0;
+}
+.loader__marker[data-at='mark'] .loader__mono {
+  opacity: 1;
 }
 
 /* The field: one fixed canvas behind everything, pixels are dither cells. */
@@ -1427,11 +1480,27 @@ html.js .reveal {
 ::view-transition-new(.vt-fade) {
   animation: 200ms var(--ease-out-expo) both vt-fade;
 }
+/* The page leaves under its own weight and the next one is cut in over it: the old page keeps
+   moving the way the reader was going and dims rather than disappearing, and the new one arrives
+   from behind it through a mask that opens from the edge it came from. Both halves run on the
+   same curve and the same clock, so the two pages read as one movement. */
+::view-transition-old(.vt-page-out) {
+  animation: 1000ms var(--ease-mask) both vt-page-out;
+}
+::view-transition-old(.vt-page-out-back) {
+  animation: 1000ms var(--ease-mask) both vt-page-out-back;
+}
+/* The arriving page is cut over the leaving one, so it has to carry a ground of its own: a page
+   is transparent, and without this the two are read through each other. */
+::view-transition-new(.vt-wipe-up),
+::view-transition-new(.vt-wipe-down) {
+  background-color: var(--canvas);
+}
 ::view-transition-new(.vt-wipe-up) {
-  animation: 1000ms var(--ease-hop) both vt-wipe-up;
+  animation: 1000ms var(--ease-mask) both vt-wipe-up;
 }
 ::view-transition-new(.vt-wipe-down) {
-  animation: 1000ms var(--ease-hop) both vt-wipe-down;
+  animation: 1000ms var(--ease-mask) both vt-wipe-down;
 }
 ::view-transition-group(.morph) {
   animation-duration: 600ms;
@@ -1450,18 +1519,51 @@ html.js .reveal {
 }
 @keyframes vt-wipe-up {
   from {
+    transform: translateY(25%);
     clip-path: inset(100% 0 0 0);
   }
   to {
+    transform: translateY(0%);
     clip-path: inset(0);
   }
 }
 @keyframes vt-wipe-down {
   from {
+    transform: translateY(-25%);
     clip-path: inset(0 0 100% 0);
   }
   to {
+    transform: translateY(0%);
     clip-path: inset(0);
+  }
+}
+/* The page being left keeps going and thins out. It is gone before the mask has finished opening:
+   these pages are transparent and not all the same height, so a snapshot left under a moving one
+   reads as two pages at once rather than as depth. */
+@keyframes vt-page-out {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-25%);
+    opacity: 0;
+  }
+}
+@keyframes vt-page-out-back {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
+  }
+  to {
+    transform: translateY(25%);
+    opacity: 0;
   }
 }
 @keyframes vt-blur {

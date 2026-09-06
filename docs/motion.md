@@ -150,6 +150,38 @@ A parallel design, never a speed setting. `data-motion` is written before the fi
 creates no triggers at all and its CSS already shows the finished state: no pins, no letter field,
 no physics, no cloth deformation, and the loader never appears.
 
+## The entrance, and the transition between pages
+
+The entrance is a grid of tiles in the theme's ink covering the screen, with four holes in it on
+the middle row and a marker the size of one tile that hops from hole to hole. It hops when
+something has actually become ready, in this order: fonts, the shader, the content, the images
+above the fold, counting 25, 50 and 75 and landing on the EB mark. Then every tile drops out of
+its own top edge in a random order and the page is underneath.
+
+Three rules hold it together:
+
+- **A dwell and a patience.** Two resources reporting in the same tick would read as one jump, so
+  a stop is held for 260ms before the next can be taken; and a resource that never reports would
+  stall the count, so each stop is taken anyway after 450ms of waiting. The entrance is a door,
+  not a gate.
+- **It may not leave in the middle of its own count.** The screen drops when readiness is done
+  _and_ the mark has landed, plus a beat to see it. Gating on readiness alone let the grid fall
+  while the marker was still at 50, which reads as a flicker rather than an entrance.
+- **Tiles are laid out odd.** An odd number of tiles across and down gives a true middle column
+  and a true middle row for the mark to land on, and one extra tile beyond every edge means no
+  half tile ever shows at the border. `lib/loader-grid.ts` does that arithmetic and is tested.
+
+The page transition is a clip mask on React's `ViewTransition`, one animation shared by two
+pages: the one being left keeps moving the way the reader was going and thins out, the one
+arriving is cut in over it from the edge it came from. Two things it needs that a demo on
+same-sized pages does not:
+
+- **The arriving page has to carry a ground.** A page here is transparent, so without a background
+  on `::view-transition-new` the two pages are read through each other.
+- **The leaving page has to be gone before the mask finishes.** These pages are not all the same
+  height, so a snapshot still at a quarter opacity under a moving one reads as two pages at once
+  rather than as depth. It reaches zero at 55% of the run, while the mask is still opening.
+
 ## Where things live
 
 | what                    | file                                          |
