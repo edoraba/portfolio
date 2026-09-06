@@ -43,7 +43,7 @@ Unit tests also enforce the house rules: every theme token in `DESIGN.md` matche
 
 ## The home
 
-Seven plates, each a section of the grid with its own scroll choreography: the hero with the field showing through the headline and a strip; the about plate, where the mark draws itself bar by bar out of the same field; the pinned work stage, a hole cut in the sheet that opens until the screen is the void, its word parting into a shell of letters with the projects crossing it; the notes index with the field running in its lab plate; the toolbox where the stack falls into a container with 2D physics (Matter.js, loaded only when the plate is near); the since column, five words at the width of the sheet that arrive out of line and close onto it; and the grid cloth. Nothing pins below 1024px and every plate has a static layout under reduced motion.
+Seven plates, each a section of the grid with its own scroll choreography: the hero with the field showing through the headline and a strip; the about plate, where the mark draws itself bar by bar out of the same field; the pinned work stage, a hole cut in the sheet that opens until the screen is the void, its word parting into a shell of letters with the projects crossing it; the notes index with the field running in its lab plate; the toolbox where the stack falls into a container with 2D physics (Matter.js, loaded only when the plate is near); the since paragraph, five lines of ordinary text opened by the scroll until one word fills the plate; and the grid cloth. Nothing pins below 1024px and every plate has a static layout under reduced motion.
 
 How the movement is put together, and the rules that keep it from breaking, is `docs/motion.md`. Read it before writing any GSAP.
 

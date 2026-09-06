@@ -175,7 +175,7 @@ no physics, no cloth deformation, and the loader never appears.
 | P/03 work    | pinned: the hole opens to the screen, the word parts into a shell, cards cross it  |
 | P/04 notes   | the lab plate is a window onto the field                                           |
 | P/05 toolbox | the tags fall into a ruled container, physics loaded only when the plate is near   |
-| P/06 since   | pinned: five words the width of the sheet arrive out of line and close onto it     |
+| P/06 since   | pinned: a paragraph opens until one word fills the plate, walked word by word      |
 | P/07 contact | the cloth bulges away from the pointer                                             |
 
 Two things learned building P/03 and P/06 that generalise:
@@ -190,15 +190,16 @@ Two things learned building P/03 and P/06 that generalise:
   frame. P/03 has three octagons and recuts one. The same goes for texture: the dither in the void
   stopped drifting, because animating a background position across a full screen layer repaints
   it every frame, and what follows the pointer is a transform instead.
-- **A fill that fades is a wash; a fill that is clipped is type.** Taking a word from outline to
-  ink by interpolating its colour puts it through every muddy value in between, which at display
-  size is most of the time it is on screen. P/06 pours the ink in instead: a hard edged gradient
-  clipped to the text with `background-clip`, so every part of every letter is either ink or
-  empty, and the stroke holds the shape the whole way.
-- **Type fitted to a measure has to be given its tracking back.** Letter spacing is applied after
-  the last letter as well, so a negatively tracked word measures narrower than its ink and a word
-  fitted on that measurement overhangs its column by exactly that much. A padding of the same size
-  on the measured element makes the two agree.
+- **A zoom into type is arithmetic if nothing reflows.** P/06 grows a paragraph from reading size
+  to one word filling the plate and keeps the plate centred on whichever word the sentence has
+  reached. That only stays cheap because the lines never rewrap and the tracking never changes: a
+  word's place in the block is then a straight multiple of the size, measured once on mount. The
+  version that animated tracking along with the size moved every word along its line by a
+  different amount and the aim missed by half a screen.
+- **Aim at the middle before you aim at a word.** Blending the target from the block's own centre
+  to the word's centre as the type opens means the closed state is simply a centred paragraph and
+  the opening is a zoom. Aiming at the first word from the first frame slides the paragraph out of
+  the plate before the reader has read it.
 - **A zoom needs something outside it that grows too.** P/03's octagon scales from one factor on a
   fixed half width, half height and corner, so its shape never changes; ruled squares outside it
   scale at the same rate. Without them a hole opening reads as a shape changing size rather than

@@ -2,7 +2,7 @@ import { AboutBox } from '@/components/plates/about-box'
 import { Cloth } from '@/components/plates/cloth'
 import { Hero } from '@/components/plates/hero'
 import { Notes } from '@/components/plates/notes'
-import { SinceSlab } from '@/components/plates/since-slab'
+import { SinceLeading } from '@/components/plates/since-leading'
 import { Toolbox } from '@/components/plates/toolbox'
 import { WorkStage } from '@/components/plates/work-stage'
 import { labs, pageBySlug, works, writings } from '@/lib/content'
@@ -68,7 +68,7 @@ export default function Home() {
 
       <Toolbox tags={toolboxTags} />
 
-      <SinceSlab />
+      <SinceLeading />
 
       <Cloth />
     </PageTransition>
