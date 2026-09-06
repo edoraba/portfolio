@@ -62,6 +62,18 @@ measured in pixels and the real fonts change every measurement.
   a bar across the top. Either keep the fixed layer outside the pinned subtree, or subtract the
   pinned element's own rect from the layer's `top` and `left` while the pin is active, which is
   what `work-stage.tsx` does.
+- **`perspective` applies to an element's own children and no further.** Put it a level too high
+  and every 3D transform below the gap renders flat, at full size, with no foreshortening: P/03's
+  shell of letters was three times the size it was meant to be and nobody could see why. If a
+  layer sits between the perspective and the transformed elements, the perspective moves down to
+  the layer.
+- **Do not assume where a fixed layer's origin is: measure it.** GSAP leaves a transform on a
+  plate it has pinned whether or not the pin is currently running, so the containing block for
+  anything fixed inside is the plate at some times and the viewport at others. Where the layer
+  lands when told to sit at its own top left is the offset to cancel, and it is right in every
+  case.
+- **Viewport units count the scrollbar.** A full bleed fixed layer at `width: 100vw` gives the
+  page a sideways scroll of exactly one scrollbar. Size it from `documentElement.clientWidth`.
 - **A clip path clips its whole subtree, fixed descendants included.** Anything the reader has to
   reach (P/03's timecode) goes outside the clipped element, or it stops being reachable the moment
   the shape is small.
@@ -172,6 +184,12 @@ Two things learned building P/03 and P/06 that generalise:
   an object crawls while it is far away and then leaps past in the last moment, which is exactly
   the part a reader needs it to hold still for. P/06 solves z from a straight line in scale, so a
   band grows at one steady rate the whole way down.
+- **Repainting beats compositing only when there is no choice.** A shape that only moves and
+  scales is one element with a constant clip path and a transform, and costs nothing while it
+  runs; only the layer whose contents must stay still while the shape grows has to be recut every
+  frame. P/03 has three octagons and recuts one. The same goes for texture: the dither in the void
+  stopped drifting, because animating a background position across a full screen layer repaints
+  it every frame, and what follows the pointer is a transform instead.
 - **A zoom needs something outside it that grows too.** P/03's octagon scales from one factor on a
   fixed half width, half height and corner, so its shape never changes; ruled squares outside it
   scale at the same rate. Without them a hole opening reads as a shape changing size rather than

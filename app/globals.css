@@ -744,8 +744,13 @@ html[data-motion='reduced'] .tunnel__rays {
   --z: 1;
   --ox: 50vw;
   --oy: 50vh;
-  --grid-zoom: 1;
   --grid-near: 0;
+  /* Half of the octagon at rest, half at this zoom, and where its corners are cut. A regular
+     octagon: square, with each corner taken back by 1 / (2 + root 2) of the side. `--oct` is the
+     one number the shape comes from, and work-stage.tsx has to agree with it. */
+  --oct: 245px;
+  --oh: calc(var(--oct) * var(--z));
+  --oc: calc(var(--oh) * 0.58579);
   position: relative;
   display: grid;
   flex: 1;
@@ -754,15 +759,12 @@ html[data-motion='reduced'] .tunnel__rays {
 }
 @media (min-width: 1024px) {
   .porthole__stage {
-    /* Half of the octagon at rest, and the bite taken out of each corner. Everything scales
-       from these by one factor, so the shape never changes, only its size. */
-    --ow: calc(150px * var(--z));
-    --oh: calc(196px * var(--z));
-    --oc: calc(56px * var(--z));
+    /* Placed and sized by work-stage.tsx: a pinned ancestor moves the origin, and viewport
+       units would count the scrollbar. These are the values before the first frame. */
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100dvh;
     z-index: 30;
     display: block;
@@ -770,7 +772,6 @@ html[data-motion='reduced'] .tunnel__rays {
     overflow: hidden;
     visibility: hidden;
     pointer-events: none;
-    perspective: 1000px;
   }
   .porthole__stage[data-on='1'] {
     visibility: visible;
@@ -801,55 +802,85 @@ html[data-motion='reduced'] .tunnel__rays {
       );
     background-size: calc(74px * var(--z)) calc(74px * var(--z));
     background-position: var(--ox) var(--oy);
-    opacity: calc(0.9 * var(--grid-zoom) * var(--grid-near));
-    mask-image: radial-gradient(46% 62% at var(--ox) var(--oy), #000 35%, #0000 100%);
+    opacity: calc(0.9 * var(--grid-near));
+    /* The fade is centred on the layer, not on the hole: following the hole means recomputing a
+       full screen mask every frame for a difference nobody can see. */
+    mask-image: radial-gradient(46% 62% at 50% 50%, #000 35%, #0000 100%);
+  }
+  /* Repainting a full screen grid every frame is the most expensive thing in the section, so
+     once the hole covers everything the grid stops existing instead of going transparent. */
+  .porthole__stage[data-covered='1'] .porthole__grid {
+    display: none;
   }
 }
 
-/* Three cuts of the same octagon: the outer stroke, the sheet showing through as a gap, and the
-   hole itself. Stacked, they read as an aperture with a ring around it. */
-.porthole__oct {
-  position: absolute;
-  inset: 0;
-  --w: calc(var(--ow) * var(--s, 1));
-  --h: calc(var(--oh) * var(--s, 1));
-  --c: calc(var(--oc) * var(--s, 1));
-  clip-path: polygon(
-    calc(var(--ox) - var(--w) + var(--c)) calc(var(--oy) - var(--h)),
-    calc(var(--ox) + var(--w) - var(--c)) calc(var(--oy) - var(--h)),
-    calc(var(--ox) + var(--w)) calc(var(--oy) - var(--h) + var(--c)),
-    calc(var(--ox) + var(--w)) calc(var(--oy) + var(--h) - var(--c)),
-    calc(var(--ox) + var(--w) - var(--c)) calc(var(--oy) + var(--h)),
-    calc(var(--ox) - var(--w) + var(--c)) calc(var(--oy) + var(--h)),
-    calc(var(--ox) - var(--w)) calc(var(--oy) + var(--h) - var(--c)),
-    calc(var(--ox) - var(--w)) calc(var(--oy) - var(--h) + var(--c))
-  );
+/* The ring and the gap: one octagon each, at a fixed size, moved and scaled by a transform. Their
+   clip path never changes, so opening the hole does not repaint them. */
+.porthole__shape {
+  display: none;
 }
-.porthole__ring {
-  --s: 1.075;
-  background-color: var(--void);
+@media (min-width: 1024px) {
+  .porthole__shape {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(var(--oct) * 2);
+    height: calc(var(--oct) * 2);
+    clip-path: polygon(
+      29.289% 0,
+      70.711% 0,
+      100% 29.289%,
+      100% 70.711%,
+      70.711% 100%,
+      29.289% 100%,
+      0 70.711%,
+      0 29.289%
+    );
+    transform: translate3d(calc(var(--ox) - var(--oct)), calc(var(--oy) - var(--oct)), 0)
+      scale(calc(var(--z) * var(--s)));
+  }
+  .porthole__ring {
+    --s: 1.075;
+    background-color: var(--void);
+  }
+  .porthole__gap {
+    --s: 1.045;
+    background-color: var(--canvas);
+  }
 }
-.porthole__gap {
-  --s: 1.055;
-  background-color: var(--canvas);
-}
+
+/* The hole itself. Its contents are fixed to the screen, so this one is cut in screen
+   coordinates and is the only shape here that has to be recut as the zoom runs. */
 .porthole__hole {
-  --s: 1;
+  position: relative;
+  height: 100%;
+  /* The perspective belongs here and not on the stage: it applies to an element's own children,
+     and the stage's children are these layers, not the letters. Put it a level too high and the
+     shell renders flat, every copy at full size, which reads as a much bigger word than it is. */
+  perspective: 1000px;
+}
+@media (min-width: 1024px) {
+  .porthole__hole {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    clip-path: polygon(
+      calc(var(--ox) - var(--oh) + var(--oc)) calc(var(--oy) - var(--oh)),
+      calc(var(--ox) + var(--oh) - var(--oc)) calc(var(--oy) - var(--oh)),
+      calc(var(--ox) + var(--oh)) calc(var(--oy) - var(--oh) + var(--oc)),
+      calc(var(--ox) + var(--oh)) calc(var(--oy) + var(--oh) - var(--oc)),
+      calc(var(--ox) + var(--oh) - var(--oc)) calc(var(--oy) + var(--oh)),
+      calc(var(--ox) - var(--oh) + var(--oc)) calc(var(--oy) + var(--oh)),
+      calc(var(--ox) - var(--oh)) calc(var(--oy) + var(--oh) - var(--oc)),
+      calc(var(--ox) - var(--oh)) calc(var(--oy) - var(--oh) + var(--oc))
+    );
+  }
 }
 @media (max-width: 1023.98px) {
-  /* No octagon to open down here: the cell is the space. */
-  .porthole__oct {
-    position: relative;
-    clip-path: none;
-  }
-  .porthole__ring,
-  .porthole__gap {
-    display: none;
-  }
   .porthole__hole {
     display: grid;
     place-items: center;
-    height: 100%;
   }
 }
 
@@ -858,38 +889,51 @@ html[data-motion='reduced'] .tunnel__rays {
   inset: 0;
   z-index: 0;
   background-color: var(--void);
+  overflow: hidden;
 }
-/* The same dither cell as the field, printed, drifting. A live canvas cannot serve here: it
-   paints its own ground in the page colour, and this ground is the opposite one. */
+/* The same dither cell as the field, printed. It does not drift: animating a background position
+   across a full screen layer repaints it every frame, which is what made the section stutter and
+   the texture crawl. What moves here is the light, and that is a transform. */
 .porthole__dither {
   position: absolute;
-  inset: -10%;
+  inset: 0;
   background-image: radial-gradient(circle at 50% 50%, var(--void-ink) 0 1.1px, transparent 1.4px);
   background-size: 4px 4px;
-  opacity: 0.5;
-  mask-image: radial-gradient(120% 90% at 50% 45%, #000 10%, #0002 78%);
-  animation: porthole-dither 24s linear infinite;
+  opacity: 0.42;
 }
-@keyframes porthole-dither {
-  to {
-    background-position: 160px 96px;
-  }
+/* The light under the pointer, the one thing in the void that answers to it. */
+.porthole__glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 900px;
+  height: 900px;
+  margin: -450px 0 0 -450px;
+  background: radial-gradient(
+    circle closest-side,
+    color-mix(in srgb, var(--void-ink) 22%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out-expo);
+  will-change: transform;
 }
 
-/* Every copy of every letter starts in the same place. `--open` turns each one out to its own
-   longitude and latitude on the shell, so the stacked word becomes the space around the reader
-   with one property write, and `--turn` keeps the whole shell moving after that. */
+/* Every copy of a letter starts in the same place. `--open` turns each one out to its own
+   longitude on the shell, so a stacked word becomes the space around the reader with one
+   property write, and `--turn` keeps the whole shell moving after that. The four rows part a
+   little at the same time, but they never multiply: one row per letter, always. */
 .porthole__sphere {
   --open: 0;
   --turn: 0deg;
-  --tilt: 0deg;
+  --sphere-y: 0px;
   --sphere-r: 1000px;
   position: absolute;
   inset: 0;
   z-index: 1;
   display: grid;
   place-items: center;
-  transform: rotateY(var(--turn)) rotateX(var(--tilt));
+  transform: translateY(var(--sphere-y)) rotateY(var(--turn));
   transform-style: preserve-3d;
   pointer-events: none;
   color: var(--void-ink);
@@ -904,8 +948,7 @@ html[data-motion='reduced'] .tunnel__rays {
   transform: rotateY(calc(var(--th) * var(--open)))
     rotateX(calc(var(--ph0) * (1 - var(--open)) + var(--ph1) * var(--open)))
     translateZ(calc(var(--sphere-r) * -1));
-  /* The second word is not there until the shell opens: closed, it hides behind the first. */
-  opacity: calc((0.82 + 0.18 * (1 - var(--open))) * (1 - var(--late, 0) * (1 - var(--open))));
+  opacity: calc(0.82 + 0.18 * (1 - var(--open)));
 }
 @media (max-width: 1023.98px) {
   /* No shell without the room for it: the word stands in the space as a word. */
@@ -925,9 +968,6 @@ html[data-motion='reduced'] .tunnel__rays {
     grid-area: auto;
     transform: none;
     opacity: 0.3;
-  }
-  .porthole__glyph[data-first]:nth-child(n + 50) {
-    display: none;
   }
 }
 
@@ -1004,9 +1044,6 @@ html[data-motion='reduced'] .porthole__card {
   opacity: 1;
   scroll-snap-align: center;
 }
-html[data-motion='reduced'] .porthole__dither {
-  animation: none;
-}
 
 /* The reader's place in the ride. It sits over the void rather than in it, so it is reachable
    whatever the octagon is doing. */
@@ -1048,8 +1085,15 @@ html[data-void='1'] .porthole__foot {
   color: var(--void-ink);
 }
 
-/* Inside the void the console is not there: the screen belongs to the space. */
+/* Inside the void the console is not there: the screen belongs to the space, and it goes as soon
+   as the hole starts opening rather than waiting for it to arrive. */
+.site-header {
+  transition:
+    opacity 240ms var(--ease-out-expo),
+    visibility 240ms;
+}
 html[data-void='1'] .site-header {
+  opacity: 0;
   visibility: hidden;
 }
 

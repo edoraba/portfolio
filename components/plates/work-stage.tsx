@@ -13,27 +13,46 @@ import { Plate } from './plate'
 import { Timecode } from './timecode'
 import { WorkCover, type CoverWork } from './work-cover'
 
-/** The word, twice over, so the shell has something in every direction. */
-const ROWS = ['W', 'O', 'R', 'K', 'W', 'O', 'R', 'K'] as const
-/** Copies of each letter, all in the same place until the space opens. */
-const COPIES = 13
+/** One row per letter of the word. Rows never repeat: what divides is each row, sideways. */
+const WORD = ['W', 'O', 'R', 'K'] as const
+/** Copies of each letter, all in the same place until the row divides. */
+const COPIES = 15
 /**
- * Half the spread around the reader, in degrees. A copy sits at radius R and angle t, so it
- * lands at R*sin(t) across and R*cos(t) back: the ones near the side of the shell come out level
- * with the reader and large, the ones straight ahead stay small and far. The word keeps a
- * latitude of its own so the letters read as a word before anything opens.
+ * Half the spread around the reader, in degrees. A copy sits at radius R and angle t, so it lands
+ * at R*sin(t) across and R*cos(t) back: the ones near the side of the shell come out level with
+ * the reader and large, the ones straight ahead stay small and far.
+ *
+ * `THETA` is the only spread that opens. The four rows keep their latitudes throughout: they part
+ * a little so the word fills the screen instead of a hole, but they never multiply, so the reader
+ * always sees four rows of W, O, R, K and not a field of repeated letters.
  */
 const THETA = 86
-const PHI_OPEN = 62
-const PHI_WORD = 15
+const PHI_OPEN = 46
+/**
+ * While closed, the latitudes have to hold the letters apart by more than a letter is tall, or
+ * the word reads as a smear. At radius 1000 with the shell a screen away, a degree of latitude is
+ * about 8.7px on the glass, and a line here is 91px.
+ */
+const PHI_WORD = 17
+
+/**
+ * How much of the hole's travel the word inside it takes. Less than all of it is what makes the
+ * approach read as depth: the window slides over something further back. Clamped so the word can
+ * never be carried out of its own hole.
+ */
+const PARALLAX = 0.72
+const PARALLAX_MAX = 44
+
+/** Half of the octagon at rest, in px. It is regular: a square with each corner cut at 45. */
+const OCT = 245
+/** Where the cut falls, as a share of the full side, for a regular octagon: 1 / (2 + root 2). */
+const CUT = 0.29289
 
 /** Approach, opening, the ride through the cards, and the way back out. */
 const OPEN = [0, 0.26] as const
 const PART = [0.06, 0.5] as const
 const RIDE = [0.24, 0.9] as const
 const CLOSE = [0.9, 1] as const
-/** How far the octagon has to grow before its corners are off a wide screen. */
-const ZOOM = 7.4
 
 /** How high each project rides and how far back it sits. */
 const CARDS = [
@@ -56,21 +75,16 @@ function cardAt(i: number, n: number) {
   return n > 1 ? SPREAD[0] + (SPREAD[1] - SPREAD[0]) * (i / (n - 1)) : 0.5
 }
 
-/** The place of one copy on the shell, and where it sits while the word is still stacked. */
-const GLYPHS = ROWS.flatMap((letter, row) => {
-  // Latitude while open spreads all eight rows over the shell; while closed the second word
-  // hides exactly behind the first, so what stands in the hole is one word, not two overlaid.
-  const word = row % 4
-  const kWord = (word / 3) * 2 - 1
-  const kOpen = (row / (ROWS.length - 1)) * 2 - 1
+/** The place of one copy on the shell, and where it sits while its row is still stacked. */
+const GLYPHS = WORD.flatMap((letter, row) => {
+  const k = (row / (WORD.length - 1)) * 2 - 1
   return Array.from({ length: COPIES }, (_, copy) => ({
     letter,
-    key: `${letter}-${row}-${copy}`,
-    first: row === word && copy === 0,
-    late: row >= 4 ? 1 : 0,
+    key: `${letter}-${copy}`,
+    first: copy === 0,
     theta: (((copy / (COPIES - 1)) * 2 - 1) * THETA).toFixed(2),
-    phiWord: (kWord * PHI_WORD).toFixed(2),
-    phiOpen: (kOpen * PHI_OPEN).toFixed(2),
+    phiWord: (k * PHI_WORD).toFixed(2),
+    phiOpen: (k * PHI_OPEN).toFixed(2),
   }))
 })
 
@@ -82,16 +96,28 @@ function zoomAt(p: number) {
 }
 
 /**
+ * How far the octagon has to grow before the screen is inside it. A regular octagon contains a
+ * point when it is within half the side on each axis and within `(2 - cut) * half` of the centre
+ * measured as |x| + |y|, so the corner of the screen is the binding one.
+ */
+function zoomToCover(w: number, h: number) {
+  const diag = (w / 2 + h / 2) / (2 - CUT * 2)
+  // A tenth over what it takes: exactly enough leaves the screen corners on the edge of the cut,
+  // where a pixel of rounding shows the sheet through as two triangles.
+  return (Math.max(w / 2, h / 2, diag) / OCT) * 1.1
+}
+
+/**
  * P/03. A hole cut in the sheet with the word standing inside it. What shows through the hole is
  * fixed to the screen, so on the way down the hole travels over it and the reader sees past the
- * page before being let in. Then the octagon zooms, keeping its shape, until its corners are off
- * the screen and the void is everything; a ruled grid outside it scales at the same rate, which
+ * page before being let in. Then the octagon zooms, a regular octagon throughout, until the screen
+ * is inside it and the void is everything; a ruled grid outside it scales at the same rate, which
  * is what makes the zoom read as a zoom and not as a shape changing size.
  *
- * Every letter is really a stack of copies in one place, so the word is a word until it opens:
- * the stack parts and the copies swing out onto a shell around the reader, each turned to its own
- * longitude and latitude and pushed back by the radius. The shell keeps turning for the rest of
- * the section. The projects cross it scattered, each at its own height and depth.
+ * Each letter is really a stack of copies in one place, so the word is a word until it opens: the
+ * stacks divide sideways onto a shell around the reader, one row per letter, and the rows part
+ * just enough to fill the screen. Rows never repeat. The projects cross the shell scattered, each
+ * at its own height and depth.
  *
  * On the way out the shell closes back into the word and the octagon shrinks to where it began.
  *
@@ -113,8 +139,15 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
     if (!section) return
     const cell = section.querySelector<HTMLElement>('.porthole')
     const stage = section.querySelector<HTMLElement>('.porthole__stage')
-    if (!cell || !stage) return
+    const sphere = section.querySelector<HTMLElement>('.porthole__sphere')
+    if (!cell || !stage || !sphere) return
     let near = false
+    let zoom = zoomToCover(window.innerWidth, window.innerHeight)
+    const onResize = () => {
+      zoom = zoomToCover(window.innerWidth, window.innerHeight)
+    }
+    window.addEventListener('resize', onResize)
+
     const io = new IntersectionObserver(
       (entries) => {
         near = entries.some((e) => e.isIntersecting)
@@ -131,42 +164,89 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
         if (!near || document.hidden) return
         const r = cell.getBoundingClientRect()
         const { p, active } = run.current
-        const z = active ? lerp(1, ZOOM, zoomAt(p)) : 1
-        const cy = r.top + r.height / 2
-        // A pinned plate carries a transform, and a transformed ancestor is the containing block
-        // for anything fixed inside it. Without this the stage would start below the header
-        // instead of over it, and full screen would be a screen with a bar across the top.
-        const origin = section.getBoundingClientRect()
-        const offX = active ? -origin.left : 0
-        const offY = active ? -origin.top : 0
+        const open = active ? zoomAt(p) : 0
+        const z = lerp(1, zoom, open)
+        const cx = r.left + r.width / 2
+        // While the page is moving the hole sits where the plate is, which is what makes the
+        // approach a parallax. Once it starts opening it settles onto the middle of the screen,
+        // where the word inside it already is: a pinned plate is 80px lower than the viewport
+        // centre, and that difference is the word sitting off centre in its own hole.
+        const cy = lerp(r.top + r.height / 2, window.innerHeight / 2, open)
+        // A transformed ancestor is the containing block for anything fixed inside it, and GSAP
+        // leaves a transform on a pinned plate whether or not the pin is currently running. So
+        // the origin is measured rather than assumed: where the stage lands when it is told to
+        // sit at its own top left is exactly the offset to cancel. Self correcting in one frame,
+        // and right whether the plate is pinned, was pinned, or never was.
+        const box = stage.getBoundingClientRect()
+        const offX = -(box.left - (parseFloat(stage.style.left) || 0))
+        const offY = -(box.top - (parseFloat(stage.style.top) || 0))
         // The grid belongs to the hole, not to the page: it comes up as the hole reaches the
         // middle of the screen and goes once the hole has the screen to itself.
-        const near0 =
+        const nearMid =
           1 - clamp01(Math.abs(cy - window.innerHeight / 2) / (window.innerHeight * 0.7))
+        // The stage is sized from the document, not from `100vw`: viewport units include the
+        // scrollbar, and a full bleed fixed layer measured that way gives the page a sideways
+        // scroll of exactly one scrollbar.
+        const view = document.documentElement
+        // The word rides at a fraction of the hole's travel, so the hole slides over it.
+        const drop = cy - view.clientHeight / 2
+        const lag = drop - Math.max(-PARALLAX_MAX, Math.min(PARALLAX_MAX, drop * (1 - PARALLAX)))
         const next = [
-          Math.round(r.left + r.width / 2 - offX),
+          Math.round(cx - offX),
           Math.round(cy - offY),
           z.toFixed(3),
-          near0.toFixed(3),
+          nearMid.toFixed(3),
           Math.round(offX),
           Math.round(offY),
+          open > 0.55 ? '1' : '',
+          view.clientWidth,
+          view.clientHeight,
+          Math.round(lag),
         ].join(' ')
         if (next === last) return
         last = next
-        const [ox, oy, oz, og, sx, sy] = next.split(' ')
+        const [ox, oy, oz, og, sx, sy, gone, vw, vh, sl] = next.split(' ')
         stage.style.setProperty('--ox', ox + 'px')
         stage.style.setProperty('--oy', oy + 'px')
         stage.style.setProperty('--z', oz)
         stage.style.setProperty('--grid-near', og)
         stage.style.left = sx + 'px'
         stage.style.top = sy + 'px'
+        stage.style.width = vw + 'px'
+        stage.style.height = vh + 'px'
+        sphere.style.setProperty('--sphere-y', sl + 'px')
+        // Painting a full screen ruled grid every frame is the most expensive thing here, so it
+        // stops existing rather than merely going transparent.
+        stage.dataset.covered = gone
       },
       { label: 'porthole' },
     )
     return () => {
+      window.removeEventListener('resize', onResize)
       io.disconnect()
       unsub?.()
       delete document.documentElement.dataset.void
+    }
+  }, [])
+
+  // The light in the void follows the pointer. Transform only, so it costs a composite and not a
+  // repaint of everything under it.
+  useEffect(() => {
+    const stage = sectionRef.current?.querySelector<HTMLElement>('.porthole__stage')
+    const glow = stage?.querySelector<HTMLElement>('.porthole__glow')
+    if (!stage || !glow) return
+    const onMove = (e: PointerEvent) => {
+      glow.style.transform = `translate3d(${Math.round(e.clientX)}px, ${Math.round(e.clientY)}px, 0)`
+      glow.style.opacity = '1'
+    }
+    const onLeave = () => {
+      glow.style.opacity = '0'
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    document.documentElement.addEventListener('pointerleave', onLeave)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      document.documentElement.removeEventListener('pointerleave', onLeave)
     }
   }, [])
 
@@ -208,9 +288,9 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
             const p = state.p
             run.current.p = p
             const z = zoomAt(p)
-            // The grid outside is the reference for the zoom, so it goes when the hole has it all.
-            stage.style.setProperty('--grid-zoom', (1 - clamp01((z - 0.4) / 0.35)).toFixed(3))
-            if (z > 0.7) document.documentElement.dataset.void = '1'
+            // The console goes as soon as the hole starts opening: a bar left fixed at the top
+            // while the screen turns into the void is the one thing that says this is a page.
+            if (z > 0.04) document.documentElement.dataset.void = '1'
             else delete document.documentElement.dataset.void
 
             const open =
@@ -220,7 +300,6 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
             sphere.style.setProperty('--open', open.toFixed(4))
             // The shell never quite settles: it keeps turning under the cards.
             sphere.style.setProperty('--turn', (lerp(-9, 9, p) * open).toFixed(2) + 'deg')
-            sphere.style.setProperty('--tilt', (lerp(4, -6, p) * open).toFixed(2) + 'deg')
 
             const ride = clamp01((p - RIDE[0]) / (RIDE[1] - RIDE[0]))
             const leaving = clamp01((p - CLOSE[0]) / 0.07)
@@ -273,12 +352,15 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
       <Cell col={1} end={13} row={3} l r flush className="porthole">
         <div className="porthole__stage">
           <div className="porthole__grid" aria-hidden="true" />
-          <div className="porthole__oct porthole__ring" aria-hidden="true" />
-          <div className="porthole__oct porthole__gap" aria-hidden="true" />
+          {/* The ring and the gap are one shape each, scaled by a transform: their clip path never
+              changes, so neither of them repaints while the hole opens. */}
+          <div className="porthole__shape porthole__ring" aria-hidden="true" />
+          <div className="porthole__shape porthole__gap" aria-hidden="true" />
 
-          <div className="porthole__oct porthole__hole">
+          <div className="porthole__hole">
             <div className="porthole__void" aria-hidden="true">
               <div className="porthole__dither" />
+              <div className="porthole__glow" />
             </div>
 
             <div className="porthole__sphere" aria-hidden="true">
@@ -292,7 +374,6 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
                       '--th': `${g.theta}deg`,
                       '--ph0': `${g.phiWord}deg`,
                       '--ph1': `${g.phiOpen}deg`,
-                      '--late': g.late,
                     } as React.CSSProperties
                   }
                 >
