@@ -2,8 +2,8 @@ import { AboutBox } from '@/components/plates/about-box'
 import { Cloth } from '@/components/plates/cloth'
 import { Hero } from '@/components/plates/hero'
 import { Notes } from '@/components/plates/notes'
+import { SinceRoad } from '@/components/plates/since-road'
 import { Toolbox } from '@/components/plates/toolbox'
-import { Tunnel } from '@/components/plates/tunnel'
 import { WorkStage } from '@/components/plates/work-stage'
 import { labs, pageBySlug, works, writings } from '@/lib/content'
 import { tagsFromContent } from '@/lib/physics/toolbox'
@@ -68,7 +68,7 @@ export default function Home() {
 
       <Toolbox tags={toolboxTags} />
 
-      <Tunnel />
+      <SinceRoad />
 
       <Cloth />
     </PageTransition>

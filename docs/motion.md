@@ -48,7 +48,7 @@ measured in pixels and the real fonts change every measurement.
 - **Function based start and end, plus `invalidateOnRefresh: true`.** Otherwise a resize keeps the
   pixel values measured at the old size.
 - **`refreshPriority` counts down the page.** A higher number refreshes earlier, so the pinned
-  plates go work 2, tunnel 1: each measures a document that already contains the pin spacers of
+  plates go work 2, road 1: each measures a document that already contains the pin spacers of
   everything above it. Getting this backwards is silent and total, the last plate simply never
   pins because its distances were measured against a shorter page.
 - **One pin on screen at a time.** Two pinned sections whose spacers overlap will jump.
@@ -175,7 +175,7 @@ no physics, no cloth deformation, and the loader never appears.
 | P/03 work    | pinned: the hole opens to the screen, the word parts into a shell, cards cross it  |
 | P/04 notes   | the lab plate is a window onto the field                                           |
 | P/05 toolbox | the tags fall into a ruled container, physics loaded only when the plate is near   |
-| P/06 since   | pinned: five ruled bands arrive out of the vanishing point, one at a time          |
+| P/06 since   | pinned: a road of five words runs to a vanishing point and the reader drives down  |
 | P/07 contact | the cloth bulges away from the pointer                                             |
 
 Two things learned building P/03 and P/06 that generalise:
@@ -190,6 +190,11 @@ Two things learned building P/03 and P/06 that generalise:
   frame. P/03 has three octagons and recuts one. The same goes for texture: the dither in the void
   stopped drifting, because animating a background position across a full screen layer repaints
   it every frame, and what follows the pointer is a transform instead.
+- **Type on a receding plane has to be pre-stretched.** A plane laid back by an angle squashes
+  everything on it by cos of that angle, and by the same factor wherever it sits, so distance is
+  not what the reader sees: they see broken type. Scaling the content by 1 / cos first takes the
+  squash back out and leaves only the part that is really distance, which is the size. P/06 is one
+  element, one transform and one property written a frame because of it.
 - **A zoom needs something outside it that grows too.** P/03's octagon scales from one factor on a
   fixed half width, half height and corner, so its shape never changes; ruled squares outside it
   scale at the same rate. Without them a hole opening reads as a shape changing size rather than

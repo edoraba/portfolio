@@ -436,7 +436,8 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 .toolbox__tag,
 .monogram,
 .cover__panel,
-.tunnel__rays,
+.road__rays,
+.road__plane,
 .cloth__grid,
 .guides,
 .console-line,
@@ -540,131 +541,292 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   cursor: grabbing;
 }
 
-/* P/06. Hairlines converge on a vanishing point that leans towards the pointer, and the frames
-   fly out of it down their own lines. The title sits out of the flight path. */
-.tunnel {
+/* P/06. Five words on a road that runs to a vanishing point, one per moment of the story, laid
+   out oldest first so scrolling drives forward through it. The section title steps down to a
+   label: the road is the type here. */
+.road {
   position: relative;
   overflow: hidden;
   min-height: 68vh;
 }
 @media (min-width: 1024px) {
-  .tunnel {
-    min-height: calc(100dvh - var(--header-h) - 34px);
+  .road {
+    /* The console, the plate's own header row and the closing rule: what is left is the stage,
+       and it has to be exact or the read band falls off the bottom of the screen. */
+    min-height: calc(100dvh - var(--header-h) - 46px);
   }
 }
-.tunnel__stage {
+.road__stage {
   --vx: 0%;
   --vy: 0%;
+  /* One geometry, shared with since-road.tsx, which solves the ride against it. The stretch is
+     1 / cos(tilt), so the tilt takes it back out and the type keeps its proportion; the vanishing
+     point lands persp / tan(tilt) above the centre, which is where the rays start. */
+  --road-tilt: 64deg;
+  --road-stretch: 2.2812;
+  --road-persp: 480px;
+  --road-vp: 234px;
+  /* Where the reader stands over the stage. Above the middle, so the road has more length in
+     front of it than sky above it. */
+  --road-eye: 44%;
   position: relative;
-  display: grid;
-  place-items: center;
   height: 100%;
   min-height: inherit;
-  perspective: 900px;
   overflow: hidden;
 }
-.tunnel__rays {
+.road__rays {
   position: absolute;
-  inset: -10%;
-  width: 120%;
-  height: 120%;
-  color: color-mix(in srgb, var(--ink) 20%, transparent);
-  transform: translate(var(--vx), var(--vy));
+  left: 50%;
+  top: calc(var(--road-eye) - var(--road-vp));
+  width: 240%;
+  height: 240%;
+  color: color-mix(in srgb, var(--ink) 16%, transparent);
+  transform: translate(-50%, -50%) translate(var(--vx), var(--vy));
   transition: transform 400ms linear;
 }
-.tunnel__title {
+.road__deck {
+  position: absolute;
+  inset: 0;
+  perspective: var(--road-persp);
+  overflow: hidden;
+}
+/* The road itself: one element, one transform, one property written per frame. The words ride on
+   it rather than each carrying its own depth, which is what keeps a five word stack at one style
+   write a frame. */
+.road__plane {
+  --ride: 0px;
+  position: absolute;
+  left: 50%;
+  top: var(--road-eye);
+  width: clamp(280px, 38vw, 780px);
+  container-type: inline-size;
+  transform: translate(-50%, -50%) rotateX(var(--road-tilt)) scaleY(var(--road-stretch))
+    translateY(var(--ride));
+  will-change: transform;
+}
+/* Lanes and rungs on the surface, far past both ends of the type. They are the only thing that
+   proves the road is moving while a word is still too far away to read. */
+.road__plane::before {
+  content: '';
+  position: absolute;
+  inset: -80% -40%;
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      color-mix(in srgb, var(--ink) 20%, transparent) 0 1px,
+      transparent 1px 12.5%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ink) 20%, transparent) 0 1px,
+      transparent 1px 140px
+    );
+}
+/* Each word is set to the width of the road, so a short word is a big one and the five of them
+   read as one slab. The container width does most of it before the script has measured anything;
+   `--fit` is the correction, and it lands within a few per cent of 1. */
+.road__word {
+  --fit: 1;
+  --len: 6;
+  position: relative;
+  margin: 0;
+  padding-top: 0.06em;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: calc(var(--fit) * 100cqw / (var(--len) * 0.548));
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.055em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.road__word span {
+  display: inline-block;
+  white-space: nowrap;
+}
+/* The horizon is a fade, not an edge, and the near end goes the same way as it leaves the frame. */
+.road__haze {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--canvas) 0, transparent 14%),
+    linear-gradient(to top, var(--canvas) 0, transparent 9%);
+}
+.road__kicker {
   position: absolute;
   top: var(--cell-pad);
   left: var(--cell-pad);
   z-index: 3;
-  max-width: 16ch;
-  text-align: left;
-  color: var(--ink);
+  max-width: 22ch;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-.tunnel__frames {
+/* What the reader is looking at, at a size that does not change: the road carries the word, this
+   carries the fact. */
+.road__read {
   position: absolute;
-  inset: 0;
-  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
   display: grid;
-  place-items: center;
-  transform-style: preserve-3d;
-  pointer-events: none;
+  gap: 12px;
+  padding: var(--cell-pad);
+  border-top: 1px solid var(--hairline);
+  background-color: color-mix(in srgb, var(--canvas) 92%, transparent);
+}
+.road__ticks {
+  display: flex;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.tunnel__frame {
+.road__tick {
+  width: 34px;
+  height: 2px;
+  background-color: color-mix(in srgb, var(--ink) 18%, transparent);
+  transition: background-color 320ms var(--ease-out-expo);
+}
+.road__tick[data-on='1'] {
+  background-color: var(--ink);
+}
+.road__moments {
+  position: relative;
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.road__moment {
   grid-area: 1 / 1;
-  width: min(72ch, 84%);
   display: flex;
   align-items: baseline;
-  gap: clamp(16px, 2.6vw, 44px);
-  padding-block: clamp(10px, 1.3vw, 22px);
-  /* Stronger than a sheet hairline: these rules are the edges of an object in the corridor,
-     and perspective thins them as it takes the band away. */
-  border-top: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
-  transform: translate3d(var(--frame-x, 0%), var(--frame-y, 0%), var(--frame-z, 0px))
-    rotate(var(--frame-r, 0deg));
-  opacity: var(--frame-o, 1);
+  gap: clamp(14px, 2vw, 32px);
+  opacity: 0;
+  transition: opacity 320ms var(--ease-out-expo);
 }
-/* The year holds its column whether or not it is known yet, so every line starts on the same
-   axis as it comes down the corridor. */
-.tunnel__mark {
+.road__moment[data-on='1'] {
+  opacity: 1;
+}
+/* The number and the year hold their columns whether or not the year is known yet, so the caption
+   starts on the same axis every time. */
+.road__no,
+.road__year {
   flex: none;
-  min-width: 5ch;
+  color: var(--ink-muted);
   font-family: var(--font-mono);
-  font-size: clamp(1.5rem, 3.4vw, 3rem);
-  line-height: 1;
-  color: var(--ink);
+  font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
 }
-.tunnel__line {
-  font-size: clamp(1rem, 1.5vw, 1.5rem);
-  line-height: 1.25;
+.road__no {
+  min-width: 3ch;
+}
+.road__year {
+  min-width: 5ch;
   color: var(--ink);
-  text-wrap: balance;
+}
+.road__caption {
+  color: var(--ink);
+  font-size: clamp(1rem, 1.4vw, 1.375rem);
+  line-height: 1.3;
 }
 
-/* Without the pin the frames are a plain stack in front of the rays. */
+/* Without the pin the road stands up: the same five words at the width of the page, then the
+   timeline under them as a list. */
 @media (max-width: 1023.98px) {
-  .tunnel__frames {
-    position: static;
-    display: grid;
-    gap: 16px;
-    padding: var(--cell-pad);
-  }
-  .tunnel__frame {
-    grid-area: auto;
-    width: 100%;
-    transform: none;
-    opacity: 1;
-  }
-  .tunnel__title {
-    position: static;
-    margin-bottom: 24px;
-    padding: var(--cell-pad) var(--cell-pad) 0;
-    max-width: none;
-  }
-  .tunnel__stage {
+  .road__stage {
     display: block;
     padding-block: var(--spacing-block);
   }
-  .tunnel__mark {
-    font-size: 1.5rem;
+  .road__deck {
+    position: static;
+    perspective: none;
+    overflow: visible;
+    padding: 0 var(--cell-pad);
+  }
+  .road__plane {
+    position: static;
+    width: auto;
+    transform: none;
+    will-change: auto;
+  }
+  .road__plane::before {
+    display: none;
+  }
+  .road__haze {
+    display: none;
+  }
+  .road__kicker {
+    position: static;
+    max-width: none;
+    padding: 0 var(--cell-pad) 24px;
+  }
+  .road__read {
+    position: static;
+    padding-top: 28px;
+    border-top: 0;
+    background-color: transparent;
+  }
+  .road__ticks {
+    display: none;
+  }
+  .road__moments {
+    gap: 14px;
+  }
+  .road__moment {
+    grid-area: auto;
+    opacity: 1;
   }
 }
-html[data-motion='reduced'] .tunnel__frame {
+html[data-motion='reduced'] .road__deck {
+  position: static;
+  perspective: none;
+  overflow: visible;
+  padding: 0 var(--cell-pad);
+}
+html[data-motion='reduced'] .road__plane {
+  position: static;
+  width: auto;
   transform: none;
+}
+html[data-motion='reduced'] .road__plane::before,
+html[data-motion='reduced'] .road__haze,
+html[data-motion='reduced'] .road__ticks {
+  display: none;
+}
+html[data-motion='reduced'] .road__stage {
+  display: block;
+  padding-block: var(--spacing-block);
+}
+html[data-motion='reduced'] .road__kicker {
+  position: static;
+  max-width: none;
+  padding: 0 var(--cell-pad) 24px;
+}
+html[data-motion='reduced'] .road__read {
+  position: static;
+  padding-top: 28px;
+  border-top: 0;
+  background-color: transparent;
+}
+html[data-motion='reduced'] .road__moment {
+  grid-area: auto;
   opacity: 1;
 }
-html[data-motion='reduced'] .tunnel__frames {
-  position: static;
-  gap: 16px;
-  padding: var(--cell-pad);
+html[data-motion='reduced'] .road__moments {
+  gap: 14px;
 }
-html[data-motion='reduced'] .tunnel__rays {
+html[data-motion='reduced'] .road__rays {
   transition: none;
 }
 
