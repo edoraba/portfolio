@@ -749,6 +749,9 @@ html[data-motion='reduced'] .tunnel__rays {
      octagon: square, with each corner taken back by 1 / (2 + root 2) of the side. `--oct` is the
      one number the shape comes from, and work-stage.tsx has to agree with it. */
   --oct: 245px;
+  /* The line on either edge of the ring: the canvas lifted towards its own lightest step, so it
+     reads as a warm rim in every theme instead of a colour from nowhere. */
+  --rim: color-mix(in srgb, var(--surface-2) 62%, var(--void-ink));
   --oh: calc(var(--oct) * var(--z));
   --oc: calc(var(--oh) * 0.58579);
   position: relative;
@@ -840,12 +843,23 @@ html[data-motion='reduced'] .tunnel__rays {
     transform: translate3d(calc(var(--ox) - var(--oct)), calc(var(--oy) - var(--oct)), 0)
       scale(calc(var(--z) * var(--s)));
   }
+  /* Five cuts of the same octagon, back to front: a light line outside the ring, the ring, the
+     same light line inside it, the sheet showing through as a gap, and the hole. Each one covers
+     the middle of the one behind it, so what is left of each is a band. */
+  .porthole__rim-out {
+    --s: 1.094;
+    background-color: var(--rim);
+  }
   .porthole__ring {
     --s: 1.075;
     background-color: var(--void);
   }
+  .porthole__rim-in {
+    --s: 1.046;
+    background-color: var(--rim);
+  }
   .porthole__gap {
-    --s: 1.045;
+    --s: 1.032;
     background-color: var(--canvas);
   }
 }
@@ -857,8 +871,10 @@ html[data-motion='reduced'] .tunnel__rays {
   height: 100%;
   /* The perspective belongs here and not on the stage: it applies to an element's own children,
      and the stage's children are these layers, not the letters. Put it a level too high and the
-     shell renders flat, every copy at full size, which reads as a much bigger word than it is. */
-  perspective: 1000px;
+     shell renders flat, every copy at full size, which reads as a much bigger word than it is.
+     It is a long lens: the shorter it is, the more the nearest copy dwarfs the furthest and the
+     harder each row bows out of the screen. */
+  perspective: 9600px;
 }
 @media (min-width: 1024px) {
   .porthole__hole {
@@ -891,32 +907,21 @@ html[data-motion='reduced'] .tunnel__rays {
   background-color: var(--void);
   overflow: hidden;
 }
-/* The same dither cell as the field, printed. It does not drift: animating a background position
-   across a full screen layer repaints it every frame, which is what made the section stutter and
-   the texture crawl. What moves here is the light, and that is a transform. */
+/* The same dither cell as the field, printed. It drifts by one cell and starts over, and it does
+   it with a transform: animating a background position across a layer this size repaints it every
+   frame, which is what made the texture crawl and the section stutter. */
 .porthole__dither {
   position: absolute;
-  inset: 0;
+  inset: -8px;
   background-image: radial-gradient(circle at 50% 50%, var(--void-ink) 0 1.1px, transparent 1.4px);
   background-size: 4px 4px;
   opacity: 0.42;
+  animation: porthole-dither 6s linear infinite;
 }
-/* The light under the pointer, the one thing in the void that answers to it. */
-.porthole__glow {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 900px;
-  height: 900px;
-  margin: -450px 0 0 -450px;
-  background: radial-gradient(
-    circle closest-side,
-    color-mix(in srgb, var(--void-ink) 22%, transparent),
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 400ms var(--ease-out-expo);
-  will-change: transform;
+@keyframes porthole-dither {
+  to {
+    transform: translate3d(4px, 4px, 0);
+  }
 }
 
 /* Every copy of a letter starts in the same place. `--open` turns each one out to its own
@@ -926,27 +931,29 @@ html[data-motion='reduced'] .tunnel__rays {
 .porthole__sphere {
   --open: 0;
   --turn: 0deg;
+  --word: 0.38;
   --sphere-y: 0px;
-  --sphere-r: 1000px;
+  --sphere-r: 1500px;
   position: absolute;
   inset: 0;
   z-index: 1;
   display: grid;
   place-items: center;
-  transform: translateY(var(--sphere-y)) rotateY(var(--turn));
+  transform: translateY(var(--sphere-y)) rotateY(var(--turn)) scale(var(--word));
   transform-style: preserve-3d;
   pointer-events: none;
   color: var(--void-ink);
   font-family: var(--font-display);
-  font-size: clamp(7rem, 13vw, 14rem);
+  font-size: clamp(9rem, 18vw, 22rem);
   font-weight: 700;
   line-height: 0.8;
   letter-spacing: -0.05em;
 }
+/* One value recomputed a frame: the longitude. Latitude and radius are written once, and the
+   word is the whole shell scaled down, so opening it is not a hundred style recalculations. */
 .porthole__glyph {
   grid-area: 1 / 1;
-  transform: rotateY(calc(var(--th) * var(--open)))
-    rotateX(calc(var(--ph0) * (1 - var(--open)) + var(--ph1) * var(--open)))
+  transform: rotateY(calc(var(--th) * var(--open))) rotateX(var(--ph))
     translateZ(calc(var(--sphere-r) * -1));
   opacity: calc(0.82 + 0.18 * (1 - var(--open)));
 }

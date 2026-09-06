@@ -16,32 +16,33 @@ import { WorkCover, type CoverWork } from './work-cover'
 /** One row per letter of the word. Rows never repeat: what divides is each row, sideways. */
 const WORD = ['W', 'O', 'R', 'K'] as const
 /** Copies of each letter, all in the same place until the row divides. */
-const COPIES = 15
+const COPIES = 13
 /**
  * Half the spread around the reader, in degrees. A copy sits at radius R and angle t, so it lands
  * at R*sin(t) across and R*cos(t) back: the ones near the side of the shell come out level with
  * the reader and large, the ones straight ahead stay small and far.
  *
- * `THETA` is the only spread that opens. The four rows keep their latitudes throughout: they part
- * a little so the word fills the screen instead of a hole, but they never multiply, so the reader
- * always sees four rows of W, O, R, K and not a field of repeated letters.
+ * The shell is wide and shallow on purpose. A long lens and a big radius (see `--sphere-r` and
+ * the perspective on the hole) keep the difference between the nearest copy and the furthest
+ * small, which is what flattens the rows: on a tight shell each row bows into an arc and half of
+ * it leaves the screen. The outermost copies land past the edge of a wide screen, which is where
+ * they should be.
+ *
+ * Longitude is the only thing that opens. Latitude is fixed, and the word is made by scaling the
+ * whole shell down instead, so a copy's transform recomputes one value a frame and not three.
  */
-const THETA = 86
-const PHI_OPEN = 46
-/**
- * While closed, the latitudes have to hold the letters apart by more than a letter is tall, or
- * the word reads as a smear. At radius 1000 with the shell a screen away, a degree of latitude is
- * about 8.7px on the glass, and a line here is 91px.
- */
-const PHI_WORD = 17
+const THETA = 88
+const PHI = 16
+/** How small the shell is while the word stands in the hole. */
+const WORD_SCALE = 0.38
 
 /**
  * How much of the hole's travel the word inside it takes. Less than all of it is what makes the
  * approach read as depth: the window slides over something further back. Clamped so the word can
  * never be carried out of its own hole.
  */
-const PARALLAX = 0.72
-const PARALLAX_MAX = 44
+const PARALLAX = 0.88
+const PARALLAX_MAX = 26
 
 /** Half of the octagon at rest, in px. It is regular: a square with each corner cut at 45. */
 const OCT = 245
@@ -75,7 +76,7 @@ function cardAt(i: number, n: number) {
   return n > 1 ? SPREAD[0] + (SPREAD[1] - SPREAD[0]) * (i / (n - 1)) : 0.5
 }
 
-/** The place of one copy on the shell, and where it sits while its row is still stacked. */
+/** The place of one copy on the shell. Latitude is its row and never changes. */
 const GLYPHS = WORD.flatMap((letter, row) => {
   const k = (row / (WORD.length - 1)) * 2 - 1
   return Array.from({ length: COPIES }, (_, copy) => ({
@@ -83,8 +84,7 @@ const GLYPHS = WORD.flatMap((letter, row) => {
     key: `${letter}-${copy}`,
     first: copy === 0,
     theta: (((copy / (COPIES - 1)) * 2 - 1) * THETA).toFixed(2),
-    phiWord: (k * PHI_WORD).toFixed(2),
-    phiOpen: (k * PHI_OPEN).toFixed(2),
+    phi: (k * PHI).toFixed(2),
   }))
 })
 
@@ -168,10 +168,10 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
         const z = lerp(1, zoom, open)
         const cx = r.left + r.width / 2
         // While the page is moving the hole sits where the plate is, which is what makes the
-        // approach a parallax. Once it starts opening it settles onto the middle of the screen,
-        // where the word inside it already is: a pinned plate is 80px lower than the viewport
-        // centre, and that difference is the word sitting off centre in its own hole.
-        const cy = lerp(r.top + r.height / 2, window.innerHeight / 2, open)
+        // approach a parallax. It settles onto the middle of the screen in the first fifth of the
+        // opening, so the zoom runs from the centre: a pinned plate sits 80px below it, and the
+        // whole thing growing from there reads as low.
+        const cy = lerp(r.top + r.height / 2, window.innerHeight / 2, clamp01(open * 5))
         // A transformed ancestor is the containing block for anything fixed inside it, and GSAP
         // leaves a transform on a pinned plate whether or not the pin is currently running. So
         // the origin is measured rather than assumed: where the stage lands when it is told to
@@ -192,8 +192,11 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
         const drop = cy - view.clientHeight / 2
         const lag = drop - Math.max(-PARALLAX_MAX, Math.min(PARALLAX_MAX, drop * (1 - PARALLAX)))
         const next = [
-          Math.round(cx - offX),
-          Math.round(cy - offY),
+          // Viewport coordinates, not stage local ones: the stage is placed so its own box starts
+          // at the top left of the screen, so the two are already the same thing. Subtracting the
+          // offset here as well pushed the hole down by the height of the console.
+          Math.round(cx),
+          Math.round(cy),
           z.toFixed(3),
           nearMid.toFixed(3),
           Math.round(offX),
@@ -226,27 +229,6 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
       io.disconnect()
       unsub?.()
       delete document.documentElement.dataset.void
-    }
-  }, [])
-
-  // The light in the void follows the pointer. Transform only, so it costs a composite and not a
-  // repaint of everything under it.
-  useEffect(() => {
-    const stage = sectionRef.current?.querySelector<HTMLElement>('.porthole__stage')
-    const glow = stage?.querySelector<HTMLElement>('.porthole__glow')
-    if (!stage || !glow) return
-    const onMove = (e: PointerEvent) => {
-      glow.style.transform = `translate3d(${Math.round(e.clientX)}px, ${Math.round(e.clientY)}px, 0)`
-      glow.style.opacity = '1'
-    }
-    const onLeave = () => {
-      glow.style.opacity = '0'
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    document.documentElement.addEventListener('pointerleave', onLeave)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      document.documentElement.removeEventListener('pointerleave', onLeave)
     }
   }, [])
 
@@ -298,6 +280,7 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
                 ? clamp01((p - PART[0]) / (PART[1] - PART[0]))
                 : 1 - clamp01((p - CLOSE[0]) / (CLOSE[1] - CLOSE[0]))
             sphere.style.setProperty('--open', open.toFixed(4))
+            sphere.style.setProperty('--word', lerp(WORD_SCALE, 1, open).toFixed(4))
             // The shell never quite settles: it keeps turning under the cards.
             sphere.style.setProperty('--turn', (lerp(-9, 9, p) * open).toFixed(2) + 'deg')
 
@@ -354,13 +337,14 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
           <div className="porthole__grid" aria-hidden="true" />
           {/* The ring and the gap are one shape each, scaled by a transform: their clip path never
               changes, so neither of them repaints while the hole opens. */}
+          <div className="porthole__shape porthole__rim-out" aria-hidden="true" />
           <div className="porthole__shape porthole__ring" aria-hidden="true" />
+          <div className="porthole__shape porthole__rim-in" aria-hidden="true" />
           <div className="porthole__shape porthole__gap" aria-hidden="true" />
 
           <div className="porthole__hole">
             <div className="porthole__void" aria-hidden="true">
               <div className="porthole__dither" />
-              <div className="porthole__glow" />
             </div>
 
             <div className="porthole__sphere" aria-hidden="true">
@@ -372,8 +356,7 @@ export function WorkStage({ works }: { works: CoverWork[] }) {
                   style={
                     {
                       '--th': `${g.theta}deg`,
-                      '--ph0': `${g.phiWord}deg`,
-                      '--ph1': `${g.phiOpen}deg`,
+                      '--ph': `${g.phi}deg`,
                     } as React.CSSProperties
                   }
                 >
