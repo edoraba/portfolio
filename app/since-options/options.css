@@ -1,0 +1,412 @@
+/* Provisional. Styles for the four P/06 candidates on /since-options. Delete with the page and
+   the components once one of them is chosen. Nothing here is imported by the site. */
+
+.opt__body {
+  position: relative;
+  overflow: hidden;
+  min-height: 62vh;
+}
+@media (min-width: 1024px) {
+  .opt__body {
+    min-height: calc(100dvh - var(--header-h) - 46px);
+  }
+}
+.opt__body > * {
+  position: relative;
+  height: 100%;
+  min-height: inherit;
+}
+
+/* The line each candidate prints along the bottom: number, year, caption, one at a time. */
+.opt-read {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  display: grid;
+  margin: 0;
+  padding: var(--cell-pad);
+  border-top: 1px solid var(--hairline);
+  background-color: color-mix(in srgb, var(--canvas) 96%, transparent);
+  list-style: none;
+}
+.opt-read > li {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(14px, 2vw, 32px);
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out-expo);
+}
+.opt-read > li[data-on='1'] {
+  opacity: 1;
+}
+.opt-read .opt-no,
+.opt-read .opt-year {
+  flex: none;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.opt-read .opt-no {
+  min-width: 3ch;
+}
+.opt-read .opt-year {
+  min-width: 5ch;
+  color: var(--ink);
+}
+.opt-read .opt-caption {
+  color: var(--ink);
+  font-size: clamp(1rem, 1.4vw, 1.375rem);
+  line-height: 1.3;
+}
+
+.opt-title {
+  position: absolute;
+  top: var(--cell-pad);
+  left: var(--cell-pad);
+  z-index: 4;
+  max-width: 24ch;
+  color: var(--ink-muted);
+}
+
+/* Option 1: the specimen. One size for every line, set so the longest of them lives inside the
+   measure and all five inside the plate. Ragged right, like a foundry page. */
+.spec {
+  --fit: 1;
+  padding: calc(var(--cell-pad) * 3) var(--cell-pad) var(--cell-pad);
+  container-type: inline-size;
+}
+.spec__title {
+  color: var(--ink-muted);
+}
+.spec__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.spec__row {
+  --w: 300;
+  --lit: 1;
+  padding-top: 6px;
+  border-top: 1px solid var(--hairline);
+}
+.spec__row + .spec__row {
+  margin-top: clamp(4px, 0.9vh, 14px);
+}
+.spec__meta {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(10px, 1.4vw, 24px);
+  margin: 0 0 2px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: var(--lit);
+  transition: opacity 200ms linear;
+}
+.spec__no {
+  min-width: 3ch;
+}
+.spec__year {
+  min-width: 5ch;
+}
+.spec__caption {
+  flex: 1;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+.spec__wght {
+  font-variant-numeric: tabular-nums;
+}
+.spec__word {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  /* One size for every line, so the family is what changes and not the setting. The height of
+     the plate governs it: all five have to be on screen at once or the ramp cannot be read. */
+  font-size: min(calc(var(--fit) * 100cqw / 3.84), 13vh);
+  font-variation-settings: 'wght' var(--w);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+.spec__word span {
+  display: inline-block;
+  padding-right: 0.045em;
+  white-space: nowrap;
+}
+/* A specimen answers the pointer: the line under it goes to the heaviest cut and the rest step
+   back, which is how you read one against the others. */
+@media (hover: hover) and (min-width: 1024px) {
+  .spec__list:hover .spec__row {
+    opacity: 0.32;
+    transition: opacity 260ms var(--ease-out-expo);
+  }
+  .spec__list:hover .spec__row:hover {
+    opacity: 1;
+  }
+  .spec__list:hover .spec__row:hover .spec__word {
+    font-variation-settings: 'wght' 800;
+  }
+  .spec__word {
+    transition: font-variation-settings 320ms var(--ease-out-expo);
+  }
+}
+
+/* Option 2: the reading window. Two copies of one column: the pale one, and the same column
+   again inside a slot that inverts it. They are driven by the same value, so they register. */
+.win {
+  --draw: 0px;
+  --slot-h: clamp(150px, 33vh, 380px);
+  overflow: hidden;
+}
+.win__title {
+  position: absolute;
+  top: var(--cell-pad);
+  left: var(--cell-pad);
+  z-index: 4;
+  max-width: 24ch;
+  color: var(--ink-muted);
+}
+.win__pale,
+.win__lit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 0 var(--cell-pad);
+  container-type: inline-size;
+  transform: translate3d(0, var(--draw), 0);
+  will-change: transform;
+}
+.win__column {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.win__word {
+  margin: 0;
+  padding-top: 0.05em;
+  border-top: 1px solid currentColor;
+  font-family: var(--font-display);
+  font-size: calc(var(--fit, 1) * 100cqw / (var(--len, 6) * 0.548));
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+.win__word span {
+  display: inline-block;
+  padding-right: 0.055em;
+  white-space: nowrap;
+}
+.win__pale {
+  color: color-mix(in srgb, var(--ink) 18%, transparent);
+}
+/* The slot. Deep enough for a word to be read whole, and it never moves. Where it starts is
+   measured rather than guessed, because the lit copy has to be pulled back by exactly that much
+   for the two copies to be one column. */
+.win__slot {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: var(--slot-top, 40%);
+  height: var(--slot-h);
+  overflow: hidden;
+  background-color: var(--void);
+  color: var(--void-ink);
+}
+.win__lit {
+  top: calc(var(--slot-top, 0px) * -1);
+}
+
+/* Option 3: out of register. Every word in the same place, each pushed its own way, each in its
+   own tint, and one of them in register at a time. */
+.reg {
+  --fit: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--cell-pad);
+}
+.reg__title {
+  position: absolute;
+  top: var(--cell-pad);
+  left: var(--cell-pad);
+  z-index: 4;
+  max-width: 24ch;
+  color: var(--ink-muted);
+}
+.reg__plate {
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+}
+.reg__stack {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.reg__word {
+  --reg: 0;
+  --ox: 0px;
+  --oy: 0px;
+  grid-area: 1 / 1;
+  justify-self: center;
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) calc(11% + 89% * var(--reg)), transparent);
+  font-family: var(--font-display);
+  font-size: min(calc(var(--fit) * 100cqw / 3.84), 38vh);
+  font-weight: 800;
+  line-height: 0.84;
+  letter-spacing: -0.05em;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translate3d(calc(var(--ox) * (1 - var(--reg))), calc(var(--oy) * (1 - var(--reg))), 0);
+  mix-blend-mode: multiply;
+}
+.reg__word span {
+  display: inline-block;
+  padding-right: 0.05em;
+  white-space: nowrap;
+}
+/* Registration marks, where a press would put them. */
+.reg__mark {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background-image:
+    linear-gradient(var(--ink-muted), var(--ink-muted)),
+    linear-gradient(var(--ink-muted), var(--ink-muted));
+  background-size:
+    100% 1px,
+    1px 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.55;
+}
+.reg__mark--tl {
+  top: -46px;
+  left: -8px;
+}
+.reg__mark--tr {
+  top: -46px;
+  right: -8px;
+}
+.reg__mark--bl {
+  bottom: -46px;
+  left: -8px;
+}
+.reg__mark--br {
+  bottom: -46px;
+  right: -8px;
+}
+
+/* Option 4: the leading. One block of text that never rewraps, opened by the scroll and walked
+   word by word. */
+.lead {
+  overflow: hidden;
+}
+.lead__title {
+  position: absolute;
+  top: var(--cell-pad);
+  left: var(--cell-pad);
+  z-index: 4;
+  max-width: 24ch;
+  color: var(--ink-muted);
+}
+.lead__block {
+  --size: 22px;
+  --x: 0px;
+  --y: 0px;
+  --open: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--size);
+  font-weight: 500;
+  line-height: 1.35;
+  /* Constant: tracking that changes with the opening would move every word along its line by a
+     different amount, and the plate is aimed with numbers measured once. */
+  letter-spacing: -0.022em;
+  white-space: nowrap;
+  transform: translate3d(var(--x), var(--y), 0);
+  will-change: transform, font-size;
+}
+.lead__before {
+  color: color-mix(in srgb, var(--ink) calc(100% - 62% * var(--open)), transparent);
+}
+.lead__mark {
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* Below the pin breakpoint and under reduced motion every candidate is a plain stack: this page
+   exists to judge the desktop choreography, so the small screen only has to stay readable. */
+@media (max-width: 1023.98px) {
+  .opt__body {
+    min-height: 0;
+  }
+  .opt__body > * {
+    height: auto;
+    min-height: 0;
+  }
+  .win__pale,
+  .win__lit,
+  .win__slot,
+  .reg__mark {
+    position: static;
+    transform: none;
+  }
+  .win__slot,
+  .win__lit {
+    display: none;
+  }
+  .opt-title,
+  .spec__title,
+  .win__title,
+  .reg__title,
+  .lead__title {
+    position: static;
+    margin-bottom: 16px;
+  }
+  .opt-read {
+    position: static;
+    display: grid;
+    gap: 12px;
+    border-top: 0;
+    background: none;
+  }
+  .opt-read > li {
+    grid-area: auto;
+    opacity: 1;
+  }
+  .reg__word {
+    grid-area: auto;
+    transform: none;
+    color: var(--ink);
+    mix-blend-mode: normal;
+  }
+  .lead__block {
+    position: static;
+    font-size: 1.125rem;
+    white-space: normal;
+    transform: none;
+  }
+  .win,
+  .reg,
+  .spec,
+  .lead {
+    padding: var(--spacing-block) var(--cell-pad);
+  }
+}
