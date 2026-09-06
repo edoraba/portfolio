@@ -91,8 +91,8 @@ export function Hero({ works }: { works: HeroWork[] }) {
         className="py-8 md:after:hidden"
       >
         <p className="measure text-ink-muted">
-          <span className="text-ink">{site.role}.</span> Whole products, from the interface to the
-          database, shipped from {site.location}.
+          <span className="text-ink">{site.role}.</span> I build whole products, from the interface
+          to the database, and put them live. {site.location}.
         </p>
         <CopyEmail className="mt-6 block" />
       </Cell>

@@ -1,7 +1,8 @@
 'use client'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
-import { drawAllRules, drawRules } from '@/lib/motion/rules'
+import { drawAllRules, drawRules, drawVisibleRules } from '@/lib/motion/rules'
+import { isArriving } from '@/lib/nav'
 import { useMotion } from '@/lib/motion/store'
 
 /**
@@ -20,6 +21,8 @@ export function RulesObserver() {
       mo.observe(document.body, { childList: true, subtree: true })
       return () => mo.disconnect()
     }
+    // Arriving from a transition: what is already on screen is simply there.
+    if (isArriving()) drawVisibleRules()
     let kill = drawRules()
     let timer = 0
     const mo = new MutationObserver(() => {

@@ -34,3 +34,15 @@ export function drawRules(root: ParentNode = document): () => void {
 export function drawAllRules(root: ParentNode = document) {
   root.querySelectorAll(RULE_SELECTOR).forEach((el) => el.classList.add('is-drawn'))
 }
+
+/**
+ * Everything the reader can see already, drawn without drawing. Used on arrival from a page
+ * transition: those lines were part of what the transition put on the screen, so redrawing them
+ * is the site revealing itself a second time. What is below the fold still draws on the scroll.
+ */
+export function drawVisibleRules(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>(RULE_SELECTOR).forEach((el) => {
+    const r = el.getBoundingClientRect()
+    if (r.bottom > 0 && r.top < window.innerHeight) el.classList.add('is-drawn')
+  })
+}

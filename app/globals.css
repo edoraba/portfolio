@@ -536,7 +536,7 @@ html[data-motion='reduced'] .menu .menu__foot {
   border-top: 1px solid var(--hairline);
   transition: background-color 240ms var(--ease-out-expo);
 }
-.lab-index li:first-child .lab-row {
+.lab-index > li:first-child .lab-row {
   border-top: 0;
 }
 .lab-row:hover {
@@ -1578,7 +1578,9 @@ html[data-entrance='0']::after {
 .hero-svg {
   display: block;
   width: 100%;
-  height: calc(var(--text-display-xl) * 2.05);
+  /* Two lines plus the descender on the last word: the box has to hold it or the tail of a p
+     crosses the rule under the headline. */
+  height: calc(var(--text-display-xl) * 2.28);
   overflow: visible;
 }
 .hero-mask-defs {
@@ -1661,13 +1663,6 @@ html.js .reveal {
 ::view-transition-new(.vt-wipe-down) {
   animation: 1000ms var(--ease-mask) both vt-wipe-down;
 }
-::view-transition-group(.morph) {
-  animation-duration: 600ms;
-  animation-timing-function: var(--ease-hop);
-}
-::view-transition-image-pair(.morph) {
-  animation-name: vt-blur;
-}
 @keyframes vt-fade {
   from {
     opacity: 0;
@@ -1723,11 +1718,6 @@ html.js .reveal {
   to {
     transform: translateY(25%);
     opacity: 0;
-  }
-}
-@keyframes vt-blur {
-  30% {
-    filter: blur(3px);
   }
 }
 @media (prefers-reduced-motion: reduce) {

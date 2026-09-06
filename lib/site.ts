@@ -1,16 +1,16 @@
 export const site = {
   name: 'Edoardo Baravaglio',
   shortName: 'EB',
-  role: 'Frontend developer with a design degree',
+  role: 'Frontend developer',
   location: 'Turin, Italy',
-  email: 'edoardo@redergo.com',
+  email: 'edo.baravaglio@gmail.com',
   // TODO(edoardo): final domain
   url: 'https://example.com',
   github: 'https://github.com/edoraba',
   linkedin: 'https://www.linkedin.com/in/edoardo-baravaglio/',
   repo: 'https://github.com/edoraba/portfolio',
   /** Console header, row one. */
-  status1: 'Frontend developer with a design degree. Turin, IT',
+  status1: 'Frontend developer. Whole products, front to back. Turin, IT',
   /** Console header, row two, followed by the email. */
   status2: 'Partner at Redergo. Write me',
   coordinates: '45.07 N, 7.69 E',

@@ -5,7 +5,7 @@ import { useConsole } from './console-store'
 
 /** The seven home plates, in story order. The console prints `P/0n TITLE` for the visible one. */
 export const PLATES = [
-  { id: 'hero', n: 1, title: 'Design, then build' },
+  { id: 'hero', n: 1, title: 'Build, then ship' },
   { id: 'about', n: 2, title: 'In one sentence' },
   { id: 'work', n: 3, title: 'Work' },
   { id: 'notes', n: 4, title: 'Notes' },

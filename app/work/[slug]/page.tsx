@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ViewTransition } from 'react'
 import { ConsolePlate } from '@/components/console/console-plate'
 import { Decode } from '@/components/decode'
 import { Mdx } from '@/components/mdx-components'
@@ -66,9 +65,7 @@ export default async function WorkDetail({ params }: Props) {
             r
             className="pt-8 pb-10 md:pt-12 lg:after:hidden"
           >
-            <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
-              <h1 className="display">{w.title}</h1>
-            </ViewTransition>
+            <h1 className="display">{w.title}</h1>
             <p className="mt-8 measure text-ink-muted">{w.summary}</p>
           </Cell>
           <Cell col={10} end={13} l r className="hidden lg:block" />

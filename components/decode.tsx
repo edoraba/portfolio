@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react'
 import { decode } from '@/lib/motion/decode'
 import { useMotion } from '@/lib/motion/store'
+import { isArriving, onScreen } from '@/lib/nav'
 
 /**
  * A mono label that decodes once when it enters the viewport. The visible span is decorative
@@ -21,6 +22,8 @@ export function Decode({ children, className }: { children: string; className?: 
       (entries) => {
         if (!entries.some((e) => e.isIntersecting)) return
         io.disconnect()
+        // A label the page transition already showed does not decode: it arrived with the page.
+        if (isArriving() && onScreen(el)) return
         stop = decode(el, children)
       },
       { threshold: 0.3 },

@@ -19,7 +19,7 @@ export default function Home() {
   const cases = works.slice(0, 5)
   // Only what the content already claims: the case study stacks plus the tools named in About.
   const aboutStack = pageBySlug('about')
-    ? ['React', 'Next.js', 'Astro', 'Figma', 'Claude Code']
+    ? ['React', 'Next.js', 'TypeScript', 'Astro', 'Claude Code', 'Figma']
     : []
   const toolboxTags = tagsFromContent(
     works.map((w) => w.stack),

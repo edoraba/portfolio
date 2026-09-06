@@ -1,6 +1,5 @@
 import type { Work } from 'content-collections'
 import Link from 'next/link'
-import { ViewTransition } from 'react'
 import { Decode } from './decode'
 import { LineReveal } from './line-reveal'
 import { Cell } from './sheet/cell'
@@ -8,7 +7,7 @@ import { Rule } from './sheet/rule'
 
 /**
  * The case study index as rows of cells on the sheet: number, title and summary, year.
- * The whole row is one link; the title morphs into the case study heading.
+ * The whole row is one link.
  */
 export function WorkList({ works }: { works: Work[] }) {
   return (
@@ -34,14 +33,12 @@ export function WorkList({ works }: { works: Work[] }) {
               r
               className="md:after:hidden"
             >
-              <ViewTransition name={`work-title-${w.slug}`} share="morph" default="none">
-                <LineReveal
-                  as="span"
-                  className="block headline transition-colors group-hover:text-accent"
-                >
-                  {w.title}
-                </LineReveal>
-              </ViewTransition>
+              <LineReveal
+                as="span"
+                className="block headline transition-colors group-hover:text-accent"
+              >
+                {w.title}
+              </LineReveal>
               <span className="mt-3 block measure text-ink-muted">{w.summary}</span>
             </Cell>
             <Cell

@@ -22,7 +22,7 @@ A personal site that presents Edoardo Baravaglio as a person and proves, in the 
 
 ## Positioning
 
-Designer by training (IAAD, Digital Communication Design), developer by choice since 2021, partner at Redergo since 2025 who still writes code every day. He ships whole products: design, frontend, backend, database, deployment, SEO, maintenance. What a neighbouring portfolio cannot truthfully copy: the design degree visible in the typography and the site's own concept, plus shipped products with real volume (Refattura, 12,000+ documents) and a public Figma community plugin that literally translates between design and code.
+A frontend developer who ships whole products: frontend, backend, database, deployment, SEO, maintenance. Partner at Redergo since 2025, still writing code every day. He came to it from design (IAAD, Digital Communication Design) and stopped handing off in 2021, and the training shows in the work rather than in the title. What a neighbouring portfolio cannot truthfully copy: shipped products with real volume (Refattura, 12,000+ documents), a public Figma community plugin that translates between design and code, and a site whose type and concept are its own.
 
 ## Operating Context
 
@@ -42,7 +42,7 @@ The site is read alongside a CV generated from a YAML master (private repo cv-ge
 - Name: Edoardo Baravaglio, full name everywhere; "EB" only as favicon and monogram.
 - Voice: first person, present tense, maker verbs, specific, plain English, no buzzwords, no "AI" in self-description, no em-dashes anywhere.
 - Binding visual constraint volunteered by the user: follow the Awwwards creative-developer register; direction D "Specimen in the Field" approved on 2026-09-03 and recorded in DESIGN.md and docs/superpowers/specs/2026-09-03-portfolio-design.md.
-- Contact: edoardo@redergo.com (also in the GitHub profile README). GitHub: github.com/edoraba. LinkedIn: linkedin.com/in/edoardo-baravaglio.
+- Contact: edo.baravaglio@gmail.com (also in the GitHub profile README). GitHub: github.com/edoraba. LinkedIn: linkedin.com/in/edoardo-baravaglio.
 
 ## Evidence on Hand
 
@@ -55,7 +55,7 @@ The site is read alongside a CV generated from a YAML master (private repo cv-ge
 ## Product Principles
 
 1. The site is the first work sample: typography, spacing and motion are judged before a word is read, so craft in the site outranks quantity of content.
-2. Prove, do not claim: the design degree shows in the type system and the concept, the engineering shows in the Lab, the colophon, the public repo and the performance numbers; the word "hybrid" never appears.
+2. Prove, do not claim: the engineering shows in the Lab, the colophon, the public repo and the performance numbers, and the training shows in the type system and the concept without being announced; the words "hybrid" and "designer who codes" never appear.
 3. Accessibility and performance are features of the design, not constraints on it: reduced motion is a parallel design, Lighthouse 100 on mobile is a launch gate, the WebGL field always has a finished fallback.
 4. Honest ownership: every project states role, team and what is confidential; unknown facts stay marked until Edoardo confirms them.
 5. One idea per surface: the headline as a window onto the field on home, decisions as the content of case studies, touchable proof in the Lab.

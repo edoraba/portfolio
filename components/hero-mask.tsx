@@ -7,8 +7,8 @@ import { useField } from '@/lib/field/store'
 import { prefersReducedMotion } from '@/lib/field/support'
 import { clamp01, lerp } from '@/lib/motion/scrub'
 
-const WORDS = ['Design,', 'then', 'build.'] as const
-const HEADLINE = 'Design, then build.'
+const WORDS = ['Build,', 'then', 'ship.'] as const
+const HEADLINE = 'Build, then ship.'
 /** Funnel Display varies on weight alone, so weight is what the headline plays. */
 const WEIGHT_MIN = 350
 const WEIGHT_MAX = 700

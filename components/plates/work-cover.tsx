@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { ViewTransition } from 'react'
 import { useConsole } from '@/lib/console-store'
 import { Decode } from '../decode'
 
@@ -18,7 +17,7 @@ export type CoverWork = {
  * A project as a typographic plate: the number, a ruled dither panel standing in for the
  * screenshot Edoardo has not shipped yet, then client, title and stack. Swapping in a real image
  * later means filling the panel, not rebuilding the plate. The title carries the shared name
- * that morphs into the case study heading.
+ * that opens the case study.
  *
  * It takes its colours from whatever it is placed in: inside the void of P/03 the palette is
  * inverted around it, and the card follows without knowing.
@@ -46,9 +45,7 @@ export function WorkCover({ work, className }: { work: CoverWork; className?: st
         <span className="cover__panel" aria-hidden="true" />
         <span className="cover__body">
           <span className="label text-ink-muted">{work.client}</span>
-          <ViewTransition name={`work-title-${work.slug}`} share="morph" default="none">
-            <span className="cover__title">{work.title}</span>
-          </ViewTransition>
+          <span className="cover__title">{work.title}</span>
           <span className="cover__stack label text-ink-muted">
             {work.stack.slice(0, 3).join(', ')}
           </span>

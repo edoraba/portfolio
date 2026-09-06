@@ -44,7 +44,7 @@ export function MdxPage({
           sm={{ col: 1, end: 5 }}
           l
           r
-          className="prose-cell"
+          className="prose-cell lg:after:hidden"
         >
           <Mdx code={page.body} />
         </Cell>

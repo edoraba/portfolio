@@ -14,7 +14,7 @@ test('the loader never shows under reduced motion', async ({ page }) => {
 test('the loader always lets the page through', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('[data-loader]')).toHaveCount(0, { timeout: 2500 })
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Design, then build.')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Build, then ship.')
 })
 
 test('it runs on every visit, not once per session', async ({ page }) => {
@@ -25,5 +25,5 @@ test('it runs on every visit, not once per session', async ({ page }) => {
   const remembered = await page.evaluate(() => sessionStorage.getItem('calibrated'))
   expect(remembered).toBeNull()
   await page.reload()
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Design, then build.')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Build, then ship.')
 })

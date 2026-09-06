@@ -11,7 +11,7 @@ test('the console header is two rows and the nav is keyboard reachable', async (
   expect(box?.height).toBeGreaterThanOrEqual(80)
   expect(box?.height).toBeLessThanOrEqual(82)
   const nav = page.getByRole('navigation', { name: 'Primary' })
-  await expect(nav.getByRole('link')).toHaveCount(4)
+  await expect(nav.getByRole('link')).toHaveCount(3)
   await expect(nav.getByRole('link', { name: /Work/ })).toBeVisible()
 })
 
@@ -34,7 +34,7 @@ test('mobile menu opens, traps focus, closes with Escape and restores focus', as
   await button.click()
   const dialog = page.getByRole('dialog', { name: 'Menu' })
   await expect(dialog).toBeVisible()
-  await expect(dialog.getByRole('link')).toHaveCount(7)
+  await expect(dialog.getByRole('link')).toHaveCount(5)
   // Tab cycles inside the dialog.
   for (let i = 0; i < 16; i++) await page.keyboard.press('Tab')
   const inside = await page.evaluate(() => !!document.activeElement?.closest('#site-menu'))

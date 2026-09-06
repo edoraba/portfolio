@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 
 test('home headline is a real h1 for assistive tech', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Design, then build.')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Build, then ship.')
 })
 
 test('the hero is either the live field or the static dither, never empty', async ({ page }) => {

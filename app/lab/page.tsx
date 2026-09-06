@@ -26,31 +26,34 @@ export default function LabPage() {
       />
       {/* One ruled row a piece, spanning the sheet, with the thing itself running beside the
           list: a grid of cards makes a short index look like a mistake, and a rule does not. */}
-      <Sheet as="ul" className="lab-index">
-        {labs.map((l, i) => (
-          <Cell
-            as="li"
-            key={l.slug}
-            col={1}
-            end={9}
-            md={{ col: 1, end: 7 }}
-            sm={{ col: 1, end: 5 }}
-            l
-            r
-            flush
-          >
-            <Link href={`/lab/${l.slug}`} className="lab-row">
-              <span className="lab-row__n label text-accent">
-                P/{String(i + 1).padStart(2, '0')}
-              </span>
-              <span className="lab-row__body">
-                <span className="headline">{l.title}</span>
-                <span className="mt-3 block measure text-ink-muted">{l.description}</span>
-              </span>
-              <span className="lab-row__date label text-ink-muted">{l.date}</span>
-            </Link>
-          </Cell>
-        ))}
+      <Sheet>
+        <Cell
+          col={1}
+          end={9}
+          md={{ col: 1, end: 7 }}
+          sm={{ col: 1, end: 5 }}
+          l
+          r
+          flush
+          className="lg:after:hidden"
+        >
+          <ul className="lab-index">
+            {labs.map((l, i) => (
+              <li key={l.slug}>
+                <Link href={`/lab/${l.slug}`} className="lab-row">
+                  <span className="lab-row__n label text-accent">
+                    P/{String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="lab-row__body">
+                    <span className="headline">{l.title}</span>
+                    <span className="mt-3 block measure text-ink-muted">{l.description}</span>
+                  </span>
+                  <span className="lab-row__date label text-ink-muted">{l.date}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Cell>
         <Cell col={9} end={13} l r flush className="hidden lg:block">
           <FieldPlate id="lab-index" className="h-full min-h-[260px]" />
         </Cell>

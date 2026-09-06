@@ -13,7 +13,7 @@ export const metadata: Metadata = page ? { title: page.title, description: page.
  * What the About text itself claims, and nothing else. The case study stacks hold the parts of
  * each product rather than the tools of a practice, so listing them here reads as a keyword dump.
  */
-const stack = ['React', 'Next.js', 'Astro', 'TypeScript', 'Figma', 'Claude Code']
+const stack = ['React', 'Next.js', 'TypeScript', 'Astro', 'Claude Code', 'Figma']
 
 export default function AboutPage() {
   return (

@@ -220,7 +220,7 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
           {KEYS.map(([key, what]) => (
             <Command.Item
               key={key}
-              value={`key ${key} ${what}`}
+              value={`key ${key}`}
               onSelect={() => undefined}
               className="palette__item palette__item--flat"
             >

@@ -197,6 +197,14 @@ same-sized pages does not:
 
 - **The arriving page has to carry a ground.** A page here is transparent, so without a background
   on `::view-transition-new` the two pages are read through each other.
+- **A page that opens behind a mask cannot also carry a shared element.** The group a shared
+  element flies in is nested inside the arriving page's group, so the mask clips it: the title
+  crossed the screen cut off at the mask's edge, landed, and then completed itself when the mask
+  opened. That is the navigation animating twice. One or the other.
+- **What is already on screen when a transition lands does not reveal itself again.** The rules
+  drawing from nothing and the mono labels decoding are for a load, not for an arrival, so
+  `lib/nav.ts` marks the click and both of them stay still for anything the transition already
+  showed. What is below the fold still draws on the scroll.
 - **The leaving page has to be gone before the mask finishes.** These pages are not all the same
   height, so a snapshot still at a quarter opacity under a moving one reads as two pages at once
   rather than as depth. It reaches zero at 55% of the run, while the mask is still opening.
