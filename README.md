@@ -49,7 +49,7 @@ How the movement is put together, and the rules that keep it from breaking, is `
 
 ## Layout and themes
 
-Every section is a `.sheet`: one full-bleed grid with 12, 6 or 4 columns; text lives in cells whose hairlines sit on column lines. Press `G` to see the grid, `T` to cycle the six themes (signal, field, paper, phosphor, cobalt, ash), `Cmd K` for the command palette. Themes live in `lib/themes.data.mjs`; `pnpm themes` regenerates `app/themes.css`.
+Every section is a `.sheet`: one full-bleed grid with 12, 6 or 4 columns; text lives in cells whose hairlines sit on column lines. The keys are the numbers the site already prints: `0` home, `1` work, `2` lab, `3` about, `4` colophon. `G` shows the grid, `T` cycles the six themes (signal, field, paper, phosphor, cobalt, ash), `Cmd K` or `/` opens the command palette and `?` opens it on the list of keys. Themes live in `lib/themes.data.mjs`; `pnpm themes` regenerates `app/themes.css`.
 
 ## License
 

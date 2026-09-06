@@ -49,7 +49,7 @@ test('no element uses the retired container utilities', async ({ page }) => {
 // Every band on a sheet opens on the left content line and closes on the right one, and no two
 // neighbours draw a line each a gutter apart. The footer is the one deliberate exception: it is
 // unboxed, with no side lines and no line above it.
-const banded = [...routes, '/writing', '/lab', '/lab/field', '/nope']
+const banded = [...routes, '/lab', '/lab/field', '/nope']
 
 for (const route of banded) {
   test(`${route}: every band closes on the grid`, async ({ page }) => {

@@ -1,44 +1,46 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PRIORITY } from '@/lib/field/claims'
 import { useField } from '@/lib/field/store'
-import { navItems } from '@/lib/site'
+import { keyedRoutes } from '@/lib/site'
 import { useUi } from '@/lib/ui-store'
 import { ThemeSwatches } from './theme-swatches'
 
-const ITEMS = [
-  { n: '0', label: 'Home', href: '/' },
-  ...navItems,
-  { n: '5', label: 'Now', href: '/now' },
-  { n: '6', label: 'Colophon', href: '/colophon' },
-] as const
-
 /**
- * Full-screen menu below lg: seven numbered links in display size, right-aligned, the six
- * theme swatches at the bottom, the field in band mode behind. Focus is trapped while open,
- * Escape and navigation close it, focus returns to the MENU button.
+ * Full-screen menu below lg: the numbered links in display size, right-aligned, the six theme
+ * swatches at the bottom, the field in band mode behind.
+ *
+ * It opens out of the console rather than appearing: the panel is cut down from the top edge and
+ * each line rises out of its own mask behind it, and closing runs the panel back up. The element
+ * stays mounted until the closing animation has finished, which is what makes the way out as
+ * smooth as the way in. Focus is trapped while it is open, Escape and navigation close it, focus
+ * returns to the MENU button.
  */
 export function MobileMenu({ returnTo }: { returnTo: React.RefObject<HTMLButtonElement | null> }) {
   const open = useUi((s) => s.menuOpen)
   const setOpen = useUi((s) => s.setMenuOpen)
   const pathname = usePathname()
   const ref = useRef<HTMLDivElement>(null)
-  const wasOpen = useRef(false)
+  const [phase, setPhase] = useState<'closed' | 'in' | 'out'>('closed')
 
   // Close on navigation.
   useEffect(() => {
     setOpen(false)
   }, [pathname, setOpen])
 
+  // Adjusting state while the prop changes rather than in an effect: opening is immediate,
+  // closing hands over to the animation, and a menu that was never open stays that way.
+  const [was, setWas] = useState(open)
+  if (open !== was) {
+    setWas(open)
+    if (open) setPhase('in')
+    else if (phase !== 'closed') setPhase('out')
+  }
+
   useEffect(() => {
-    if (!open) {
-      if (wasOpen.current) returnTo.current?.focus()
-      wasOpen.current = false
-      return
-    }
-    wasOpen.current = true
+    if (phase !== 'in') return
     const root = ref.current
     if (!root) return
     useField.getState().claim('menu', {
@@ -73,9 +75,17 @@ export function MobileMenu({ returnTo }: { returnTo: React.RefObject<HTMLButtonE
       document.documentElement.style.overflow = ''
       useField.getState().release('menu')
     }
-  }, [open, returnTo])
+  }, [phase])
 
-  if (!open) return null
+  // The panel is gone when its own closing animation ends, not when the state flips.
+  const onEnd = (e: React.AnimationEvent<HTMLDivElement>) => {
+    if (e.target === ref.current && phase === 'out') {
+      setPhase('closed')
+      returnTo.current?.focus()
+    }
+  }
+
+  if (phase === 'closed') return null
   return (
     <div
       ref={ref}
@@ -84,10 +94,12 @@ export function MobileMenu({ returnTo }: { returnTo: React.RefObject<HTMLButtonE
       aria-modal="true"
       aria-label="Menu"
       className="menu"
+      data-phase={phase}
+      onAnimationEnd={onEnd}
     >
       <ol className="menu__list">
-        {ITEMS.map((item) => (
-          <li key={item.href}>
+        {keyedRoutes.map((item, i) => (
+          <li key={item.href} className="menu__line" style={{ '--i': i } as React.CSSProperties}>
             <Link
               href={item.href}
               className="menu__link display"

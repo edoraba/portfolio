@@ -74,24 +74,6 @@ const lab = defineCollection({
   }),
 })
 
-const writing = defineCollection({
-  name: 'writing',
-  directory: 'content/writing',
-  include: '*.mdx',
-  schema: z.object({
-    content,
-    title: z.string(),
-    date: z.string(),
-    description: z.string(),
-    draft: z.boolean().default(true),
-  }),
-  transform: async (doc, ctx) => ({
-    ...doc,
-    slug: slugOf(doc._meta.path),
-    body: await compileMDX(ctx, doc, mdxOptions),
-  }),
-})
-
 const pages = defineCollection({
   name: 'pages',
   directory: 'content/pages',
@@ -109,4 +91,4 @@ const pages = defineCollection({
   }),
 })
 
-export default defineConfig({ content: [work, lab, writing, pages] })
+export default defineConfig({ content: [work, lab, pages] })

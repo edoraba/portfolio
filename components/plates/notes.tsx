@@ -8,13 +8,13 @@ import { Plate } from './plate'
 export type NoteItem = { slug: string; title: string; date: string; href: string }
 
 /**
- * P/04. Two ruled indexes side by side: the lab pieces on the left with a dither plate that
- * shifts on a slow cycle, the essays on the right. No pin: after two pinned plates the reader
- * gets a plain page again.
+ * P/04. The lab index and the thing it points at, side by side: the pieces on the left, the
+ * field itself running on the right, because the field is one of them. No pin: after two pinned
+ * plates the reader gets a plain page again.
  */
-export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem[] }) {
+export function Notes({ labs }: { labs: NoteItem[] }) {
   return (
-    <Plate id="notes" className="notes-plate" meta={<span>Smaller pieces and essays</span>}>
+    <Plate id="notes" className="notes-plate" meta={<span>Smaller pieces, live</span>}>
       <Rule />
       <Cell
         col={1}
@@ -36,31 +36,14 @@ export function Notes({ labs, writings }: { labs: NoteItem[]; writings: NoteItem
             </li>
           ))}
         </ul>
-        {/* The lab column is short, so the field itself fills the rest of it: the piece the
-            list points at is the field, and this is it running. */}
-        <FieldPlate id="notes-plate" className="mt-6 grow" />
+        <p className="mt-8 measure text-ink-muted">
+          Small live pieces, dated. Most come out of real work and stay here once the work has moved
+          on.
+        </p>
       </Cell>
-      <Cell
-        col={7}
-        end={13}
-        md={{ col: 4, end: 7 }}
-        sm={{ col: 1, end: 5 }}
-        l
-        r
-        className="py-8"
-        hidden={writings.length === 0}
-      >
-        <h2 className="label text-ink-muted">Writing</h2>
-        <ul className="mt-6 space-y-4">
-          {writings.map((w) => (
-            <li key={w.slug}>
-              <Link href={w.href} className="headline transition-colors hover:text-accent">
-                {w.title}
-              </Link>
-              <span className="ml-3 label text-ink-muted">{w.date}</span>
-            </li>
-          ))}
-        </ul>
+      <Cell col={7} end={13} md={{ col: 4, end: 7 }} sm={{ col: 1, end: 5 }} l r flush>
+        {/* The piece the list points at is the field, and this is it running. */}
+        <FieldPlate id="notes-plate" className="h-full min-h-[220px]" />
       </Cell>
       <Rule />
     </Plate>

@@ -7,9 +7,7 @@ const routes = [
   '/work/traceability',
   '/lab',
   '/lab/field',
-  '/writing',
   '/about',
-  '/now',
   '/colophon',
 ]
 

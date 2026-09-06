@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useRef } from 'react'
-import { navItems, site } from '@/lib/site'
+import { keyedRoutes, site } from '@/lib/site'
 import { CopyEmail } from './copy-email'
 import { Decode } from './decode'
 import { FooterField } from './footer-field'
@@ -12,12 +12,6 @@ import { Rule } from './sheet/rule'
 import { Sheet } from './sheet/sheet'
 
 const linkClass = 'inline-flex items-center py-2 transition-colors hover:text-ink'
-
-const FOOT_NAV = [
-  ...navItems,
-  { n: '5', label: 'Now', href: '/now' },
-  { n: '6', label: 'Colophon', href: '/colophon' },
-] as const
 
 /**
  * The footer console: the field returns behind it in band mode, the email is one tap away,
@@ -49,7 +43,7 @@ export function Footer() {
           className="py-10 md:py-14"
         >
           <ol className="grid grid-cols-2 gap-x-6 label text-ink-muted">
-            {FOOT_NAV.map((n) => (
+            {keyedRoutes.map((n) => (
               <li key={n.href}>
                 <Link href={n.href} className={linkClass}>
                   <span className="mr-2 text-accent">{n.n}</span>

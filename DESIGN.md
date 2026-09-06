@@ -157,7 +157,7 @@ motion:
   rules-draw: 800ms editorial, stagger 60ms, on enter, once
   slice-flip: 4 strips, 500ms hop, 30ms stagger, alternating directions
   plates: rules draw on enter, pins scrub only transforms and clip-path, never filters (docs/motion.md)
-  loader: calibration entrance, a grid of ink tiles with four holes in it and the EB mark hopping from hole to hole as fonts, the shader, the content and the above-the-fold images report ready. The page is covered from the first paint and never half seen: the screen lifts as one plate at the end and that is the only reveal. Real readiness only, about 2s end to end, on every visit (it is what hides the field arriving), never under reduced motion, no counter
+  loader: calibration entrance, a grid of ink tiles with four holes in it and the EB mark hopping from hole to hole as fonts, the shader, the content and the above-the-fold images report ready. The page is covered from the first paint and never half seen, and the screen lifts as one plate at the end, which is the only reveal. Real readiness only, about 2s end to end, on every visit (it is what hides the field arriving), never under reduced motion, no counter
 
 field:
   renderer: hand-written WebGL2, one fragment shader, full-screen triangle, parallel shader compile
@@ -206,6 +206,8 @@ field:
 
 - Content fast, field slow: text 600ms out (power4.in) and 800ms in (expo.out, 200ms delay); field 2000ms (expo.inOut); in parallel.
 - Reveals are masked line reveals. Decode only on mono labels, once, 40ms ticks. Hover states are CSS transitions on transform, opacity and font-variation-settings.
+- The command palette opens cut down from its own top edge in 280ms and leaves in 170ms, and the mobile menu does the same out of the console with its lines rising out of their own masks. Both hold their own exit rather than being unmounted on a state change: an exit nobody can see is not an exit.
+- Keys are the numbers already printed beside the names: 0 home, 1 work, 2 lab, 3 about, 4 colophon, plus G for the grid, T for the next theme, Cmd K or / for the palette, ? for the list of keys, Escape to close. A shortcut nobody can discover is a private joke, so the palette carries the list.
 - Page transitions: field persists, and a typed navigation is a clip mask, 1000ms on cubic-bezier(0.75, 0, 0.1, 1): the page being left keeps moving the way the reader was going and thins to nothing, the one arriving is cut in over it from the edge it came from and carries its own ground. Shared-element morph of the project number and cover from /work to a case study; back and forward crossfade in 200ms.
 - Smooth scroll (Lenis, lerp 0.08) only on home and /work.
 - Reduced motion is a parallel design, listed in the frontmatter, never a kill switch.
@@ -213,7 +215,7 @@ field:
 ## Voice
 
 - First person, present tense, maker verbs. Specific: numbers only when confirmed, sectors and cities named.
-- Labels are plain ("Selected work", "Writing", "Now"), never poetic ("From the field", "Loose plates").
+- Labels are plain ("Selected work", "Lab", "Colophon"), never poetic ("From the field", "Loose plates").
 - No em-dash or en-dash anywhere: headlines, labels, body, captions, code, commits.
 
 ## Do not

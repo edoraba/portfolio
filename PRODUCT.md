@@ -31,11 +31,11 @@ The site is read alongside a CV generated from a YAML master (private repo cv-ge
 ## Capabilities and Constraints
 
 - English only, international market. No Italian pages.
-- Routes: home, work index, five case studies (Refattura, traceability for an F1 supplier, HTML to Figma plugin, Redergo Sales, Envergo), Lab with dated live pieces, writing, about, now, colophon, designed 404.
+- Routes: home, work index, five case studies (Refattura, traceability for an F1 supplier, HTML to Figma plugin, Redergo Sales, Envergo), Lab with dated live pieces, about, colophon, designed 404. Writing and Now were cut on 2026-09-06: neither had enough behind it to earn a page, and an empty index says more about the site than no index does.
 - LoL Brain, a personal side project, must never be mentioned on the site or in this repository.
 - Facts that still need Edoardo's confirmation before publish: NDA scope for traceability, his role on each archive site (lampante.ai, boerotrucks.com, atavola.pro, rekupero.it, thefootballroyale.com), Figma plugin install count and source visibility, depth allowed for Redergo Sales and Redergo Hub, availability wording, domain and hosting.
 - Numbers allowed today: Refattura 12,000+ documents; athenaonoranzefunebri.com 100 in all four Lighthouse categories; Redergo is a ten-person team; partner since early 2025; at Redergo since 2020, developer since 2021.
-- Terminology: "case study" for the five deep pages, "Lab" for live pieces, "Writing" for essays, "Now" for the dated status page, "Colophon" for how the site is built.
+- Terminology: "case study" for the five deep pages, "Lab" for live pieces, "Colophon" for how the site is built.
 
 ## Brand Commitments
 

@@ -5,7 +5,7 @@ import { Notes } from '@/components/plates/notes'
 import { SinceLeading } from '@/components/plates/since-leading'
 import { Toolbox } from '@/components/plates/toolbox'
 import { WorkStage } from '@/components/plates/work-stage'
-import { labs, pageBySlug, works, writings } from '@/lib/content'
+import { labs, pageBySlug, works } from '@/lib/content'
 import { tagsFromContent } from '@/lib/physics/toolbox'
 import { PageTransition } from '@/components/page-transition'
 import { SmoothScroll } from '@/components/smooth-scroll'
@@ -57,12 +57,6 @@ export default function Home() {
           title: l.title,
           date: l.date,
           href: `/lab/${l.slug}`,
-        }))}
-        writings={writings.slice(0, 3).map((w) => ({
-          slug: w.slug,
-          title: w.title,
-          date: w.date,
-          href: `/writing/${w.slug}`,
         }))}
       />
 

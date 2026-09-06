@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useRef } from 'react'
 import { useConsole } from '@/lib/console-store'
-import { site } from '@/lib/site'
+import { navItems, site } from '@/lib/site'
 import { useUi } from '@/lib/ui-store'
 import { CopyEmail } from '../copy-email'
 import { FlipText } from '../flip-text'
@@ -57,7 +57,7 @@ export function SiteHeader() {
             <Monogram size={20} className="text-ink" />
           </Link>
         </Cell>
-        <Cell col={3} end={9} row={1} l className="hidden lg:block">
+        <Cell col={3} end={13 - navItems.length} row={1} l className="hidden lg:block">
           <p className="truncate label text-ink-muted">{site.status1}</p>
         </Cell>
         <NavCells />

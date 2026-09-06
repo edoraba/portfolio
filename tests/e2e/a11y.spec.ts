@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
-const routes = ['/', '/work', '/work/refattura', '/lab', '/writing', '/about', '/colophon']
+const routes = ['/', '/work', '/work/refattura', '/lab', '/about', '/colophon']
 
 for (const theme of ['signal', 'field', 'paper'] as const) {
   for (const route of routes) {

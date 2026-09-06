@@ -1,26 +1,37 @@
 'use client'
 import { Command } from 'cmdk'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useField } from '@/lib/field/store'
 import type { Cell } from '@/lib/field/quality'
 import { useMotion } from '@/lib/motion/store'
-import { site } from '@/lib/site'
+import { keyedRoutes, site } from '@/lib/site'
 import { THEMES } from '@/lib/themes'
 import { switchTheme } from './console/theme-swatches'
 import { useUi } from '@/lib/ui-store'
 
 export type CommandItem = { group: string; label: string; href: string; hint?: string }
 
-const PAGES: CommandItem[] = [
-  { group: 'Go', label: 'Home', href: '/' },
-  { group: 'Go', label: 'Work', href: '/work' },
-  { group: 'Go', label: 'Lab', href: '/lab' },
-  { group: 'Go', label: 'Writing', href: '/writing' },
-  { group: 'Go', label: 'About', href: '/about' },
-  { group: 'Go', label: 'Now', href: '/now' },
-  { group: 'Go', label: 'Colophon', href: '/colophon' },
-]
+/** The same list the console prints and the number keys answer to, with the key as the hint. */
+const PAGES: CommandItem[] = keyedRoutes.map((r) => ({
+  group: 'Go',
+  label: r.label,
+  href: r.href,
+  hint: r.n,
+}))
+
+/** Every key the site listens for, so the shortcuts are discoverable and not folklore. */
+const KEYS = [
+  ['0 to 4', 'Go to a page, the numbers the console prints'],
+  ['G', 'Grid overlay'],
+  ['T', 'Next theme'],
+  ['?', 'This list'],
+  ['Cmd K or /', 'Open the palette'],
+  ['Esc', 'Close'],
+] as const
+
+/** How long the panel takes to leave. Matches the palette-close keyframes in globals.css. */
+const LEAVE = 170
 
 function isEditable(t: EventTarget | null) {
   return (
@@ -29,9 +40,12 @@ function isEditable(t: EventTarget | null) {
 }
 
 /**
- * Cmd+K palette (cmdk, MIT). Navigation, the whole index, site controls and a few playful
- * commands in the Toyfight spirit. No open animation: a tool used many times a day should
- * not perform. Rendered in the root layout with the content index passed from the server.
+ * Cmd+K palette (cmdk, MIT). Navigation, the whole index, site controls, the list of keys and a
+ * few playful commands. It opens the way everything here opens, cut down from its own top edge,
+ * and it has a way out as well as a way in: closing is held for the length of the animation
+ * rather than left to the library, because the panel is unmounted the moment the dialog's own
+ * state flips and an exit nobody can see is not an exit. Short either way, because this is a tool
+ * and not a performance. Rendered in the root layout with the content index from the server.
  */
 export function CommandMenu({ items }: { items: CommandItem[] }) {
   const router = useRouter()
@@ -41,12 +55,31 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
   const setFx = useUi((s) => s.setFx)
   const setPreference = useMotion((s) => s.setPreference)
   const setCell = useField((s) => s.setCell)
+  const reduced = useMotion((s) => s.reduced)
+  const [leaving, setLeaving] = useState(false)
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  const close = useCallback(() => {
+    if (reduced) {
+      setOpen(false)
+      return
+    }
+    setLeaving(true)
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => {
+      setLeaving(false)
+      setOpen(false)
+    }, LEAVE)
+  }, [reduced, setOpen])
+
+  useEffect(() => () => clearTimeout(timer.current), [])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        setOpen(!useUi.getState().paletteOpen)
+        if (useUi.getState().paletteOpen) close()
+        else setOpen(true)
       } else if (e.key === '/' && !isEditable(e.target) && !useUi.getState().paletteOpen) {
         e.preventDefault()
         setOpen(true)
@@ -54,10 +87,10 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
     }
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [setOpen])
+  }, [setOpen, close])
 
   const run = (fn: () => void) => () => {
-    setOpen(false)
+    close()
     fn()
   }
   const go = (href: string) => run(() => router.push(href))
@@ -68,7 +101,7 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
   return (
     <Command.Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(next) => (next ? setOpen(true) : close())}
       label="Command menu"
       filter={(value, search) => {
         // Plain substring match on words: fuzzy scoring surfaced "Redergo" for "grid".
@@ -77,8 +110,8 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
         return terms.every((t) => v.includes(t)) ? 1 : 0
       }}
       className="palette"
-      overlayClassName="palette__overlay"
-      contentClassName="palette__content"
+      overlayClassName={'palette__overlay' + (leaving ? ' is-leaving' : '')}
+      contentClassName={'palette__content' + (leaving ? ' is-leaving' : '')}
     >
       <Command.Input placeholder="Type a command or search" className="palette__input" />
       <Command.List className="palette__list" data-lenis-prevent>
@@ -182,6 +215,19 @@ export function CommandMenu({ items }: { items: CommandItem[] }) {
           >
             Reset
           </Command.Item>
+        </Command.Group>
+        <Command.Group heading="Keys" className="palette__group">
+          {KEYS.map(([key, what]) => (
+            <Command.Item
+              key={key}
+              value={`key ${key} ${what}`}
+              onSelect={() => undefined}
+              className="palette__item palette__item--flat"
+            >
+              {what}
+              <span className="palette__hint">{key}</span>
+            </Command.Item>
+          ))}
         </Command.Group>
         <Command.Group heading="Contact" className="palette__group">
           <Command.Item

@@ -6,19 +6,21 @@ import { FlipText } from '../flip-text'
 import { Cell } from '../sheet/cell'
 
 /**
- * The four primary links as one cell each in the header's top row (lg only). Hovering echoes
- * the label in the console cell.
+ * The primary links as one cell each in the header's top row (lg only), counted back from the
+ * right edge so the row always closes on the last column whatever the list holds. Hovering
+ * echoes the label in the console cell.
  */
 export function NavCells() {
   const setHover = useConsole((s) => s.setHover)
+  const first = 13 - navItems.length
   return (
     <nav aria-label="Primary" className="contents">
       {navItems.map((item, i) => (
         <Cell
           key={item.href}
           as="div"
-          col={9 + i}
-          end={10 + i}
+          col={first + i}
+          end={first + i + 1}
           row={1}
           l
           r={i === navItems.length - 1}

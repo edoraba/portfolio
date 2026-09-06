@@ -16,9 +16,20 @@ export const site = {
   coordinates: '45.07 N, 7.69 E',
 } as const
 
+/**
+ * The console header, the footer map, the mobile menu and the number keys all read from this:
+ * what is printed next to a name is the key that goes there. Home is 0 and Colophon closes the
+ * list, so the numbers a reader sees are the numbers they can press.
+ */
 export const navItems = [
   { n: '1', label: 'Work', href: '/work' },
   { n: '2', label: 'Lab', href: '/lab' },
-  { n: '3', label: 'Writing', href: '/writing' },
-  { n: '4', label: 'About', href: '/about' },
+  { n: '3', label: 'About', href: '/about' },
+] as const
+
+/** Every destination with a key on it, in order. */
+export const keyedRoutes = [
+  { n: '0', label: 'Home', href: '/' },
+  ...navItems,
+  { n: '4', label: 'Colophon', href: '/colophon' },
 ] as const
