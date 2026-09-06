@@ -150,6 +150,16 @@ A parallel design, never a speed setting. `data-motion` is written before the fi
 creates no triggers at all and its CSS already shows the finished state: no pins, no letter field,
 no physics, no cloth deformation, and the loader never appears.
 
+## Cells that fall back
+
+A cell's span at md and sm is worked out proportionally from its span at lg unless it is given
+one. That is right for a cell in a row of cells and wrong for a cell of prose: a body starting at
+column 4 of 12 fits to column 2 of 4, and the reader gets a paragraph seven words wide down the
+middle of a phone. Every cell that carries running text names its own `sm`, and there is a script
+that finds the ones that do not:
+
+    <Cell col={4} end={11} md={{ col: 1, end: 7 }} sm={{ col: 1, end: 5 }} />
+
 ## The entrance, and the transition between pages
 
 The entrance is a grid of tiles in the theme's ink covering the screen, with four holes in it on

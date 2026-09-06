@@ -1,47 +1,60 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { FieldPlate } from '@/components/field-plate'
 import { PageHeader } from '@/components/page-header'
 import { labs } from '@/lib/content'
 import { PageTransition } from '@/components/page-transition'
 import { Cell } from '@/components/sheet/cell'
-import { rowEdge } from '@/components/sheet/edge'
+import { Rule } from '@/components/sheet/rule'
 import { Sheet } from '@/components/sheet/sheet'
 
 export const metadata: Metadata = { title: 'Lab' }
 
 export default function LabPage() {
+  const latest = labs[0]
   return (
     <PageTransition>
-      <PageHeader n="P/02" title="Lab" lede="Small live pieces, dated. Most come from real work." />
-      <Sheet as="ul" className="mt-16 pb-16">
-        {labs.map((l, i) => {
-          const c = (i % 3) * 4 + 1
-          return (
-            <Cell
-              as="li"
-              key={l.slug}
-              col={c}
-              end={c + 4}
-              md={{ col: (i % 2) * 3 + 1, end: (i % 2) * 3 + 4 }}
-              sm={{ col: 1, end: 5 }}
-              l
-              r
-              t
-              b
-              flush
-              className={rowEdge(i)}
-            >
-              <Link
-                href={`/lab/${l.slug}`}
-                className="block aspect-[4/3] bg-surface p-3 transition-colors hover:bg-surface-2"
-              >
-                <p className="label text-ink-muted">{l.date}</p>
-                <p className="mt-4 headline">{l.title}</p>
-                <p className="mt-3 text-ink-muted">{l.description}</p>
-              </Link>
-            </Cell>
-          )
-        })}
+      <PageHeader
+        n="P/02"
+        title="Lab"
+        lede="Small live pieces, dated. Most come out of real work and stay here once the work has moved on."
+        facts={[
+          { label: 'Pieces', value: String(labs.length) },
+          { label: 'Latest', value: latest?.date ?? '' },
+          { label: 'All live', value: 'Running on this page' },
+        ]}
+      />
+      {/* One ruled row a piece, spanning the sheet, with the thing itself running beside the
+          list: a grid of cards makes a short index look like a mistake, and a rule does not. */}
+      <Sheet as="ul" className="lab-index">
+        {labs.map((l, i) => (
+          <Cell
+            as="li"
+            key={l.slug}
+            col={1}
+            end={9}
+            md={{ col: 1, end: 7 }}
+            sm={{ col: 1, end: 5 }}
+            l
+            r
+            flush
+          >
+            <Link href={`/lab/${l.slug}`} className="lab-row">
+              <span className="lab-row__n label text-accent">
+                P/{String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="lab-row__body">
+                <span className="headline">{l.title}</span>
+                <span className="mt-3 block measure text-ink-muted">{l.description}</span>
+              </span>
+              <span className="lab-row__date label text-ink-muted">{l.date}</span>
+            </Link>
+          </Cell>
+        ))}
+        <Cell col={9} end={13} l r flush className="hidden lg:block">
+          <FieldPlate id="lab-index" className="h-full min-h-[260px]" />
+        </Cell>
+        <Rule />
       </Sheet>
     </PageTransition>
   )

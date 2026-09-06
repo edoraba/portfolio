@@ -24,7 +24,13 @@ export function Footer() {
     <footer ref={ref} className="site-footer relative mt-section">
       <FooterField target={ref} />
       <Sheet>
-        <Cell col={1} end={8} md={{ col: 1, end: 7 }} className="py-10 md:py-14">
+        <Cell
+          col={1}
+          end={8}
+          md={{ col: 1, end: 7 }}
+          sm={{ col: 1, end: 5 }}
+          className="py-10 md:py-14"
+        >
           <p className="label text-ink-muted">
             <Decode>Write to me</Decode>
           </p>
@@ -40,6 +46,7 @@ export function Footer() {
           col={8}
           end={13}
           md={{ col: 1, end: 7 }}
+          sm={{ col: 1, end: 5 }}
           className="py-10 md:py-14"
         >
           <ol className="grid grid-cols-2 gap-x-6 label text-ink-muted">

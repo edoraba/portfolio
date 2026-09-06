@@ -521,6 +521,100 @@ html[data-motion='reduced'] .menu .menu__foot {
 .page-header {
   margin-top: 0;
 }
+/* The lab index: one ruled row a piece across eight columns, the field running in the last four. */
+.lab-index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lab-row {
+  display: grid;
+  grid-template-columns: 5ch 1fr auto;
+  gap: 16px;
+  align-items: start;
+  padding: var(--spacing-block) var(--cell-pad);
+  border-top: 1px solid var(--hairline);
+  transition: background-color 240ms var(--ease-out-expo);
+}
+.lab-index li:first-child .lab-row {
+  border-top: 0;
+}
+.lab-row:hover {
+  background-color: var(--surface);
+}
+.lab-row:hover .headline {
+  color: var(--accent);
+}
+.lab-row .headline {
+  transition: color 240ms var(--ease-out-expo);
+}
+@media (max-width: 767.98px) {
+  .lab-row {
+    grid-template-columns: 1fr auto;
+  }
+  .lab-row__n {
+    display: none;
+  }
+}
+
+/* The column beside the prose, and the readout in the title band: the same ruled rows. */
+.aside + .aside {
+  margin-top: 32px;
+}
+.aside__list {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.aside__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 8px;
+  border-top: 1px solid var(--hairline);
+}
+.aside__row > :last-child {
+  min-width: 0;
+  text-align: right;
+}
+.aside__row:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+.aside__link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  transition: color 200ms var(--ease-out-expo);
+}
+.aside__link:hover span {
+  color: var(--accent);
+}
+
+/* The readout in the header's right cell: one ruled row a fact, the label on the left and the
+   value on the right, the way the console prints anything else. */
+.page-header__facts {
+  display: grid;
+  margin: 0;
+}
+.page-header__fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 8px;
+  border-top: 1px solid var(--hairline);
+}
+.page-header__fact:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.page-header__fact dd {
+  margin: 0;
+  text-align: right;
+}
 .work-row {
   display: grid;
 }

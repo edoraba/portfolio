@@ -38,6 +38,7 @@ export default async function LabDetail({ params }: Props) {
             col={1}
             end={9}
             md={{ col: 1, end: 7 }}
+            sm={{ col: 1, end: 5 }}
             l
             r
             className="pt-8 pb-10 md:pt-12 lg:after:hidden"
@@ -50,7 +51,15 @@ export default async function LabDetail({ params }: Props) {
           <Cell col={1} end={13} l r flush>
             <div className="aspect-video bg-surface" aria-hidden="true" />
           </Cell>
-          <Cell col={1} end={9} md={{ col: 1, end: 7 }} l r className="prose-cell">
+          <Cell
+            col={1}
+            end={9}
+            md={{ col: 1, end: 7 }}
+            sm={{ col: 1, end: 5 }}
+            l
+            r
+            className="prose-cell"
+          >
             <Mdx code={l.body} />
             {l.source ? (
               <a href={l.source} className="mt-8 inline-block label text-accent">

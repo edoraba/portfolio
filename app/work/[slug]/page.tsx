@@ -61,6 +61,7 @@ export default async function WorkDetail({ params }: Props) {
             col={1}
             end={10}
             md={{ col: 1, end: 7 }}
+            sm={{ col: 1, end: 5 }}
             l
             r
             className="pt-8 pb-10 md:pt-12 lg:after:hidden"
@@ -110,7 +111,16 @@ export default async function WorkDetail({ params }: Props) {
           <Cell col={1} end={4} l className="hidden lg:block">
             <Toc headings={w.headings} />
           </Cell>
-          <Cell id="case-body" col={4} end={11} md={{ col: 1, end: 7 }} l r className="prose-cell">
+          <Cell
+            id="case-body"
+            col={4}
+            end={11}
+            md={{ col: 1, end: 7 }}
+            sm={{ col: 1, end: 5 }}
+            l
+            r
+            className="prose-cell"
+          >
             <Mdx code={w.body} />
           </Cell>
         </Sheet>
