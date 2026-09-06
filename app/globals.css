@@ -436,8 +436,7 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
 .toolbox__tag,
 .monogram,
 .cover__panel,
-.road__rays,
-.road__plane,
+.slab__words,
 .cloth__grid,
 .guides,
 .console-line,
@@ -541,137 +540,111 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   cursor: grabbing;
 }
 
-/* P/06. Five words on a road that runs to a vanishing point, one per moment of the story, laid
-   out oldest first so scrolling drives forward through it. The section title steps down to a
-   label: the road is the type here. */
-.road {
+/* P/06. The story as one column of type at the width of the sheet, a word to a moment. Every word
+   arrives out of line, shoved sideways and drawn in outline, and fills with ink as it closes onto
+   the column: what resolves is the column, because the rule each word carries only becomes a
+   ladder once they are all home. */
+.slab {
   position: relative;
   overflow: hidden;
   min-height: 68vh;
 }
 @media (min-width: 1024px) {
-  .road {
+  .slab {
     /* The console, the plate's own header row and the closing rule: what is left is the stage,
        and it has to be exact or the read band falls off the bottom of the screen. */
     min-height: calc(100dvh - var(--header-h) - 46px);
   }
 }
-.road__stage {
-  --vx: 0%;
-  --vy: 0%;
-  /* One geometry, shared with since-road.tsx, which solves the ride against it. The stretch is
-     1 / cos(tilt), so the tilt takes it back out and the type keeps its proportion; the vanishing
-     point lands persp / tan(tilt) above the centre, which is where the rays start. */
-  --road-tilt: 64deg;
-  --road-stretch: 2.2812;
-  --road-persp: 480px;
-  --road-vp: 234px;
-  /* Where the reader stands over the stage. Above the middle, so the road has more length in
-     front of it than sky above it. */
-  --road-eye: 44%;
+.slab__stage {
   position: relative;
   height: 100%;
   min-height: inherit;
   overflow: hidden;
 }
-.road__rays {
-  position: absolute;
-  left: 50%;
-  top: calc(var(--road-eye) - var(--road-vp));
-  width: 240%;
-  height: 240%;
-  color: color-mix(in srgb, var(--ink) 16%, transparent);
-  transform: translate(-50%, -50%) translate(var(--vx), var(--vy));
-  transition: transform 400ms linear;
+/* The column travels; nothing inside it does. One transform a frame carries five words. */
+.slab__block {
+  --travel: 0px;
+  padding: 0 var(--cell-pad);
 }
-.road__deck {
-  position: absolute;
-  inset: 0;
-  perspective: var(--road-persp);
-  overflow: hidden;
+@media (min-width: 1024px) {
+  .slab__block {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    transform: translate3d(0, var(--travel), 0);
+    will-change: transform;
+  }
 }
-/* The road itself: one element, one transform, one property written per frame. The words ride on
-   it rather than each carrying its own depth, which is what keeps a five word stack at one style
-   write a frame. */
-.road__plane {
-  --ride: 0px;
-  position: absolute;
-  left: 50%;
-  top: var(--road-eye);
-  width: clamp(280px, 38vw, 780px);
-  container-type: inline-size;
-  transform: translate(-50%, -50%) rotateX(var(--road-tilt)) scaleY(var(--road-stretch))
-    translateY(var(--ride));
-  will-change: transform;
+.slab__title {
+  padding: var(--spacing-block) 0 0;
+  max-width: 18ch;
+  color: var(--ink);
 }
-/* Lanes and rungs on the surface, far past both ends of the type. They are the only thing that
-   proves the road is moving while a word is still too far away to read. */
-.road__plane::before {
-  content: '';
-  position: absolute;
-  inset: -80% -40%;
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      color-mix(in srgb, var(--ink) 20%, transparent) 0 1px,
-      transparent 1px 12.5%
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--ink) 20%, transparent) 0 1px,
-      transparent 1px 140px
-    );
+.slab__words {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-/* Each word is set to the width of the road, so a short word is a big one and the five of them
-   read as one slab. The container width does most of it before the script has measured anything;
-   `--fit` is the correction, and it lands within a few per cent of 1. */
-.road__word {
+@media (min-width: 1024px) {
+  /* The gap is the first word's approach: it starts near the bottom of the plate, as far out of
+     line as it will ever be, and has the length of the plate to come home. */
+  .slab__words {
+    margin-top: min(20vh, 220px);
+  }
+}
+/* Outline until it is read, then ink. One value a frame does both this and the shove, and the
+   fill is a colour mix rather than a second copy of the word underneath. */
+.slab__word {
   --fit: 1;
   --len: 6;
-  position: relative;
+  --shove: 0;
+  --t: 0;
+  --ink-in: 100%;
   margin: 0;
   padding-top: 0.06em;
   border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
-  color: var(--ink);
+  color: transparent;
+  /* The ink pours into the word from the left as it comes home, so there is no half filled
+     state: every part of a letter is either ink or empty. */
+  background-image: linear-gradient(
+    to right,
+    var(--ink) 0 var(--ink-in),
+    transparent var(--ink-in)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 0.01em var(--ink);
   font-family: var(--font-display);
   font-size: calc(var(--fit) * 100cqw / (var(--len) * 0.548));
   font-weight: 800;
   line-height: 0.82;
   letter-spacing: -0.055em;
-  text-align: center;
   text-transform: uppercase;
+  transform: translate3d(calc(var(--shove) * var(--t) * 100%), 0, 0);
 }
-.road__word span {
+/* Tracking is applied after the last letter too, so the measured width comes up short of the ink
+   by exactly that much and a fitted word overhangs the column. The padding gives it back. */
+.slab__word span {
   display: inline-block;
+  padding-right: 0.055em;
   white-space: nowrap;
 }
-/* The horizon is a fade, not an edge, and the near end goes the same way as it leaves the frame. */
-.road__haze {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, var(--canvas) 0, transparent 14%),
-    linear-gradient(to top, var(--canvas) 0, transparent 9%);
+/* Without a stroke, or without a fill clipped to the text, an unfilled word would be nothing at
+   all: fall back to plain ink. */
+@supports not ((-webkit-text-stroke: 1px black) and (background-clip: text)) {
+  .slab__word {
+    color: var(--ink);
+    background-image: none;
+  }
 }
-.road__kicker {
-  position: absolute;
-  top: var(--cell-pad);
-  left: var(--cell-pad);
-  z-index: 3;
-  max-width: 22ch;
-  color: var(--ink-muted);
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.slab__block {
+  container-type: inline-size;
 }
-/* What the reader is looking at, at a size that does not change: the road carries the word, this
-   carries the fact. */
-.road__read {
+/* What the reader is looking at, at a size that does not change: the column carries the word,
+   this carries the fact. */
+.slab__read {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -681,32 +654,32 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   gap: 12px;
   padding: var(--cell-pad);
   border-top: 1px solid var(--hairline);
-  background-color: color-mix(in srgb, var(--canvas) 92%, transparent);
+  background-color: color-mix(in srgb, var(--canvas) 96%, transparent);
 }
-.road__ticks {
+.slab__ticks {
   display: flex;
   gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.road__tick {
+.slab__tick {
   width: 34px;
   height: 2px;
   background-color: color-mix(in srgb, var(--ink) 18%, transparent);
   transition: background-color 320ms var(--ease-out-expo);
 }
-.road__tick[data-on='1'] {
+.slab__tick[data-on='1'] {
   background-color: var(--ink);
 }
-.road__moments {
+.slab__moments {
   position: relative;
   display: grid;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.road__moment {
+.slab__moment {
   grid-area: 1 / 1;
   display: flex;
   align-items: baseline;
@@ -714,13 +687,13 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   opacity: 0;
   transition: opacity 320ms var(--ease-out-expo);
 }
-.road__moment[data-on='1'] {
+.slab__moment[data-on='1'] {
   opacity: 1;
 }
 /* The number and the year hold their columns whether or not the year is known yet, so the caption
    starts on the same axis every time. */
-.road__no,
-.road__year {
+.slab__no,
+.slab__year {
   flex: none;
   color: var(--ink-muted);
   font-family: var(--font-mono);
@@ -728,106 +701,81 @@ html.js[data-motion='full'] .cell:not(.is-drawn).cell-b {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
 }
-.road__no {
+.slab__no {
   min-width: 3ch;
 }
-.road__year {
+.slab__year {
   min-width: 5ch;
   color: var(--ink);
 }
-.road__caption {
+.slab__caption {
   color: var(--ink);
   font-size: clamp(1rem, 1.4vw, 1.375rem);
   line-height: 1.3;
 }
 
-/* Without the pin the road stands up: the same five words at the width of the page, then the
-   timeline under them as a list. */
+/* Without the pin the column is already whole: the same five words at the width of the page, in
+   ink and in line, then the timeline under them as a list. */
 @media (max-width: 1023.98px) {
-  .road__stage {
+  .slab__stage {
     display: block;
-    padding-block: var(--spacing-block);
+    padding-block: var(--spacing-block) 0;
   }
-  .road__deck {
-    position: static;
-    perspective: none;
-    overflow: visible;
-    padding: 0 var(--cell-pad);
-  }
-  .road__plane {
-    position: static;
-    width: auto;
+  .slab__word {
+    color: var(--ink);
+    background-image: none;
+    -webkit-text-stroke: 0;
     transform: none;
-    will-change: auto;
   }
-  .road__plane::before {
-    display: none;
-  }
-  .road__haze {
-    display: none;
-  }
-  .road__kicker {
-    position: static;
-    max-width: none;
-    padding: 0 var(--cell-pad) 24px;
-  }
-  .road__read {
+  .slab__read {
     position: static;
     padding-top: 28px;
     border-top: 0;
     background-color: transparent;
   }
-  .road__ticks {
+  .slab__ticks {
     display: none;
   }
-  .road__moments {
+  .slab__moments {
     gap: 14px;
   }
-  .road__moment {
+  .slab__moment {
     grid-area: auto;
     opacity: 1;
   }
 }
-html[data-motion='reduced'] .road__deck {
-  position: static;
-  perspective: none;
-  overflow: visible;
-  padding: 0 var(--cell-pad);
+html[data-motion='reduced'] .slab__stage {
+  display: block;
+  padding-block: var(--spacing-block) 0;
 }
-html[data-motion='reduced'] .road__plane {
+html[data-motion='reduced'] .slab__block {
   position: static;
-  width: auto;
   transform: none;
 }
-html[data-motion='reduced'] .road__plane::before,
-html[data-motion='reduced'] .road__haze,
-html[data-motion='reduced'] .road__ticks {
-  display: none;
+html[data-motion='reduced'] .slab__words {
+  margin-top: var(--spacing-block);
 }
-html[data-motion='reduced'] .road__stage {
-  display: block;
-  padding-block: var(--spacing-block);
+html[data-motion='reduced'] .slab__word {
+  color: var(--ink);
+  background-image: none;
+  -webkit-text-stroke: 0;
+  transform: none;
 }
-html[data-motion='reduced'] .road__kicker {
-  position: static;
-  max-width: none;
-  padding: 0 var(--cell-pad) 24px;
-}
-html[data-motion='reduced'] .road__read {
+html[data-motion='reduced'] .slab__read {
   position: static;
   padding-top: 28px;
   border-top: 0;
   background-color: transparent;
 }
-html[data-motion='reduced'] .road__moment {
+html[data-motion='reduced'] .slab__ticks {
+  display: none;
+}
+html[data-motion='reduced'] .slab__moment {
   grid-area: auto;
   opacity: 1;
 }
-html[data-motion='reduced'] .road__moments {
+html[data-motion='reduced'] .slab__moments {
   gap: 14px;
-}
-html[data-motion='reduced'] .road__rays {
-  transition: none;
 }
 
 /* P/07. A ruled cloth that bulges away from the pointer, with the invitation at its centre. */
